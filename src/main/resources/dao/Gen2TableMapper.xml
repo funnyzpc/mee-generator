@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+@description 单体代码生成::业务表
+@author shadow
+@date 2023-04-08 20:32:03
+-->
+<mapper namespace="com.mee.generator.mapper.Gen2TableMapper">
+    <!-- 查询 -->
+    <select id="findList" resultType="com.mee.generator.entity.Gen2Table">
+        select * from GEN2_TABLE
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+             <if test="table_name != null and table_name!=''" > and table_name like #{table_name}</if>
+             <if test="table_comment != null and table_comment!=''" > and table_comment like #{table_comment}</if>
+             <if test="current_db_type != null and current_db_type!=''" > and current_db_type like #{current_db_type}</if>
+             <if test="class_name != null and class_name!=''" > and class_name like #{class_name}</if>
+             <if test="package_name != null and package_name!=''" > and package_name like #{package_name}</if>
+             <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+             <if test="remark != null and remark!=''" > and remark like #{remark}</if>
+             <if test="create_by != null and create_by!=''" > and create_by like #{create_by}</if>
+             <if test="create_time != null" > and create_time = #{create_time}</if>
+             <if test="update_by != null and update_by!=''" > and update_by like #{update_by}</if>
+        </where>
+        order by id desc
+        <if test="page_no !=null">
+            limit #{page_size} offset #{page_size}*#{page_no}
+        </if>
+    </select>
+
+    <select id="findList" resultType="com.mee.generator.entity.Gen2Table" databaseId="mysql">
+        select * from GEN2_TABLE
+        <where>
+            <if test="id != null" > and id = #{id}</if>
+            <if test="table_name != null and table_name!=''" > and table_name like #{table_name}</if>
+            <if test="table_comment != null and table_comment!=''" > and table_comment like #{table_comment}</if>
+            <if test="current_db_type != null and current_db_type!=''" > and current_db_type like #{current_db_type}</if>
+            <if test="class_name != null and class_name!=''" > and class_name like #{class_name}</if>
+            <if test="package_name != null and package_name!=''" > and package_name like #{package_name}</if>
+            <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+            <if test="remark != null and remark!=''" > and remark like #{remark}</if>
+            <if test="create_by != null and create_by!=''" > and create_by like #{create_by}</if>
+            <if test="create_time != null" > and create_time = #{create_time}</if>
+            <if test="update_by != null and update_by!=''" > and update_by like #{update_by}</if>
+        </where>
+        order by id desc
+        <if test="page_no !=null">
+            limit #{page_size} offset #{_offset}
+        </if>
+    </select>
+
+    <select id="findById" resultType="com.mee.generator.entity.Gen2Table">
+        SELECT * FROM GEN2_TABLE t
+        where t.id = #{table_id}
+    </select>
+
+    <select id="findByIdToMap" resultType="java.util.LinkedHashMap">
+        SELECT * FROM GEN2_TABLE t
+        where t.id = #{table_id}
+    </select>
+
+    <select id="findByIdToMap" resultType="java.util.LinkedHashMap" databaseId="mysql">
+        SELECT
+        id,table_name,table_comment,current_db,database_id,class_name,base_package,module_name,author,version,camel_case,`desc`,create_by,create_time,update_by,update_time
+        FROM GEN2_TABLE t
+        where t.id = #{table_id}
+    </select>
+
+    <select id="findById2" resultType="com.mee.generator.entity.Gen2Table">
+        SELECT t.table_id, t.table_name, t.table_comment, t.sub_table_name, t.sub_table_fk_name, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name,t.function_version, t.function_author, t.gen_type, t.gen_path, t.options, t.remark,
+        c.column_id, c.column_name, c.column_comment, c.column_type, c.java_type, c.java_field, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort
+        FROM GEN2_TABLE t
+        LEFT JOIN gen_table_column2 c ON t.table_id = c.table_id
+        where t.table_id = #{table_id} order by c.sort
+    </select>
+
+    <!-- postgresql -->
+    <select id="findTableList" resultType="com.mee.generator.entity.Gen2Table">
+        select
+        c.relname as table_name,
+        /* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
+        obj_description(c.oid) as table_comment,
+        now()::timestamp create_time,
+        now()::timestamp update_time,
+        c.relnamespace::regnamespace as current_schema
+        from pg_class as c
+        where relname in (
+        select tablename from pg_tables where schemaname=(select current_schema())
+        /* and position('_2' in tablename)=0 */
+        )
+        and c.relname  not in (  select table_name from GEN2_TABLE  )
+        AND LOWER(C.RELNAME) NOT LIKE 'gen%'
+        and c.relnamespace::regnamespace::varchar =  (select current_schema() )
+        <if test="table_name != null and table_name != ''">
+            AND lower(c.relname) like lower(#{table_name})
+        </if>
+        <if test="table_comment != null and table_comment != ''">
+            AND lower(cast(obj_description(c.relfilenode,'pg_class') as varchar)) like lower( #{table_comment} )
+        </if>
+        <if test="page_no !=null">
+            limit #{page_size} offset #{page_size}*#{page_no}
+        </if>
+    </select>
+
+    <select id="findTableList" resultType="com.mee.generator.entity.Gen2Table" databaseId="mysql">
+        select table_name, table_comment, create_time, update_time,s.current_schema
+        from information_schema.tables as t
+        left join ( select database() as current_schema ) as s on 1=1
+        where table_schema = (select database())
+<!--        AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'-->
+        AND table_name NOT IN (select table_name from gen_table)
+        AND LOWER(table_name) NOT LIKE 'gen%'
+        <if test="table_name != null and table_name != ''">
+            AND lower(t.table_name) like lower(#{table_name})
+        </if>
+        <if test="table_comment != null and table_comment != ''">
+            AND lower(t.table_comment) like lower( #{table_comment} )
+        </if>
+        <if test="page_no !=null">
+            limit #{page_size} offset #{_offset}
+        </if>
+    </select>
+
+    <select id="findTableByNames" resultType="com.mee.generator.entity.Gen2Table">
+        select
+        c.relname as table_name,
+        /* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
+        obj_description(c.oid) as table_comment,
+        now()::timestamp create_time,
+        now()::timestamp update_time,
+        c.relnamespace::regnamespace as current_schema
+        from pg_class c
+        where c.relname in (
+        select tablename from pg_tables where schemaname=(select current_schema())
+        )
+        and c.relnamespace::regnamespace::varchar = (select current_schema())
+        <!-- and c.relname NOT LIKE 'qrtz_%' -->
+        and c.relname NOT LIKE 'gen_%'
+        and lower(c.relname) in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            lower(#{item})
+        </foreach>
+    </select>
+
+    <select id="findTableByNames" resultType="com.mee.generator.entity.Gen2Table" databaseId="mysql">
+        select table_name, table_comment, create_time, update_time,s.current_schema from information_schema.tables
+        left join ( select database() as current_schema ) as s on 1=1
+        where table_schema = (select database())
+<!--        AND table_name NOT LIKE 'qrtz_%' -->
+<!--        AND table_name NOT LIKE 'gen_%'-->
+        AND table_name NOT IN (select table_name from gen_table)
+        and lower(table_name) in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            lower(#{item})
+        </foreach>
+    </select>
+
+    <!-- update -->
+    <update id="update">
+        update GEN2_TABLE
+        <set>
+             <if test="table_comment != null and table_comment!=''" > table_comment = #{table_comment},</if>
+             <if test="current_db != null and current_db!=''" > current_db = #{current_db},</if>
+             <if test="database_id != null and database_id!=''" > database_id = #{database_id},</if>
+             <if test="class_name != null and class_name!=''" > class_name = #{class_name},</if>
+             <if test="base_package != null and base_package!=''" > base_package = #{base_package},</if>
+             <if test="module_name != null and module_name!=''" > module_name = #{module_name},</if>
+             <if test="author != null and author!=''" > author = #{author},</if>
+             <if test="version != null and version!=''" > version = #{version},</if>
+             <if test="camel_case != null" > camel_case = #{camel_case},</if>
+             <if test="desc != null and desc!=''" > "desc" = #{desc},</if>
+             <if test="update_by != null and update_by!=''" > update_by = #{update_by},</if>
+             <if test="update_time != null" > update_time = #{update_time},</if>
+        </set>
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+        </where>
+    </update>
+
+    <insert id="insert">
+        insert into GEN2_TABLE(
+            id,
+            table_name,
+            table_comment,
+            current_db,
+            database_id,
+            class_name,
+            base_package,
+            module_name,
+            author,
+            version,
+            camel_case,
+            "desc",
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) values (
+            #{id},
+            #{table_name},
+            #{table_comment},
+            #{current_db},
+            #{database_id},
+            #{class_name},
+            #{base_package},
+            #{module_name},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{desc},
+            #{create_by},
+            #{create_time},
+            #{update_by},
+            #{update_time}
+        )
+    </insert>
+
+    <insert id="insert" databaseId="mysql">
+        insert into GEN2_TABLE(
+            id,
+            table_name,
+            table_comment,
+            current_db,
+            database_id,
+            class_name,
+            base_package,
+            module_name,
+            author,
+            version,
+            camel_case,
+            `desc`,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) values (
+            #{id},
+            #{table_name},
+            #{table_comment},
+            #{current_db},
+            #{database_id},
+            #{class_name},
+            #{base_package},
+            #{module_name},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{desc},
+            #{create_by},
+            #{create_time},
+            #{update_by},
+            #{update_time}
+        )
+    </insert>
+
+    <!--  delete -->
+    <delete id="delete">
+        delete from GEN2_TABLE where id = #{id}
+    </delete>
+
+    <delete id="deleteByTableId" >
+        delete from GEN2_TABLE where id=#{id}
+    </delete>
+
+</mapper>

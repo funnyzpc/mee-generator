@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成一</title>
+    <#include "../wrapper/header.html"/>
+    <link rel="stylesheet" href="${ctxPath}/static/css/fix-table.css?r=1">
+</head>
+<body style="height:100%;" >
+<div class="main" >
+<!-- 业务内容 -->
+<!-- 查询表单 -->
+<div id="data-search">
+    <h4>代码生成一</h4>
+    <form method="GET" id="search-form">
+    <label class="form-label">表名称</label>
+    <input type="text" name="table_name" >&nbsp;&nbsp;
+
+    <label class="form-label">表备注</label>
+    <input type="text" name="table_comment" >&nbsp;&nbsp;
+
+    <button _func="query" type="submit" class="btn btn-primary">查询</button>
+    <button type="reset" class="btn btn-secondary">重置</button>&nbsp;&nbsp;
+    <!--        <button name="query" type="button" onclick="Gen1Func.queryList()">查询</button>-->
+    <button _func="import_table" type="button" class="btn btn-warning">导入</button>
+<!--    <button _func="exp" class="btn btn-info">导出</button>-->
+    </form>
+</div>
+<!-- 渲染后的数据 -->
+<div id="data-list"></div></div>
+
+<script type="text/cc-template" id="template-data-list">
+    <div class="table">
+        <table style="white-space: nowrap;overflow: auto;" >
+        <thead>
+        <tr>
+            <th>表名称</th>
+            <!--<th>编号</th>-->
+            <th>表描述</th>
+            <th>关联子表的表名</th>
+            <th>子表关联的外键名</th>
+            <th>实体类名称</th>
+            <th>使用的模板</th>
+            <th>生成包路径</th>
+            <th>生成模块名</th>
+            <th>生成业务名</th>
+            <th>生成功能名</th>
+            <th>生成功能版本</th>
+            <th>生成功能作者</th>
+            <th>生成代码方式</th>
+            <th>生成路径</th>
+            <th>其它生成选项</th>
+            <th>创建人</th>
+            <th>创建时间</th>
+            <th>更新人</th>
+            <th>更新时间</th>
+            <th>备注</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{table_name}}</td>
+            <!--<td>{{table_id}}</td>-->
+            <td>{{table_comment}}</td>
+            <td>{{sub_table_name}}</td>
+            <td>{{sub_table_fk_name}}</td>
+            <td>{{class_name}}</td>
+            <td>{{tpl_category}}</td>
+            <td>{{package_name}}</td>
+            <td>{{module_name}}</td>
+            <td>{{business_name}}</td>
+            <td>{{function_name}}</td>
+            <td>{{function_version}}</td>
+            <td>{{function_author}}</td>
+            <td>{{gen_type}}</td>
+            <td>{{gen_path}}</td>
+            <td>{{options}}</td>
+            <td>{{create_by}}</td>
+            <td>{{create_time}}</td>
+            <td>{{update_by}}</td>
+            <td>{{update_time}}</td>
+            <td>{{remark}}</td>
+            <td>
+        <!--                    <a href="#" onclick="javascript:window.open('${ctxPath}/code_gen1/gen1_edit.html?id={{item.table_id}}','_blank','channelmode=yes,fullscreen=yes')">预览</a>-->
+                <a href="#" func="preview({{table_id}})">预览</a>
+        <!--                    <a href="#" onclick="edit(item.table_id)">编辑</a>-->
+                <a href="${ctxPath}/code_gen1/gen1_field.html?table_id={{table_id}}">编辑</a>
+                <a href="#" func="delete">删除</a> <!-- delete 或者 delete() 都可以 均会在common.js中统一注册事件 -->
+                <a href="${ctxPath}/code_gen1/download?table_id={{table_id}}" target="_blank" >下载代码</a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+        </table>
+    </div>
+    <#include "../wrapper/page-form.html"/>
+</script>
+<script type="module">
+    // import * as Gen1Func from "${ctxPath}/static/js/gen1/gen1.js"
+    // Gen1Func.init();
+    import { init } from "${ctxPath}/static/js/gen1/gen1.js?r=1"
+    init();
+</script>
+</body>
+</html>

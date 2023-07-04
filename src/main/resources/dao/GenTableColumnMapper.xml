@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mee.generator.mapper.GenTableColumnMapper">
+    <cache/>
+    <cache-ref namespace="com.mee.generator.mapper.GenTableColumnMapper"/>
+    <resultMap type="com.mee.generator.entity.GenTableColumn" id="GenTableColumnResult">
+        <id     property="column_id"       column="column_id"      />
+        <result property="table_id"        column="table_id"       />
+        <result property="column_name"     column="column_name"    />
+        <result property="column_comment"  column="column_comment" />
+        <result property="column_type"     column="column_type"    />
+        <result property="java_type"       column="java_type"      />
+        <result property="java_field"      column="java_field"     />
+        <result property="is_pk"           column="is_pk"          />
+        <result property="is_increment"    column="is_increment"   />
+        <result property="is_required"     column="is_required"    />
+        <result property="is_insert"       column="is_insert"      />
+        <result property="is_edit"         column="is_edit"        />
+        <result property="is_list"         column="is_list"        />
+        <result property="is_query"        column="is_query"       />
+        <result property="query_type"      column="query_type"     />
+        <result property="html_type"       column="html_type"      />
+        <result property="dict_type"       column="dict_type"      />
+        <result property="sort"            column="sort"           />
+        <result property="create_by"       column="create_by"      />
+        <result property="create_time"     column="create_time"    />
+<!--        <result property="update_by"       column="update_by"      />
+        <result property="update_time"     column="update_time"    />-->
+    </resultMap>
+	
+	<sql id="selectGenTableColumnVo">
+        select column_id, table_id, column_name, column_comment, column_type, java_type, java_field, is_pk, is_increment, is_required, is_insert, is_edit, is_list, is_query, query_type, html_type, dict_type, sort, create_by, create_time /*, update_by, update_time*/ from gen_table_column
+    </sql>
+	
+    <select id="selectGenTableColumnListByTableId" parameterType="Long" resultMap="GenTableColumnResult">
+        <include refid="selectGenTableColumnVo"/>
+        where table_id = #{tableId}
+        order by sort
+    </select>
+
+    <select id="selectDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
+        select
+        t1.*,
+        t2.table_comment,
+        t2.column_comment,
+        t2.column_type,
+        case when t3.column_name is not null then '1' else '0' end as is_pk -- 主键
+        from
+        (
+            select
+            t.table_name,
+            c.column_name::text as column_name,
+            case  c.is_nullable when 'NO' then '1' else '0' end  as is_required,
+            -- null as is_pk,
+            c.ordinal_position as sort,
+            -- null as column_comment,
+            case c.is_generated when 'NEVER' then '0' else '1'end as is_increment
+            -- concat_ws('', data_type) as column_type
+            from information_schema.tables t
+            -- inner join information_schema.columns c on  t.table_name = c.table_name
+            inner join information_schema.columns c on  t.table_name = c.table_name and t.table_schema=c.table_schema
+            where t.table_schema = (select current_schema())
+            --and t.table_type= 'BASE TABLE'
+            --and c.table_schema = 'public'
+            and t.table_name=#{table_name}
+            -- group by t.table_name
+        ) as t1  left join
+        (
+            -- 获取表注释 及 字段类型
+            select
+            c.oid,
+            c.relname as table_name,
+            cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, --表注释
+            d.description  as column_comment, --字段注释
+            a.attname as  column_name,
+            a.atttypid as 类型id,
+            t.typname as column_type
+            from pg_class as c
+            left join pg_attribute as a on a.attrelid=c.oid
+            left join pg_type as t on t.oid=a.atttypid
+            left join pg_description as d on  d.objoid=a.attrelid and d.objsubid=a.attnum
+            where  c.relname=#{table_name}
+            and a.attnum>0
+            and c.relnamespace::regnamespace::varchar =  (select current_schema() )
+        ) as t2 on t1.table_name=t2.table_name and  t1.column_name=t2.column_name
+        left join
+        (
+            -- 获取主键
+            SELECT
+            C.conrelid::REGCLASS::varchar AS table_name,
+            A.attname  column_name
+            FROM
+            pg_constraint
+            C INNER JOIN pg_namespace n ON n.OID = C.connamespace
+            CROSS JOIN LATERAL UNNEST ( C.conkey ) ak ( K )
+            INNER JOIN pg_attribute A ON A.attrelid = C.conrelid
+            AND A.attnum = ak.K
+            WHERE C.conrelid::REGCLASS::TEXT = #{table_name}
+            ORDER BY C.contype
+        ) as t3  on t1.table_name=t3.table_name and t1.column_name=t3.column_name
+    </select>
+
+<!--   mysql
+    <select id="selectDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
+		select column_name, (case when (is_nullable = 'no' <![CDATA[ && ]]> column_key != 'PRI') then '1' else null end) as is_required, (case when column_key = 'PRI' then '1' else '0' end) as is_pk, ordinal_position as sort, column_comment, (case when extra = 'auto_increment' then '1' else '0' end) as is_increment, column_type
+		from information_schema.columns where table_schema = (select database()) and table_name = (#{tableName})
+		order by ordinal_position
+	</select>-->
+    
+<!--    <insert id="insertGenTableColumn" parameterType="com.mee.generator.entity.GenTableColumn" useGeneratedKeys="true" keyProperty="columnId">-->
+    <insert id="insertGenTableColumn" parameterType="com.mee.generator.entity.GenTableColumn" >
+        insert into gen_table_column (
+            column_id,
+			table_id,
+			column_name,
+			column_comment,
+			column_type,
+			java_type,
+			java_field,
+			is_pk,
+			is_increment,
+			is_required,
+			is_insert,
+			is_edit,
+			is_list,
+			is_query,
+			query_type,
+			html_type,
+			dict_type,
+			sort,
+			create_by,
+			create_time
+         )values(
+            #{column_id},
+			#{table_id},
+			#{column_name},
+			#{column_comment},
+			#{column_type},
+			#{java_type},
+			#{java_field},
+			#{is_pk},
+			#{is_increment},
+			#{is_required},
+			#{is_insert},
+			#{is_edit},
+			#{is_list},
+			#{is_query},
+			#{query_type},
+			#{html_type},
+			#{dict_type},
+            #{sort},
+			#{create_by},
+			#{create_time}
+         )
+    </insert>
+	 
+    <update id="updateGenTableColumn" parameterType="com.mee.generator.entity.GenTableColumn">
+        update gen_table_column
+        <set>
+            <if test="column_comment != null">column_comment = #{column_comment},</if>
+            <if test="java_type != null">java_type = #{java_type},</if>
+            <if test="java_field != null">java_field = #{java_field},</if>
+            <if test="is_insert != null">is_insert = #{is_insert},</if>
+            <if test="is_edit != null">is_edit = #{is_edit},</if>
+            <if test="is_list != null">is_list = #{is_list},</if>
+            <if test="is_query != null">is_query = #{is_query},</if>
+            <if test="is_required != null">is_required = #{is_required},</if>
+            <if test="query_type != null">query_type = #{query_type},</if>
+            <if test="html_type != null">html_type = #{html_type},</if>
+            <if test="dict_type != null">dict_type = #{dict_type},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <!--
+            <if test="update_by != null">update_by = #{update_by},</if>
+            update_time = now()
+            -->
+        </set>
+        where column_id = #{column_id}
+        and table_id = #{table_id}
+    </update>
+
+<!--    <delete id="deleteGenTableColumnByIds" parameterType="Long">
+        delete from gen_table_column where table_id in 
+        <foreach collection="array" item="tableId" open="(" separator="," close=")">
+            #{tableId}
+        </foreach>
+    </delete>-->
+
+    <delete id="deleteByTableId" >
+        delete from gen_table_column where table_id=#{table_id}
+    </delete>
+    
+    <delete id="deleteGenTableColumns">
+        delete from gen_table_column where column_id in 
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.columnId}
+        </foreach>
+    </delete>
+
+<!--    <select id="findList" resultType="java.util.Map" resultMap="GenTableColumnResult">-->
+    <select id="findList" resultMap="GenTableColumnResult">
+        select * from gen_table_column
+        <where>
+            <if test="column_id!=null">and column_id=#{column_id}</if>
+            <if test="table_id!=null">and table_id=#{table_id}</if>
+            <if test="column_id!=null">and column_id=#{column_id}</if>
+            <if test="java_type!=null and java_type!=''">and java_type=#{java_type}</if>
+        </where>
+        order by column_id desc
+    </select>
+
+    <select id="findList2" resultType="java.util.Map">
+        select * from gen_table_column
+        <where>
+            <if test="table_id!=null">and table_id=#{table_id}</if>
+            <if test="column_id!=null">and column_id=#{column_id}</if>
+            <if test="java_type!=null and java_type!=''">and java_type=#{java_type}</if>
+        </where>
+        order by  column_id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>基本信息</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+<div style="display:flex;font-size:1.6rem;">
+<ul>
+    <li>
+        <a href="${ctxPath}/code_gen2/gen2_table.html?table_id=${table_id}" style="background-color:#8fff8f;">表信息</a>
+    </li>
+    <li>
+        <a href="${ctxPath}/code_gen2/gen2_field.html?table_id=${table_id}">字段信息</a>
+    </li>
+</ul>
+</div>
+<!-- 业务内容 -->
+<div id="data-search">
+    <form id="search-form">
+        <input type="hidden" name="table_id" value="${table_id}">
+    </form>
+</div>
+<div id="data-list"></div>
+
+<script type="text/cc-template" id="template-data-list">
+    {{#with this.data.table}}
+    <form method="PUT" id="data_form">
+        <input type="hidden" name="id" value="{{id}}"/>
+
+        <div class="col-sm-5">
+            <label class="control-label col-sm-3">表名称</label>
+            <input type="text" name="table_name" value="{{table_name}}" class="form-control input-sm" required="required" style="font-weight:bold;" readonly title="表名称不可更改">
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label col-sm-3" >表描述</label>
+            <input type="text" name="table_comment" value="{{table_comment}}" class="form-control input-sm " required="required" aria-required="true">
+        </div>
+
+        <div class="col-sm-5">
+            <label class="control-label col-sm-4" >当前数据库类型</label>
+            <input type="text" name="current_db" value="{{current_db}}" class="form-control" readonly>
+        </div>
+
+        <div class="col-sm-4">
+            <label class="control-label col-sm-3" >实体类名称</label>
+            <input type="text" name="class_name" value="{{class_name}}" class="form-control input-sm " required="required">
+        </div>
+
+        <div class="col-sm-5">
+            <label class="control-label col-sm-3" >包基础路径</label>
+            <input type="text" name="base_package" value="{{base_package}}" class="form-control input-sm " required="required">
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label col-sm-3" title="[生成包路径].module.[生成模块名]">生成模块名</label>
+            <input type="text" name="module_name" value="{{module_name}}" class="form-control input-sm " required="required">
+        </div>
+        <div class="col-sm-5">
+            <label class="control-label col-sm-3" >作者</label>
+            <input type="text" name="author" value="{{author}}" class="form-control input-sm " required="required">
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label col-sm-3" >版本</label>
+            <input type="text" name="version" value="{{version}}" class="form-control input-sm " required="required">
+        </div>
+        <div class="col-sm-5">
+            <label class="control-label col-sm-12" >生成数据库类型(for mybatis xml)</label>
+            <!--            <input type="text" name="database_id" value="{{database_id}}" class="form-control input-sm " required="required">-->
+            <div style="padding:0.4rem 0.4rem">
+                <input type="checkbox" name="database_id" value="postgresql" title="postgresql" {{#_list_include database_id 'postgresql'}}checked{{/_list_include}}>postgresql&nbsp;&nbsp;
+                <input type="checkbox" name="database_id" value="mysql" title="mysql" {{#_list_include database_id 'mysql'}}checked{{/_list_include}}>mysql&nbsp;&nbsp;
+                <input type="checkbox" name="database_id" value="oracle" title="oracle" {{#_list_include database_id 'oracle'}}checked{{/_list_include}}>oracle&nbsp;&nbsp;
+                <input type="checkbox" name="database_id" value="sqlserver" title="sqlserver" {{#_list_include database_id 'sqlserver'}}checked{{/_list_include}}>sqlserver&nbsp;
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label col-sm-4" >是否驼峰</label>
+            <div style="width:100%;padding:6px 16px 6px 6px;margin:4px 0px;" class="col-sm-6">
+                <input type="radio" name="camel_case" value="1" {{#equal camel_case 1}}checked{{/equal}}/>是
+                <input type="radio" name="camel_case" value="0" {{#equal camel_case 0}}checked{{/equal}}/>否
+            </div>
+        </div>
+        <!--
+        <div class="col-sm-5">
+            <label class="control-label col-sm-5" >后端代码所在文件夹</label>
+            <input type="text" name="back_dir" value="{{back_dir}}" class="form-control input-sm " required="required">
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label col-sm-5" >前端代码所在文件夹</label>
+            <input type="text" name="front_dir" value="{{front_dir}}" class="form-control input-sm " required="required">
+        </div>
+        -->
+        <div class="col-sm-5">
+            <label class="control-label col-sm-3" >备注</label>
+            <textarea type="text" name="desc" class="form-control input-sm " required="required">{{desc}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <br/>
+            <button type="button" onclick="Gen2TableFunc.saveData()" class="btn btn-primary">提交</button>&nbsp;&nbsp;
+            <button type="button" onclick="window.open('${ctxPath}/code_gen2/gen2.html','_self')" class="btn btn-outline-dark">返回</button>
+        </div>
+        <!--{{datetime '1667544142308'}}-->
+    </form>
+    {{/with}}
+</script>
+
+</div>
+
+<script type="module">
+    import * as Gen2TableFunc from "${ctxPath}/static/js/gen2/gen2_table.js"
+    window.Gen2TableFunc=Gen2TableFunc;
+    Gen2TableFunc.init();
+</script>
+
+<style>
+    ul>li{
+     float:left;
+     display:block;
+     padding:0px 8px;
+    }
+</style>
+</body>
+</html>

@@ -1,0 +1,75 @@
+
+#data-list{
+    margin-left:8px;
+}
+#search-form{
+    margin-left:8px;
+}
+label{
+    display:inline-block;
+}
+input{
+    display:inline-block;
+}
+/* booststrap css*/
+.col-sm-3 {
+  width: 25%;
+  float:left;
+}
+.col-sm-4 {
+  width: 33.3333%;
+  float:left;
+}
+.form-group{
+    width:100%;
+    margin-bottom: 8px;
+    display:table;
+    clear:both;
+    content:"";
+}
+.col-sm-1 {
+  width: 8.333%;
+  float:left;
+  padding-left:8px;
+  padding-right:8px;
+}
+.col-sm-2 {
+  width: 16.6666%;
+  float:left;
+  padding-right:8px;
+}
+.col-sm-3 {
+    width: 25%;
+    float: left;
+    padding-right:8px;
+}
+.col-sm-4 {
+  width: 33.3%;
+}
+.col-sm-5 {
+  width: 41.6%;
+  float:left;
+  padding-right:4px;
+}
+.col-sm-6 {
+  width: 49.9%;
+  float:left;
+  padding-right:6px;
+}
+.col-sm-10 {
+  width: 83.33333333333334%;
+}
+.col-sm-12 {
+  width: 99%;
+}
+.control-label {
+    padding-top: 6px;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align:left;
+}
+.form-control{
+    width:100%;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+.hidden-item{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}

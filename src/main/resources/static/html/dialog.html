@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DIALOG</title>
+  <style>
+      dialog {
+        top: -10%;
+        width: 400px;
+        border-radius:4px;
+        border: none;
+        padding:16px 16px;
+        animation: close_com 0.7s linear 1;
+        -webkit-animation: close_com 0.7s linear 1;
+        box-shadow: -1px 2px 4px rgba(232,232,232,0.6);
+        transition:1s;
+      }
+      dialog::backdrop {
+        background-color: rgba(240,240,240,0.6);
+        backdrop-filter:blur(0.4px);
+      }
+      .dialog-foot{
+        text-align:right;
+        padding:32px 16px;
+      }
+  </style>
+</head>
+<body>
+<h2>test dialog</h2>
+  <p>Hello youth!</p>
+<button id="open" type="button" onclick="openDialogModal('d1');">打开弹窗1</button>
+<br/>
+<br/>
+<br/>
+  <dialog id="d1">
+    <h4>弹窗一</h4>
+    <form name="dialog_form">
+      <div>
+        整型
+        整数 是一个没有小数部分的数字。我们在第二章使用过 u32 整数类型。该类型声明表明，它关联的值应该是一个占据 32 比特位的无符号整数<br/>
+        （有符号整数类型以 i 开头而不是 u）。表格 3-1 展示了 Rust 内建的整数类型。我们可以使用其中的任一个来声明一个整数值的类型。
+
+        表格 3-1: Rust 中的整型
+
+        长度	有符号	无符号
+        8-bit	i8	u8
+        16-bit	i16	u16
+        32-bit	i32	u32
+        64-bit	i64	u64
+        128-bit	i128	u128
+        arch	isize	usize
+        每一个变体都可以是有符号或无符号的，并有一个明确的大小。有符号 和 无符号 代表数字能否为负值，换句话说，这个数字是否有可能是负数（有符号数），<br/>
+        或者永远为正而不需要符号（无符号数）。这有点像在纸上书写数字：当需要考虑符号的时候，数字以加号或减号作为前缀；然而，可以安全地假设为正数时，<br/>
+        加号前缀通常省略。有符号数以补码形式（two’s complement representation） 存储。
+
+        每一个有符号的变体可以储存包含从 -(2n - 1) 到 2n - 1 - 1 在内的数字，这里 n 是变体使用的位数。所以 i8 可以储存从 -(27) 到 27 - 1 在内的数字，<br/>
+        也就是从 -128 到 127。无符号的变体可以储存从 0 到 2n - 1 的数字，所以 u8 可以储存从 0 到 28 - 1 的数字，也就是从 0 到 255。
+
+        另外，isize 和 usize 类型依赖运行程序的计算机架构：64 位架构上它们是 64 位的，32 位架构上它们是 32 位的。
+
+        可以使用表格 3-2 中的任何一种形式编写数字字面值。请注意可以是多种数字类型的数字字面值允许使用类型后缀，例如 57u8 来指定类型，同时也允许使用 _ 做为分隔符以方便读数，<br/>
+        例如1_000，它的值与你指定的 1000 相同。
+        fn main() {
+        let x = 2.0; // f64
+
+        let y: f32 = 3.0; // f32
+        }
+        数值运算
+
+        Rust 中的所有数字类型都支持基本数学运算：加法、减法、乘法、除法和取余。整数除法会向下舍入到最接近的整数。下面的代码展示了如何在 let 语句中使用它们：
+
+        文件名：src/main.rs
+        <br/>
+
+      </div>
+      <div>
+        fn main() {
+        // addition
+        let sum = 5 + 10;
+
+        // subtraction
+        let difference = 95.5 - 4.3;
+
+        // multiplication
+        let product = 4 * 30;
+
+        // division
+        let quotient = 56.7 / 32.2;
+        let truncated = -5 / 3; // 结果为 -1
+
+        // remainder
+        let remainder = 43 % 5;
+        }
+
+        <hr/>
+      </div>
+      <label>报名人</label>
+      <input type="hidden"  name="report">
+      <input name="_report" onclick="openDialogModal('d2')" readonly><br/>
+      <label>名字:</label> <input name="name" placeholder="名字" autofocus="autofocus"><br/>
+      <label>号码:</label> <input name="phone" type="number" placeholder="号码">
+    <footer class="dialog-foot">
+      <button type="submit">提交</button>
+      <button type="button" class="closeBtn1" onclick="closeDialog('d1');">关闭</button>
+      <br/>
+    </footer>
+    </form>
+  </dialog>
+
+<dialog id="d2">
+  <h4>我是弹窗二</h4>
+  <form name="dialog_form_report">
+    <p>我是水平垂直居中的，有本透明背景，且处于top-layer</p>
+    <label>报名人</label>
+    <input name="_report" onchange="data_change()">
+    <input type="submit" value="查询">
+    <footer class="dialog-foot">
+      <button type="button" class="closeBtn2" onclick="closeDialog('d2');">关闭</button>
+    </footer>
+  </form>
+</dialog>
+
+<script>
+  // 打开普通弹窗
+  function openDialog(dialog) {
+      return ()=>{
+          dialog.show();
+      }
+  }
+
+  // 打开模态弹窗，水平垂直居中，自带半透明背景(由::backdrop伪元素控制)，且处于top-layer
+  function openDialogModal(id) {
+      document.querySelector("#"+id).showModal();
+  }
+  function data_change(){
+    console.log("data_change-"+(new Date().getTime()) );
+  }
+  function closeDialog( id ){
+    document.querySelector("#"+id).close();
+  }
+</script>
+</body>
+</html>

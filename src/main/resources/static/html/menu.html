@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MENU</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+        const menu_data=[{"title":"顶级目录01","id":"01","has_child":true,"child_list":[{"title":"次级目录011","id":"011","has_child":false},{"title":"次级目录012","id":"012","has_child":false},{"title":"次级目录013","id":"013","has_child":false}]},{"title":"顶级目录02","id":"02","has_child":true,"child_list":[{"title":"次级目录021","id":"021","has_child":false},{"title":"次级目录022","id":"022","has_child":true,"child_list":[{"title":"次级目录0221","id":"0221","has_child":false},{"title":"次级目录0222","id":"0222","has_child":false},{"title":"次级目录0223","id":"0223","has_child":false}]},{"title":"次级目录023","id":"023","has_child":true,"child_list":[{"title":"次级目录0231","id":"0231","has_child":false},{"title":"次级目录0232","id":"0232","has_child":false},{"title":"次级目录0233","id":"0233","has_child":true,"child_list":[{"title":"次级目录02331","id":"02331","has_child":false},{"title":"次级目录02332","id":"02332","has_child":false}]}]}]},{"title":"顶级目录03","id":"03","has_child":false},{"title":"顶级目录04","id":"04","has_child":false,"link":"https://baidu.com"}];
+        const MENU_SPACE = {
+                            0:"",
+                            1:"&nbsp;&nbsp;",
+                            2:"&nbsp;&nbsp;&nbsp;&nbsp;",
+                            3:"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            4:"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+
+                            5:"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            6:"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            7:"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            8:"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                            };
+</script>
+</head>
+<body>
+  <div id="menu">
+    <ul>
+        <li>
+            <span>菜单01</span>
+            <ul>
+                <li>菜单011</li>
+                <li>菜单012</li>
+                <li>菜单013</li>
+            </ul>
+        </li>
+        <li>菜单01</li>
+        <li>菜单01</li>
+    </ul>
+  </div>
+</body>
+<style>
+    body{margin: 0px 0px;}
+    #menu{
+        display:inline-block;
+        background-color:black;
+        color: white;
+        padding: 16px 0px;
+        position: fixed;
+        height: 100%;
+        min-width: 240px;
+    }
+    #menu li{font-size:16px;
+        padding-top: 4px;
+        padding-right: 0px;
+        padding-bottom: 4px;
+        /* padding-left: 4px; */
+    }
+    ul{margin:0px;padding:0px;}
+    li {list-style:none;cursor: pointer;}
+    ul,li{padding:0,margin:0}
+    .dir-item{ display:block; }
+    .dir-item-tag{float:right; padding-right:4px;}
+    .dir-item,.menu-item-text{margin-left:8px;}
+</style>
+<script type="text/javascript">
+ window.onload=function(){
+    let dom = document.querySelector("#menu");
+    // 生成菜单
+    dom.innerHTML=this.buildMenu(menu_data,0);
+    // 注册事件
+    this.addEvent(dom);
+    // debugger;
+ }
+
+ function addEvent(dom){
+    // 目录切换 dir-item
+    let dir_dom_list = dom.querySelectorAll("#menu .dir-item");
+    dir_dom_list.forEach(dom_item=>{
+        dom_item.addEventListener("click",function(){
+            // 获取节点当前状态(dom_is_show)
+            let dom_is_show = this.getAttribute("dom_is_show");
+            if(dom_is_show==="1"){
+                // 对于显示的 置为 隐藏(姊妹节点)
+                this.nextElementSibling.style.display="none";
+                // 子节点全部隐藏
+                // this.nextElementSibling.querySelectorAll(".dir-item");
+                // 重置节点参数
+                this.setAttribute("dom_is_show","0");
+                // 改变箭头方向 ˆˇ ▲▼
+                this.querySelector(".dir-item-tag").innerHTML=MENU_SPACE[1]+"▼";
+            }else{
+                // 对于隐藏的 置为 显示(姊妹节点)
+                this.nextElementSibling.style.display="";
+                // 重置节点参数
+                this.setAttribute("dom_is_show","1");
+                // 改变箭头方向
+                this.querySelector(".dir-item-tag").innerHTML=MENU_SPACE[1]+"▲";
+            }
+            //点击的添加背景色
+            // this.style.backgroundColor="blue";
+            // debugger
+        });
+    });
+
+    // 菜单点击 menu-item
+    let menu_dom_list = dom.querySelectorAll("#menu .menu-item");
+    menu_dom_list.forEach(dom_item=>{
+        dom_item.addEventListener("click",function(){
+             // 获取节点当前状态(dom_is_show)
+            let menu_id = this.getAttribute("menu_id");
+
+            // 点击的添加背景色
+            this.style.backgroundColor="blue";
+
+            // 其他menu节点取消背景色
+            dom.querySelectorAll("#menu .menu-item").forEach(other_item=>{
+                // 获取节点当前状态(dom_is_show)
+                let other_menu_id = other_item.getAttribute("menu_id");
+                if( menu_id !== other_menu_id ){
+                    other_item.style.backgroundColor="";
+                }
+            });
+
+        });
+    });
+    // debugger
+
+ }
+
+ function buildMenu(menu_data,level){
+    let menu_str = level>0?"<ul style='display:none;background-color:rgb(40, 40, 40);'>":"<ul>";
+    for(let item in  menu_data){
+        menu_str = menu_str + buildItem(menu_data[item],level)
+    }
+    return ( menu_str + "</ul>" );
+ }
+
+ function buildItem(data_item,level){
+    if( data_item.has_child === true ){
+        return  "<li>"+
+                // "<span data-has-child='true' dom_is_show='1' class='dir-item'>♬"+level+MENU_SPACE[level]+ data_item.title +"</span>"+
+                // "<span data-has-child='true' dom_is_show='1' class='dir-item'>"+MENU_SPACE[level]+level+data_item.title +"</span>"+
+                // "<div data-has-child='true' dom_is_show='1' class='dir-item'>"+MENU_SPACE[level]+level+data_item.title +" ﹀</div>"+
+                // "<div data-has-child='true' dom_is_show='1' class='dir-item'>"+MENU_SPACE[level]+level+data_item.title +"<span class='dir-item-tag'> ▼</span></div>"+
+                "<div data-has-child='true' dom_is_show='0' class='dir-item'>"+MENU_SPACE[level]+level+data_item.title +"<span class='dir-item-tag'> ▼</span></div>"+
+                    buildMenu(data_item.child_list,++level);
+                "</li>";
+    }else{
+        //  ▲▼
+        // return "<li class='menu-item' menu_id='"+data_item.id+"'>"+(level===0?level:"&nbsp;&nbsp;○"+level)+ data_item.title +"</li>";
+        // return "<li class='menu-item' menu_id='"+data_item.id+"'>"+("♩ "+level+MENU_SPACE[level])+ data_item.title +"</li>";
+        return "<li class='menu-item' menu_id='"+data_item.id+"'><div class='menu-item-text'>"+(MENU_SPACE[level]+level)+ data_item.title +"</div></li>";
+    }
+ }
+</script>
+
+</html>

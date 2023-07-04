@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>生成信息</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+<div style="display:flex;font-size:1.2rem;">
+<ul>
+    <li>
+        <a  href="${ctxPath}/code_gen1/gen1_base.html?table_id=${table_id}" >基本信息</a>
+    </li>
+    <li>
+        <a href="${ctxPath}/code_gen1/gen1_field.html?table_id=${table_id}">字段信息</a>
+    </li>
+    <li>
+        <a href="${ctxPath}/code_gen1/gen1_generate.html?table_id=${table_id}" style="background-color:#8fff8f;">生成信息</a>
+    </li>
+</ul>
+</div>
+<!-- 业务内容 -->
+<div id="data-search">
+    <form id="search-form">
+        <input type="hidden" name="table_id" value="${table_id}">&nbsp;
+    </form>
+</div>
+<div id="data-list"></div>
+</div>
+<!--
+{{#each this.data.base}}
+    {{@index}}::{{@key}}:{{this}}<br/>
+{{/each}}
+    {{#with this.data.base}}
+        {{table_id}}||{{tpl_category}}
+{{/with}}
+-->
+<script type="text/cc-template" id="template-data-list">
+    {{#with this.data.base}}
+    <form style="" id="data_form">
+        <input type="hidden" name="table_id" value="{{table_id}}"/>
+        <div class="form-group">
+            <label class="control-label col-sm-1" >生成模板</label>
+            <div class="col-sm-2">
+<!--                <input type="text" name="tpl_category" class="form-control input-sm " required="required" aria-required="true" value="{{tpl_category}}"/>-->
+                <!-- see: com.mee.generator.enums.TplCategoryEnum -->
+                <select name="tpl_category" title="生成模板" value="{{query_type}}" style="width:100%;" required="required">
+                    <option {{#equal tpl_category 'crud'}}selected{{/equal}}>单表增删改查(crud)</option>
+                    <option {{#equal tpl_category 'tree'}}selected{{/equal}}>树表增删改查(tree)</option>
+                    <option {{#equal tpl_category 'sub'}}selected{{/equal}}>主子表增删改查(sub)</option>
+                </select>
+            </div>
+            <label class="control-label col-sm-1" >生成包路径</label>
+            <div class="col-sm-2">
+                <input type="text" name="package_name" class="form-control input-sm " required="required" aria-required="true" value="{{package_name}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-1" >生成模块名</label>
+            <div class="col-sm-2">
+                <input type="text" name="module_name" class="form-control input-sm " required="required" aria-required="true" value="{{module_name}}"/>
+            </div>
+            <label class="control-label col-sm-1" >生成业务名</label>
+            <div class="col-sm-2">
+                <input type="text" name="business_name" class="form-control input-sm " required="required" aria-required="true" value="{{business_name}}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-1" >生成功能名</label>
+            <div class="col-sm-2">
+                <input type="text" name="function_name" class="form-control input-sm" required="required" aria-required="true" value="{{function_name}}"/>
+            </div>
+            <label class="control-label col-sm-1" >功能版本</label>
+            <div class="col-sm-2">
+                <input type="text" name="function_version" class="form-control input-sm" required="required" aria-required="true" value="{{function_version}}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-1" >上级菜单</label>
+            <div class="col-sm-2">
+                <input type="text" name="brand" class="form-control input-sm " required="required" aria-required="true" value="无(需补充)">
+            </div>
+            <label class="control-label col-sm-1" >生成代码方式</label>
+            <div class="col-sm-2">
+                <input type="text" name="gen_type" class="form-control input-sm " required="required" aria-required="true" value="{{gen_type}}"/>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-1" >自定义路径</label>
+            <div class="col-sm-2">
+                <input type="text" name="gen_path" class="form-control input-sm " required="required" aria-required="true" value="{{gen_path}}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="button" onclick="Gen1GenerateFunc.saveData()" class="btn btn-primary">提交</button>&nbsp;
+            <button type="button" onclick="window.open('${ctxPath}/code_gen1/gen1.html','_self')" class="btn btn-outline-dark">返回</button>
+        </div>
+    </form>
+    {{/with}}
+</script>
+<script type="module">
+    import * as Gen1GenerateFunc from "${ctxPath}/static/js/gen1/gen1_generate.js"
+    window.Gen1GenerateFunc=Gen1GenerateFunc;
+    Gen1GenerateFunc.init();
+</script>
+<style>
+    ul>li{
+     float:left;
+     display:block;
+     padding:4px 8px;
+    }
+</style>
+</body>
+</html>

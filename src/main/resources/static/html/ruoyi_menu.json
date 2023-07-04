@@ -1,0 +1,162 @@
+{
+  "msg": "操作成功",
+  "code": 200,
+  "data": [
+    {
+      "id": 1,
+      "title": "系统管理",
+      "icon": "system",
+      "path": "/system",
+      "hidden": false,
+      "children": [
+        {
+          "id": 11,
+          "title": "用户管理",
+          "icon": "user",
+          "path": "user",
+          "hidden": false,
+          "target": "_content"
+        },
+        {
+          "id": 12,
+          "title": "角色管理",
+          "icon": "peoples",
+          "path": "role",
+          "hidden": true,
+          "target": "_content"
+        },
+        {
+          "id": 13,
+          "title": "菜单管理",
+          "icon": "tree-table",
+          "path": "menu",
+          "hidden": false,
+          "target": "_content"
+        },
+        {
+          "id": 14,
+          "title": "部门管理",
+          "icon": "tree",
+          "path": "dept",
+          "hidden": false,
+          "target": "_content"
+        },
+        {
+          "id": 15,
+          "title": "岗位管理",
+          "icon": "post",
+          "path": "post",
+          "hidden": true,
+          "target": "_content"
+        },
+        {
+          "id": 16,
+          "title": "字典管理",
+          "icon": "dict",
+          "path": "dict",
+          "hidden": true,
+          "target": "_content"
+        },
+        {
+          "id": 11,
+          "title": "参数设置",
+          "icon": "edit",
+          "path": "config",
+          "hidden": true,
+          "target": "_content"
+        },
+        {
+          "id": 17,
+          "title": "通知公告",
+          "icon": "message",
+          "path": "notice",
+          "hidden": true,
+          "target": "_content"
+        },
+        {
+          "id": 18,
+          "title": "日志管理",
+          "icon": "log",
+          "path": "log",
+          "hidden": false,
+          "children": [
+            {
+              "id": 181,
+              "title": "操作日志",
+              "icon": "form",
+              "path": "operlog",
+              "hidden": false,
+              "target": "_content"
+            },
+            {
+              "id": 182,
+              "title": "登录日志",
+              "icon": "logininfor",
+              "path": "logininfor",
+              "hidden": false,
+              "target": "_content"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "系统监控",
+      "icon": "monitor",
+      "path": "/monitor",
+      "hidden": false,
+      "children": [
+        {
+          "id": 21,
+          "title": "在线用户",
+          "icon": "online",
+          "path": "online",
+          "hidden": false,
+          "target": "_content"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "系统工具",
+      "icon": "tool",
+      "path": "/tool",
+      "hidden": true,
+      "children": [
+        {
+          "id": 31,
+          "title": "表单构建",
+          "icon": "build",
+          "path": "build",
+          "hidden": false,
+          "target": "_content"
+        },
+        {
+          "id": 32,
+          "title": "代码生成",
+          "icon": "code",
+          "path": "gen",
+          "hidden": true,
+          "target": "_content"
+        },
+        {
+          "id": 33,
+          "title": "系统接口",
+          "icon": "swagger",
+          "path": "swagger",
+          "hidden": false,
+          "target": "_content"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "shadow website",
+      "icon": "guide",
+      "path": "http://baidu.com",
+      "hidden": false,
+      "target": "_blank"
+    }
+  ]
+}

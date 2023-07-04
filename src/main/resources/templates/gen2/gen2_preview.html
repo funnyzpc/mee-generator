@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成二</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+    <!-- 业务内容 -->
+<div id="data-search">
+    <form method="GET" id="search-form">
+    <input type="hidden" name="table_id" value="${table_id}"/>
+    </form>
+</div>
+<div id="data-list">
+    <pre>
+
+    </pre>
+</div>
+
+<script type="text/cc-template" id="template-data-list">
+    <div style="margin-left: 5%;margin-right: 5%;">
+        <ul>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c1',this)" data-id="c1" style="color:white;background-color:green;">entity.java </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c2',this)" data-id="c2">dto.java </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c3',this)" data-id="c3">mapper.java </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c4',this)" data-id="c4">service.java </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c5',this)" data-id="c5">serviceImpl.java </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c6',this)" data-id="c6">controller.java </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c7',this)" data-id="c7">mapper.xml </li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c8',this)" data-id="c8">page.html</li>
+            <li onclick="Gen2PreviewFunc.doSwitchBar('c9',this)" data-id="c9">page.js</li>
+        </ul>
+        <pre width="800" style="max-width:100%;" id="c1">{{data.[ftl2/java/entity.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c2">{{data.[ftl2/java/dto.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c3">{{ data.[ftl2/java/mapper.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c4">{{data.[ftl2/java/service.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c5">{{data.[ftl2/java/serviceImpl.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c6">{{data.[ftl2/java/controller.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c7">{{data.[ftl2/xml/mapper.xml] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c8">{{data.[ftl2/web/page.html] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c9">{{data.[ftl2/web/page.js] }}</pre>
+    </div>
+</script>
+</div>
+<script type="module">
+    import * as Gen2PreviewFunc from "${ctxPath}/static/js/gen2/gen2_preview.js"
+    window.Gen2PreviewFunc = Gen2PreviewFunc ;
+    Gen2PreviewFunc.init("${table_id}");
+</script>
+<style>
+    ul{list-style: none; text-decoration: none;color: blue;padding:0px;}
+    ul>li{display:inline;padding:4px 8px;font-size:24px;font-weight:bold;text-decoration:underline dotted;cursor: pointer;}
+</style>
+</body>
+</html>

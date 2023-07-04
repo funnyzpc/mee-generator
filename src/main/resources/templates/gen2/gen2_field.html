@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成二</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+<div style="display:flex;font-size:1.6rem;">
+<ul>
+    <li>
+        <a href="${ctxPath}/code_gen2/gen2_table.html?table_id=${table_id}" >表信息</a>
+    </li>
+    <li>
+        <a href="${ctxPath}/code_gen2/gen2_field.html?table_id=${table_id}" style="background-color:#8fff8f;">字段信息</a>
+    </li>
+</ul>
+</div>
+<div id="data-search">
+    <form id="search-form">
+    <input type="hidden" name="table_id" value="${table_id}">
+    </form>
+</div>
+<!-- 业务内容 -->
+<div id="data-list"></div>
+
+</div>
+<script type="text/cc-template" id="template-data-list">
+    <h3>{{this.data.table.table_name}}</h3>
+    <div style="overflow-x: scroll; white-space: nowrap;">
+    <table style="white-space: nowrap;overflow: auto;">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>字段列名</th>
+        <th>字段描述</th>
+        <th>DB类型</th>
+        <th>java类型</th>
+        <th>java属性</th>
+        <th>是否主键</th>
+        <th title="新增时传入到后台字段">新增</th>
+        <th title="更新时传入到后台字段">更新</th>
+        <th title="查询时传入到后台字段/查询表单字段">查询</th>
+        <th title="数据库查询匹配方式">查询方式</th>
+        <th title="分页查询前端展示字段">列表展示</th>
+        <th title="字段会在在传入后端时校验">是否必填</th>
+        <th>表单类型</th>
+        <th>字典</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each data.field}}
+    <tr>
+        <td>
+            {{sort}}
+            <input type="hidden" name="id" value="{{id}}"/>
+            <input type="hidden" name="table_id" value="{{table_id}}"/>
+            <input type="hidden" name="column_name" value="{{column_name}}"/>
+        </td>
+        <td>{{column_name}}</td>
+        <td><input type="text" name="column_comment" value="{{column_comment}}"/> </td>
+        <td>{{column_type}}</td>
+        <td>
+            <select name="java_type" title="java类型" value="{{java_type}}" class="java_type">
+    <!--            <option selected="{{java_type}}==='Long'?'selected':'NONE'">Long</option>-->
+                <option {{#equal java_type 'String'}}selected{{/equal}}>String</option>
+                <option {{#equal java_type 'Integer'}}selected{{/equal}}>Integer</option>
+                <option {{#equal java_type 'Long'}}selected{{/equal}}>Long</option>
+                <option {{#equal java_type 'DOUBLE'}}selected{{/equal}}>DOUBLE</option>
+                <option {{#equal java_type 'BigDecimal'}}selected{{/equal}}>BigDecimal</option>
+                <option {{#equal java_type 'Date'}}selected{{/equal}}>Date</option>
+                <option {{#equal java_type 'LocalDate'}}selected{{/equal}}>LocalDate</option>
+                <option {{#equal java_type 'LocalDateTime'}}selected{{/equal}}>LocalDateTime</option>
+                <option {{#equal java_type 'Boolean'}}selected{{/equal}}>Boolean</option>
+            </select>
+        </td>
+        <td><input type="text"  name="java_field" value="{{java_field}}" title="java属性"/></td>
+        <!-- 是否主键 -->
+        <td><input type="checkbox" name="is_pk" value="{{is_pk}}" _selected="1" _not-selected="0" {{#equal is_pk '1' }}checked{{/equal}}/></td>
+        <!-- 插入 -->
+        <td><input type="checkbox" name="is_insert" value="{{is_insert}}" _selected="1" _not-selected="0" {{#equal is_insert '1' }}checked{{/equal}}/></td>
+        <!-- 编辑 -->
+        <td><input type="checkbox" name="is_edit" value="{{is_edit}}" _selected="1" _not-selected="0" {{#equal is_edit '1' }}checked{{/equal}}/></td>
+        <!-- 查询 -->
+        <td><input type="checkbox" name="is_query" value="{{is_query}}" _selected="1" _not-selected="0" {{#equal is_query '1' }}checked{{/equal}}/></td>
+        <td>
+            <select name="query_type" title="查询方式" value="{{query_type}}">
+                <option {{#equal query_type '='}}selected{{/equal}}>=</option>
+                <option {{#equal query_type '!='}}selected{{/equal}}>!=</option>
+                <option {{#equal query_type '>'}}selected{{/equal}}>&gt;</option>
+                <option {{#equal query_type '>='}}selected{{/equal}}>&gt;=</option>
+                <option {{#equal query_type '<'}}selected{{/equal}}>&lt;</option>
+                <option {{#equal query_type '<='}}selected{{/equal}}>&lt;=</option>
+                <option {{#equal query_type 'like'}}selected{{/equal}}>like</option>
+            </select>
+        </td>
+        <!-- 列表 -->
+        <td><input type="checkbox" aria-hidden="false" name="is_list" value="{{is_list}}" _selected="1" _not-selected="0" {{#equal is_list '1' }}checked{{/equal}}/></td>
+
+        <!-- 必填 -->
+        <td><input type="checkbox" aria-hidden="false" name="is_required" value="{{is_required}}" _selected="1" _not-selected="0" {{#equal is_required '1' }}checked{{/equal}}/></td>
+        <td>
+            <select name="html_type" value="{{html_type}}">
+                <option value="text" {{#equal html_type 'text'}}selected{{/equal}}>文本框_text</option>
+                <option value="number" {{#equal html_type 'number'}}selected{{/equal}}>数字框_number</option>
+                <option value="email" {{#equal html_type 'email'}}selected{{/equal}}>email框</option>
+                <option value="textarea" {{#equal html_type 'textarea'}}selected{{/equal}}>文本域textarea</option>
+                <option value="select" {{#equal html_type 'select'}}selected{{/equal}}>下拉框</option>
+                <option value="radio" {{#equal html_type 'radio'}}selected{{/equal}}>单选框</option>
+                <option value="checkbox" {{#equal html_type 'checkbox'}}selected{{/equal}}>复选框</option>
+                <option value="date" {{#equal html_type 'date'}}selected{{/equal}}>日期控件</option>
+                <option value="datetime-local" {{#equal html_type 'datetime-local'}}selected{{/equal}}>日期时间控件</option>
+<!--                <option value="imageUpload" {{#equal html_type 'imageUpload'}}selected{{/equal}}>图片上传</option>-->
+<!--                <option value="fileUpload" {{#equal html_type 'fileUpload'}}selected{{/equal}}>文件上传</option>-->
+<!--                <option value="editor" {{#equal html_type 'editor'}}selected{{/equal}}>富文本控件</option>-->
+            </select>
+        </td>
+        <td><input type="text" name="dict_type" value="{{dict_type}}" title="字典类型"/></td>
+    </tr>
+    {{/each}}
+    </tbody>
+    </table>
+    </div>
+<div class="form-group">
+    <form style="text-align:left;padding:16px 16px;">
+        <button type="button" onclick="Gen2FieldFunc.saveData()" class="btn btn-primary">提交</button>&nbsp;
+        <button type="button" onclick="window.open('${ctxPath}/code_gen2/gen2.html','_self')" class="btn btn-outline-dark">返回</button>
+    </form>
+</div>
+</script>
+
+<script type="module">
+    import * as Gen2FieldFunc from "${ctxPath}/static/js/gen2/gen2_field.js"
+    window.Gen2FieldFunc=Gen2FieldFunc;
+    Gen2FieldFunc.init();
+</script>
+<style>
+    ul>li{
+     float:left;
+     display:block;
+     padding:4px 8px;
+    }
+</style>
+</body>
+</html>

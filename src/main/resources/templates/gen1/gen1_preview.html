@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成二</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+    <div id="data-search">
+    <!-- 业务内容 -->
+    <form method="GET" id="search-form">
+        <input type="hidden" name="table_id" value="${table_id}"/>
+    </form>
+    </div>
+    <div id="data-list">
+        <pre>
+            package com.mee.generator.web;
+
+            import com.mee.generator.domain.GenTable;
+
+            @Controller
+            @RequestMapping("code_gen1")
+            public class CodeGen1Controller {
+
+                @Autowired
+                private GenTableMapper genTableMapper;
+
+                // 基本信息
+                @GetMapping("gen1_base.html")
+                public String gen1Base(Model m,String table_id){
+                    if(null==table_id || "".equals(table_id.trim())){
+                        throw new RuntimeException("table_id is empty!");
+                    }
+                    m.addAttribute("table_id",table_id);
+                    return "gen1/gen1_base";
+                }
+        </pre>
+    </div>
+
+<script type="text/cc-template" id="template-data-list">
+    <div style="margin-left: 5%;margin-right: 5%;">
+        <ul>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c1',this)" data-id="c1" style="color:white;background-color:green;">domain.java </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c2',this)" data-id="c2">mapper.java </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c3',this)" data-id="c3">service.java </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c4',this)" data-id="c4">serviceImpl.java </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c5',this)" data-id="c5">controller.java </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c6',this)" data-id="c6">mapper.xml </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c7',this)" data-id="c7">menuInsert.sql</li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c8',this)" data-id="c8">api.js </li>
+            <li onclick="Gen1PreviewFunc.doSwitchBar('c9',this)" data-id="c9">index.vue </li>
+        </ul>
+        <pre width="800" style="max-width:100%;" id="c1">{{data.[vm/java/domain.java.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c2">{{data.[vm/java/mapper.java.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c3">{{data.[vm/java/service.java.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c4">{{data.[vm/java/serviceImpl.java.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c5">{{data.[vm/java/controller.java.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c6">{{data.[vm/xml/mapper.xml.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c7">{{data.[vm/sql/sql.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c8">{{data.[vm/js/api.js.vm] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c9">{{data.[vm/vue/index.vue.vm] }}</pre>
+    </div>
+    <form id="page-form">
+    </form>
+</script>
+</div>
+<script type="module">
+    import * as Gen1PreviewFunc from "${ctxPath}/static/js/gen1/gen1_preview.js"
+    window.Gen1PreviewFunc = Gen1PreviewFunc ;
+    Gen1PreviewFunc.init("${table_id}");
+</script>
+<style>
+    ul{list-style: none; text-decoration: none;color: blue;padding:0px;}
+    ul>li{display:inline;padding:4px 8px;font-size:24px;font-weight:bold;text-decoration:underline dotted;cursor: pointer;}
+</style>
+</body>
+</html>

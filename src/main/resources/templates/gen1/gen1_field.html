@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成二</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+    <div style="display:flex;font-size:1.2rem;">
+    <ul>
+        <li>
+            <a href="${ctxPath}/code_gen1/gen1_base.html?table_id=${table_id}" >基本信息</a>
+        </li>
+        <li>
+            <a href="${ctxPath}/code_gen1/gen1_field.html?table_id=${table_id}" style="background-color:#8fff8f;">字段信息</a>
+        </li>
+        <li>
+            <a href="${ctxPath}/code_gen1/gen1_generate.html?table_id=${table_id}">生成信息</a>
+        </li>
+    </ul>
+    </div>
+<!--    <div style="clear:both;"></div>-->
+<div id="data-search">
+    <form id="search-form">
+        <input type="hidden" name="table_id" value="${table_id}">&nbsp;
+    </form>
+</div>
+
+<!-- 业务内容 -->
+<div id="data-list"> </div>
+
+</div>
+<script type="text/cc-template" id="template-data-list">
+    <table style="white-space: nowrap;overflow: auto;">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>字段列名</th>
+        <th>字段描述</th>
+        <th>物理类型</th>
+        <th>java类型</th>
+        <th>java属性</th>
+        <th>插入</th>
+        <th>编辑</th>
+        <th>列表</th>
+        <th>查询</th>
+        <th>查询方式</th>
+        <th>是否必填</th>
+        <th>显示类型</th>
+        <th>字典类型</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each data.field}}
+    <tr>
+        <td>
+            {{sort}}
+            <input type="hidden" name="table_id" value="{{table_id}}"/>
+            <input type="hidden" name="column_id" value="{{column_id}}"/>
+            <input type="hidden" name="column_name" value="{{column_name}}"/>
+        </td>
+        <td>{{column_name}}</td>
+        <td><input type="text" name="column_comment" value="{{column_comment}}"/> </td>
+        <td>{{column_type}}</td>
+        <td>
+            <select name="java_type" title="java类型" value="{{java_type}}" class="java_type">
+    <!--            <option selected="{{java_type}}==='Long'?'selected':'NONE'">Long</option>-->
+                <option {{#equal java_type 'String'}}selected{{/equal}}>String</option>
+                <option {{#equal java_type 'Integer'}}selected{{/equal}}>Integer</option>
+                <option {{#equal java_type 'Long'}}selected{{/equal}}>Long</option>
+                <option {{#equal java_type 'DOUBLE'}}selected{{/equal}}>DOUBLE</option>
+                <option {{#equal java_type 'BigDecimal'}}selected{{/equal}}>BigDecimal</option>
+                <option {{#equal java_type 'Date'}}selected{{/equal}}>Date</option>
+                <option {{#equal java_type 'LocalDate'}}selected{{/equal}}>LocalDate</option>
+                <option {{#equal java_type 'LocalDateTime'}}selected{{/equal}}>LocalDateTime</option>
+                <option {{#equal java_type 'Boolean'}}selected{{/equal}}>Boolean</option>
+            </select>
+        </td>
+        <td><input type="text"  name="java_field" value="{{java_field}}" title="java属性"/></td>
+        <!-- 插入 -->
+        <td><input type="checkbox" aria-hidden="false" name="is_insert" value="{{is_insert}}" true-value="1" {{#equal is_insert '1' }}checked{{/equal}}/></td>
+        <!-- 编辑 -->
+        <td><input type="checkbox" aria-hidden="false" name="is_edit" value="{{is_edit}}" true-value="1" {{#equal is_edit '1' }}checked{{/equal}}/></td>
+        <!-- 列表 -->
+        <td><input type="checkbox" aria-hidden="false" name="is_list" value="{{is_list}}" true-value="1" {{#equal is_list '1' }}checked{{/equal}}/></td>
+        <!-- 查询 -->
+        <td><input type="checkbox" aria-hidden="false" name="is_query" value="{{is_query}}" true-value="1" {{#equal is_query '1' }}checked{{/equal}}/></td>
+        <td>
+            <select name="query_type" title="查询方式" value="{{query_type}}">
+                <option {{#equal query_type '='}}selected{{/equal}}>=</option>
+                <option {{#equal query_type '!='}}selected{{/equal}}>!=</option>
+                <option {{#equal query_type '>'}}selected{{/equal}}>&gt;</option>
+                <option {{#equal query_type '>='}}selected{{/equal}}>&gt;=</option>
+                <option {{#equal query_type '<'}}selected{{/equal}}>&lt;</option>
+                <option {{#equal query_type '<='}}selected{{/equal}}>&lt;=</option>
+                <option {{#equal query_type 'like'}}selected{{/equal}}>like</option>
+            </select>
+        </td>
+        <td><input type="checkbox" aria-hidden="false" name="is_required" value="{{is_required}}" true-value="1" {{#equal is_required '1' }}checked{{/equal}}/></td>
+        <td>
+            <select name="html_type" value="{{html_type}}">
+                <option value="input" {{#equal html_type 'input'}}selected{{/equal}}>文本框</option>
+                <option value="textarea" {{#equal html_type 'textarea'}}selected{{/equal}}>文本域</option>
+                <option value="select" {{#equal html_type 'select'}}selected{{/equal}}>下拉框</option>
+                <option value="radio" {{#equal html_type 'radio'}}selected{{/equal}}>单选框</option>
+                <option value="checkbox" {{#equal html_type 'checkbox'}}selected{{/equal}}>复选框</option>
+                <option value="datetime" {{#equal html_type 'datetime'}}selected{{/equal}}>日期控件</option>
+                <option value="imageUpload" {{#equal html_type 'imageUpload'}}selected{{/equal}}>图片上传</option>
+                <option value="fileUpload" {{#equal html_type 'fileUpload'}}selected{{/equal}}>文件上传</option>
+                <option value="editor" {{#equal html_type 'editor'}}selected{{/equal}}>富文本控件</option>
+            </select>
+        </td>
+        <td><input type="text" name="dict_type" value="{{dict_type}}" title="字典类型"/></td>
+    </tr>
+    {{/each}}
+    </tbody>
+    </table>
+<div class="form-group">
+<form style="text-align:left;padding:16px 16px;">
+    <button type="button" onclick="Gen1FieldFunc.saveData()" class="btn btn-primary">提交</button>&nbsp;
+    <button type="button" onclick="window.open('${ctxPath}/code_gen1/gen1.html','_self')" class="btn btn-outline-dark">返回</button>
+</form>
+</div>
+</script>
+
+<script type="module">
+    import * as Gen1FieldFunc from "${ctxPath}/static/js/gen1/gen1_field.js?r=1"
+    window.Gen1FieldFunc=Gen1FieldFunc;
+    Gen1FieldFunc.init();
+</script>
+<style>
+    ul>li{
+     float:left;
+     display:block;
+     padding:4px 8px;
+    }
+</style>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+@description 单体代码生成::配置
+@author shadow
+@date 2023-04-08 20:32:02
+-->
+<mapper namespace="com.mee.generator.mapper.Gen2ConfigMapper">
+    <!-- 查询 -->
+    <select id="findList" resultType="com.mee.generator.entity.Gen2Config" databaseId="postgresql">
+        select * from GEN2_CONFIG
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+             <if test="author != null and author!=''" > and author like #{author}</if>
+             <if test="version != null and version!=''" > and version like #{version}</if>
+             <if test="camel_case != null" > and camel_case = #{camel_case}</if>
+             <if test="base_package != null and base_package!=''" > and base_package like #{base_package}</if>
+             <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+             <if test="database_id != null and database_id!=''" > and database_id like #{database_id}</if>
+             <if test="status != null" > and status = #{status}</if>
+             <if test="desc != null" > and "desc" = #{desc}</if>
+             <if test="update_version != null" > and update_version = #{update_version}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="findList" resultType="com.mee.generator.entity.Gen2Config" databaseId="mysql">
+        SELECT * FROM GEN2_CONFIG
+        <where>
+            <if test="id != null" > and id = #{id}</if>
+            <if test="author != null and author!=''" > and author like #{author}</if>
+            <if test="version != null and version!=''" > and version like #{version}</if>
+            <if test="camel_case != null" > and camel_case = #{camel_case}</if>
+            <if test="base_package != null and base_package!=''" > and base_package like #{base_package}</if>
+            <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+            <if test="database_id != null and database_id!=''" > and database_id like #{database_id}</if>
+            <if test="status != null" > and status = #{status}</if>
+            <if test="desc != null" > and `desc` = #{desc}</if>
+            <if test="update_version != null" > and update_version = #{update_version}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="findById" resultType="com.mee.generator.entity.Gen2Config">
+        select * from GEN2_CONFIG where id = #{id}
+    </select>
+
+    <select id="findOneEnable" resultType="com.mee.generator.entity.Gen2Config">
+        select * from GEN2_CONFIG where status=1
+        <!-- order by id desc limit 1 -->
+    </select>
+
+    <select id="findMaxVersion" resultType="java.lang.Integer">
+        select COALESCE(max(update_version),1) from  GEN2_CONFIG
+    </select>
+
+    <!-- update -->
+    <update id="update">
+        update GEN2_CONFIG
+        <set>
+             <if test="author != null and author!=''" > author = #{author},</if>
+             <if test="version != null and version!=''" > version = #{version},</if>
+             <if test="camel_case != null"> camel_case = #{camel_case},</if>
+             <if test="base_package != null and base_package!=''" > base_package = #{base_package},</if>
+             <if test="module_name != null and module_name!=''" > module_name = #{module_name},</if>
+             <if test="database_id != null and database_id!=''" > database_id = #{database_id},</if>
+             <if test="status != null" > status = #{status},</if>
+             <if test="desc != null" > "desc" = #{desc},</if>
+             <if test="update_version != null" > update_version = #{update_version},</if>
+        </set>
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+        </where>
+    </update>
+
+    <update id="update" databaseId="mysql">
+        update GEN2_CONFIG
+        <set>
+            <if test="author != null and author!=''" > author = #{author},</if>
+            <if test="version != null and version!=''" > version = #{version},</if>
+            <if test="camel_case != null"> camel_case = #{camel_case},</if>
+            <if test="base_package != null and base_package!=''" > base_package = #{base_package},</if>
+            <if test="module_name != null and module_name!=''" > module_name = #{module_name},</if>
+            <if test="database_id != null and database_id!=''" > database_id = #{database_id},</if>
+            <if test="status != null" > status = #{status},</if>
+            <if test="desc != null" >`desc` = #{desc},</if>
+            <if test="update_version != null" > update_version = #{update_version},</if>
+        </set>
+        <where>
+            <if test="id != null" > and id = #{id}</if>
+        </where>
+    </update>
+
+    <update id="toDisabled">
+        update GEN2_CONFIG
+        set status = #{status}
+        where id != #{id}
+    </update>
+
+    <insert id="insert">
+        insert into GEN2_CONFIG(
+            id,
+            author,
+            version,
+            camel_case,
+            base_package,
+            module_name,
+            database_id,
+            status,
+            "desc",
+            update_version,
+            update_time
+        ) values (
+            #{id},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{base_package},
+            #{module_name},
+            #{database_id},
+            #{status},
+            #{desc},
+            (select COALESCE(max(update_version),1) from  GEN2_CONFIG),
+            #{update_time}
+        )
+    </insert>
+
+    <insert id="insert" databaseId="mysql">
+        insert into GEN2_CONFIG(
+            id,
+            author,
+            version,
+            camel_case,
+            base_package,
+            module_name,
+            database_id,
+            status,
+            `desc`,
+            update_version,
+            update_time
+        ) values (
+            #{id},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{base_package},
+            #{module_name},
+            #{database_id},
+            #{status},
+            #{desc},
+            #{update_version},
+            #{update_time}
+        )
+    </insert>
+
+    <!--  delete -->
+    <delete id="delete">
+        delete from GEN2_CONFIG where id = #{id}
+    </delete>
+
+</mapper>

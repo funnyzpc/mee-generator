@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mee.generator.mapper.GenTableMapper">
+
+	<resultMap type="com.mee.generator.entity.GenTable" id="GenTableResult" autoMapping="true">
+	    <id     property="table_id"        column="table_id"          />
+		<result property="table_name"      column="table_name"        />
+		<result property="table_comment"   column="table_comment"     />
+		<result property="sub_table_name"   column="sub_table_name"    />
+		<result property="sub_table_fk_name" column="sub_table_fk_name" />
+		<result property="class_name"      column="class_name"        />
+		<result property="tpl_category"    column="tpl_category"      />
+		<result property="package_name"    column="package_name"      />
+		<result property="module_name"     column="module_name"       />
+		<result property="business_name"   column="business_name"     />
+		<result property="function_name"   column="function_name"     />
+		<result property="function_author" column="function_author"   />
+		<result property="gen_type"        column="gen_type"          />
+		<result property="gen_path"        column="gen_path"          />
+		<result property="options"        column="options"           />
+		<result property="create_by"       column="create_by"         />
+		<result property="create_time"     column="create_time"       />
+		<result property="update_by"       column="update_by"         />
+		<result property="update_time"     column="update_time"       />
+		<result property="remark"         column="remark"            />
+		<collection  property="columns"  javaType="java.util.List"  resultMap="GenTableColumnResult" />
+	</resultMap>
+	
+	<resultMap type="com.mee.generator.entity.GenTableColumn" id="GenTableColumnResult">
+        <id     property="column_id"       column="column_id"      />
+        <result property="table_id"        column="table_id"       />
+        <result property="column_name"     column="column_name"    />
+        <result property="column_comment"  column="column_comment" />
+        <result property="column_type"     column="column_type"    />
+        <result property="java_type"       column="java_type"      />
+        <result property="java_field"      column="java_field"     />
+        <result property="is_pk"           column="is_pk"          />
+        <result property="is_increment"    column="is_increment"   />
+        <result property="is_required"     column="is_required"    />
+        <result property="is_insert"       column="is_insert"      />
+        <result property="is_edit"         column="is_edit"        />
+        <result property="is_list"         column="is_list"        />
+        <result property="is_query"        column="is_query"       />
+        <result property="query_type"      column="query_type"     />
+        <result property="html_type"       column="html_type"      />
+        <result property="dict_type"       column="dict_type"      />
+        <result property="sort"            column="sort"           />
+        <result property="create_by"       column="create_by"      />
+        <result property="create_time"     column="create_time"    />
+        <result property="update_by"       column="update_by"      />
+        <result property="update_time"     column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectGenTableVo">
+        SELECT table_id, table_name, table_comment, sub_table_name, sub_table_fk_name, class_name, tpl_category, package_name, module_name, business_name, function_name,function_version, function_author, gen_type, gen_path, options, create_by, create_time, update_by, update_time, remark
+		FROM GEN_TABLE
+    </sql>
+    
+<!--    <select id="selectGenTableList" parameterType="java.util.Map" resultMap="GenTableResult">-->
+<!--    <select id="selectGenTableList" parameterType="java.util.Map" resultType="java.util.HashMap">-->
+<!--		<include refid="selectGenTableVo"/>-->
+<!--		<where>-->
+<!--			<if test="tableName != null and tableName != ''">-->
+<!--				AND lower(table_name) like lower(concat('%', #{tableName}, '%'))-->
+<!--			</if>-->
+<!--			<if test="tableComment != null and tableComment != ''">-->
+<!--				AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))-->
+<!--			</if>-->
+<!--			<if test="params.beginTime != null and params.beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;-->
+<!--				AND date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')-->
+<!--			</if>-->
+<!--			<if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;-->
+<!--				AND date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')-->
+<!--			</if>-->
+<!--		</where>-->
+<!--		<if test="page_no !=null">-->
+<!--			limit #{page_size} offset #{page_size}*#{page_no}-->
+<!--		</if>-->
+<!--	</select>-->
+
+	<select id="findList" parameterType="java.util.Map" resultType="java.util.HashMap">
+		<include refid="selectGenTableVo"/>
+		<where>
+			<if test="table_name != null and table_name != ''">
+				AND table_name like #{table_name}
+			</if>
+			<if test="table_comment != null and table_comment != ''">
+				AND table_comment like  #{table_comment}
+			</if>
+			<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+				AND date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			</if>
+			<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+				AND date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			</if>
+		</where>
+		order by table_id desc
+		<if test="page_no !=null">
+			limit #{page_size} offset #{page_size}*#{page_no}
+		</if>
+	</select>
+
+	<select id="findList" parameterType="java.util.Map" resultType="java.util.HashMap" databaseId="mysql">
+		<include refid="selectGenTableVo"/>
+		<where>
+			<if test="table_name != null and table_name != ''">
+				AND table_name like #{table_name}
+			</if>
+			<if test="table_comment != null and table_comment != ''">
+				AND table_comment like  #{table_comment}
+			</if>
+			<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+				AND date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			</if>
+			<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+				AND date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			</if>
+		</where>
+		order by table_id desc
+		<if test="page_no !=null">
+			limit #{page_size} offset #{_offset}
+		</if>
+	</select>
+
+	<!-- postgresql -->
+	<select id="selectDbTableList" parameterType="java.util.Map" resultMap="GenTableResult">
+		select
+			c.relname as table_name,
+			/* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
+			obj_description(c.oid) as table_comment,
+			now()::timestamp create_time,
+			now()::timestamp update_time,
+			c.relnamespace::regnamespace as current_schema
+		from pg_class as c
+		where relname in (
+			select tablename from pg_tables where schemaname='public'
+			/* and position('_2' in tablename)=0 */
+		)
+		and c.relname  not in (  select table_name from gen_table  )
+		and c.relnamespace::regnamespace::varchar =  (select current_schema() )
+		<if test="table_name != null and table_name != ''">
+			AND lower(c.relname) like lower(#{table_name})
+		</if>
+		<if test="table_comment != null and table_comment != ''">
+			AND lower(cast(obj_description(c.relfilenode,'pg_class') as varchar)) like lower( #{table_comment} )
+		</if>
+		<if test="page_no !=null">
+			limit #{page_size} offset #{page_size}*#{page_no}
+		</if>
+	</select>
+
+	<select id="selectDbTableList_mysql" parameterType="java.util.Map" resultMap="GenTableResult">
+		select table_name, table_comment, create_time, update_time from information_schema.tables
+		where table_schema = (select database())
+		AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'
+		AND table_name NOT IN (select table_name from gen_table)
+		<if test="tableName != null and tableName != ''">
+			AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
+		</if>
+		<if test="tableComment != null and tableComment != ''">
+			AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
+		</if>
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+			AND date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+		</if>
+		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+			AND date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+		</if>
+        order by create_time desc
+		<if test="page_no !=null">
+			limit #{page_size} offset #{page_size}*#{page_no}
+		</if>
+	</select>
+
+<!--	<select id="selectDbTableListByNames" resultMap="GenTableResult" databaseId="postgresql">-->
+	<select id="selectDbTableListByNames" resultMap="GenTableResult">
+		select
+			c.relname as table_name,
+			/* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
+			obj_description(c.oid) as table_comment,
+			now()::timestamp create_time,
+			now()::timestamp update_time,
+			c.relnamespace::regnamespace as current_schema
+		from pg_class c
+		where c.relname in (
+			select tablename from pg_tables where schemaname='public'
+		)
+		and c.relnamespace::regnamespace::varchar =  (select current_schema() )
+		<!-- and c.relname NOT LIKE 'qrtz_%' -->
+		and c.relname NOT LIKE 'gen_%'
+		and lower(c.relname) in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			lower(#{item})
+		</foreach>
+	</select>
+
+<!--
+	<select id="selectDbTableListByNames" resultMap="GenTableResult" databaseId="mysql">
+		select table_name, table_comment, create_time, update_time from information_schema.tables
+		where table_name NOT LIKE 'qrtz_%' and table_name NOT LIKE 'gen_%' and table_schema = (select database())
+		and table_name in
+	    <foreach collection="array" item="name" open="(" separator="," close=")">
+ 			#{name}
+        </foreach> 
+	</select>-->
+	
+	<select id="selectTableByName" parameterType="String" resultMap="GenTableResult">
+		select table_name, table_comment, create_time, update_time from information_schema.tables
+		where table_comment <![CDATA[ <> ]]> '' and table_schema = (select database())
+		and table_name = #{tableName}
+	</select>
+	
+	<select id="selectGenTableById" parameterType="Long" resultMap="GenTableResult">
+	    SELECT t.table_id, t.table_name, t.table_comment, t.sub_table_name, t.sub_table_fk_name, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name,t.function_version, t.function_author, t.gen_type, t.gen_path, t.options, t.remark,
+			   c.column_id, c.column_name, c.column_comment, c.column_type, c.java_type, c.java_field, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort
+		FROM gen_table t
+			 LEFT JOIN gen_table_column c ON t.table_id = c.table_id
+		where t.table_id = #{table_id} order by c.sort
+	</select>
+	
+	<select id="selectGenTableByName" parameterType="String" resultMap="GenTableResult">
+	    SELECT t.table_id, t.table_name, t.table_comment, t.sub_table_name, t.sub_table_fk_name, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name, t.function_author, t.gen_type, t.gen_path, t.options, t.remark,
+			   c.column_id, c.column_name, c.column_comment, c.column_type, c.java_type, c.java_field, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort
+		FROM gen_table t
+			 LEFT JOIN gen_table_column c ON t.table_id = c.table_id
+		where t.table_name = #{tableName} order by c.sort
+	</select>
+	
+	<select id="selectGenTableAll" parameterType="String" resultMap="GenTableResult">
+	    SELECT t.table_id, t.table_name, t.table_comment, t.sub_table_name, t.sub_table_fk_name, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name, t.function_author, t.options, t.remark,
+			   c.column_id, c.column_name, c.column_comment, c.column_type, c.java_type, c.java_field, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort
+		FROM gen_table t
+			 LEFT JOIN gen_table_column c ON t.table_id = c.table_id
+		order by c.sort
+	</select>
+	
+<!--	<insert id="insertGenTable" parameterType="com.mee.generator.entity.GenTable" useGeneratedKeys="true" keyProperty="tableId">-->
+	<insert id="insertGenTable" parameterType="com.mee.generator.entity.GenTable" >
+        insert into gen_table (
+			table_id,
+			table_name,
+			table_comment,
+			class_name,
+			tpl_category,
+			package_name,
+			module_name,
+			business_name,
+			function_name,
+			function_author,
+			gen_type,
+			gen_path,
+			remark,
+ 			create_by,
+			create_time
+         )values(
+			#{table_id},
+			#{table_name},
+			#{table_comment},
+			#{class_name},
+			#{tpl_category},
+			#{package_name},
+			#{module_name},
+			#{business_name},
+			#{function_name},
+			#{function_author},
+			#{gen_type},
+			#{gen_path},
+			#{remark},
+ 			#{create_by},
+			#{create_time}
+         )
+    </insert>
+    
+    <update id="updateGenTable" parameterType="com.mee.generator.entity.GenTable">
+        update gen_table
+        <set>
+            <if test="table_name != null">table_name = #{table_name},</if>
+            <if test="table_comment != null and table_comment != ''">table_comment = #{table_comment},</if>
+            <if test="sub_table_name != null">sub_table_name = #{sub_table_name},</if>
+            <if test="sub_table_fk_name != null">sub_table_fk_name = #{sub_table_fk_name},</if>
+            <if test="class_name != null and class_name != ''">class_name = #{class_name},</if>
+            <if test="function_author != null and function_author != ''">function_author = #{function_author},</if>
+            <if test="gen_type != null and gen_type != ''">gen_type = #{gen_type},</if>
+            <if test="gen_path != null and gen_path != ''">gen_path = #{gen_path},</if>
+            <if test="tpl_category != null and tpl_category != ''">tpl_category = #{tpl_category},</if>
+            <if test="package_name != null and package_name != ''">package_name = #{package_name},</if>
+            <if test="module_name != null and module_name != ''">module_name = #{module_name},</if>
+            <if test="business_name != null and business_name != ''">business_name = #{business_name},</if>
+            <if test="function_name != null and function_name != ''">function_name = #{function_name},</if>
+            <if test="function_version != null and function_version != ''">function_version = #{function_version},</if>
+            <if test="options != null and options != ''">options = #{options},</if>
+            <if test="update_by != null and update_by != ''">update_by = #{update_by},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = now()
+        </set>
+        where table_id = #{table_id}
+    </update>
+    
+<!--    <delete id="deleteGenTableByIds" parameterType="Long">
+        delete from gen_table where table_id in 
+        <foreach collection="array" item="tableId" open="(" separator="," close=")">
+            #{tableId}
+        </foreach>
+    </delete>-->
+
+	<delete id="deleteGenTableByTableId" >
+		delete from gen_table where table_id=#{table_id}
+	</delete>
+
+
+</mapper>

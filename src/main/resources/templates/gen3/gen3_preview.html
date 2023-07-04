@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成二</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+    <!-- 业务内容 -->
+    <div id="data-search">
+    <form method="GET" id="search-form" novalidate>
+        <input type="hidden" name="table_id" value="${table_id}"/>
+    </form>
+    </div>
+    <div id="data-list">
+        <pre>
+            package com.mee.generator.web;
+
+            import org.springframework.ui.Model;
+            import org.springframework.web.bind.annotation.*;
+
+            import java.util.HashMap;
+            import java.util.List;
+            import java.util.Map;
+
+            @Controller
+            @RequestMapping("code_xxx")
+            public class CodeGen1Controller {
+
+                @Autowired
+                private GenTableMapper genTableMapper;
+
+                // 基本信息
+                @GetMapping("gen3_table.html")
+                public String gen3Table(Model m,String table_id){
+                    if(null==table_id || "".equals(table_id.trim())){
+                        throw new RuntimeException("table_id is empty!");
+                    }
+                    m.addAttribute("table_id",table_id);
+                    return "gen3/gen3_table";
+                }
+        </pre>
+    </div>
+
+<script type="text/cc-template" id="template-data-list">
+    <div style="margin-left: 5%;margin-right: 5%;">
+        <ul>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c01',this)"  data-id="c01" style="color:white;background-color:green;">Entity.java</li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c02',this)"  data-id="c02">AddRequest.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c03',this)"  data-id="c03">CreateFlow.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c04',this)"  data-id="c04">DataKey.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c05',this)"  data-id="c05">DeleteFlow.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c06',this)"  data-id="c06">DeleteInvoker.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c07',this)"  data-id="c07">EditStatusFlow.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c08',this)"  data-id="c08">EditStatusInvoker.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c09',this)"  data-id="c09">EditStatusRequest.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c10',this)"  data-id="c10">ListRequest.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c11',this)"  data-id="c11">MgmController.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c12',this)"  data-id="c12">PreService.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c13',this)"  data-id="c13">PreServiceImpl.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c14',this)"  data-id="c14">PrimaryRequest.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c15',this)"  data-id="c15">Response.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c16',this)"  data-id="c16">Service.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c17',this)"  data-id="c17">ServiceImpl.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c18',this)"  data-id="c18">UpdateFlow.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c19',this)"  data-id="c19">UpdateInvoker.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c20',this)"  data-id="c20">UpdateRequest.java </li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c21',this)"  data-id="c21">WriterInvoker.java </li>
+            <!-- online -->
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c22',this)"  data-id="c22">GetInfoRequest.java</li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c23',this)"  data-id="c23">GetListRequest.java</li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c24',this)"  data-id="c24">OnlineController.java</li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c25',this)"  data-id="c25">OnlinePreService.java</li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c26',this)"  data-id="c26">OnlinePreServiceImpl.java</li>
+            <li onclick="Gen3PreviewFunc.doSwitchBar('c27',this)"  data-id="c27">InfoResponse.java</li>
+
+        </ul>
+        <pre width="800" style="max-width:100%;"              id="c01"> {{ data.[ftl3/java/Entity.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c02"> {{data.[ftl3/java/AddRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c03"> {{data.[ftl3/java/CreateFlow.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c04"> {{data.[ftl3/java/DataKey.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c05"> {{data.[ftl3/java/DeleteFlow.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c06"> {{data.[ftl3/java/DeleteInvoker.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c07"> {{data.[ftl3/java/EditStatusFlow.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c08"> {{data.[ftl3/java/EditStatusInvoker.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c09"> {{data.[ftl3/java/EditStatusRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c10"> {{data.[ftl3/java/ListRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c11"> {{data.[ftl3/java/MgmController.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c12"> {{data.[ftl3/java/PreService.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c13"> {{data.[ftl3/java/PreServiceImpl.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c14"> {{data.[ftl3/java/PrimaryRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c15"> {{data.[ftl3/java/Response.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c16"> {{data.[ftl3/java/Service.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c17"> {{data.[ftl3/java/ServiceImpl.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c18"> {{data.[ftl3/java/UpdateFlow.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c19"> {{data.[ftl3/java/UpdateInvoker.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c20"> {{data.[ftl3/java/UpdateRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c21"> {{data.[ftl3/java/WriterInvoker.java] }}</pre>
+        <!-- online -->
+        <pre width="800" style="max-width:100%;display:none;" id="c22"> {{data.[ftl3/java/GetInfoRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c23"> {{data.[ftl3/java/GetListRequest.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c24"> {{data.[ftl3/java/OnlineController.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c25"> {{data.[ftl3/java/OnlinePreService.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c26"> {{data.[ftl3/java/OnlinePreServiceImpl.java] }}</pre>
+        <pre width="800" style="max-width:100%;display:none;" id="c27"> {{data.[ftl3/java/InfoResponse.java] }}</pre>
+
+    </div>
+    <form id="page-form">
+    </form>
+</script>
+</div>
+<script type="module">
+    import * as Gen3PreviewFunc from "${ctxPath}/static/js/gen3/gen3_preview.js"
+    window.Gen3PreviewFunc = Gen3PreviewFunc ;
+    Gen3PreviewFunc.init("${table_id}");
+</script>
+<style>
+    ul{list-style: none; text-decoration: none;color: blue;padding:0px;}
+    ul>li{display:inline;padding:4px 8px;font-size:24px;font-weight:bold;text-decoration:underline dotted;cursor: pointer;}
+</style>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+@description 单体代码生成::业务表
+@author shadow
+@date 2023-04-08 20:32:03
+-->
+<mapper namespace="com.mee.generator.mapper.GenTable3Mapper">
+    <!-- 查询 -->
+    <select id="findList" resultType="com.mee.generator.entity.GenTable3">
+        SELECT * FROM GEN_TABLE3
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+             <if test="table_name != null and table_name!=''" > and table_name like #{table_name}</if>
+             <if test="table_comment != null and table_comment!=''" > and table_comment like #{table_comment}</if>
+             <if test="current_db_type != null and current_db_type!=''" > and current_db_type like #{current_db_type}</if>
+             <if test="class_name != null and class_name!=''" > and class_name like #{class_name}</if>
+             <if test="package_name != null and package_name!=''" > and package_name like #{package_name}</if>
+             <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+             <if test="remark != null and remark!=''" > and remark like #{remark}</if>
+             <if test="create_by != null and create_by!=''" > and create_by like #{create_by}</if>
+             <if test="create_time != null" > and create_time = #{create_time}</if>
+             <if test="update_by != null and update_by!=''" > and update_by like #{update_by}</if>
+        </where>
+        ORDER BY ID DESC
+    </select>
+
+    <select id="findById" resultType="com.mee.generator.entity.GenTable3">
+        SELECT * FROM gen_table3 t
+        where t.id = #{table_id}
+    </select>
+
+    <select id="findByIdToMap" resultType="java.util.LinkedHashMap" databaseId="postgresql">
+        SELECT * FROM gen_table3 t
+        where t.id = #{table_id}
+    </select>
+
+    <select id="findByIdToMap" resultType="java.util.LinkedHashMap" databaseId="oracle">
+        SELECT
+            id as "id",
+            LOWER(table_name) as "table_name",
+            table_comment as "table_comment",
+            current_db as "current_db",
+            database_id as "database_id",
+            class_name as "class_name",
+            base_package as "base_package",
+            module_name as "module_name",
+            author as "author",
+            version as "version",
+            camel_case as "camel_case",
+            back_dir as "back_dir",
+            front_dir as "front_dir",
+            "DESC" as "desc"
+            <!--
+            create_by as "create_by",
+            create_time as "create_time",
+            update_by as "update_by",
+            update_time as "update_time"
+            -->
+        FROM gen_table3 t
+        where t.id = #{table_id}
+    </select>
+
+
+    <select id="findById2" resultType="com.mee.generator.entity.GenTable3">
+        SELECT t.table_id, t.table_name, t.table_comment, t.sub_table_name, t.sub_table_fk_name, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name,t.function_version, t.function_author, t.gen_type, t.gen_path, t.options, t.remark,
+        c.column_id, c.column_name, c.column_comment, c.column_type, c.java_type, c.java_field, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort
+        FROM gen_table3 t
+        LEFT JOIN gen_table_column2 c ON t.table_id = c.table_id
+        where t.table_id = #{table_id} order by c.sort
+    </select>
+
+    <!-- postgresql -->
+    <select id="findTableList" resultType="com.mee.generator.entity.GenTable3" databaseId="postgresql">
+        select
+        c.relname as table_name,
+        /* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
+        obj_description(c.oid) as table_comment,
+        now()::timestamp create_time,
+        now()::timestamp update_time,
+        c.relnamespace::regnamespace as current_schema
+        from pg_class as c
+        where relname in (
+        select tablename from pg_tables where schemaname=(select current_schema())
+        /* and position('_2' in tablename)=0 */
+        )
+        and c.relname  not in (  select table_name from gen_table3  )
+        and c.relnamespace::regnamespace::varchar =  (select current_schema() )
+        <if test="table_name != null and table_name != ''">
+            AND LOWER(c.relname) like LOWER(#{table_name})
+        </if>
+        <if test="table_comment != null and table_comment != ''">
+            AND LOWER(cast(obj_description(c.relfilenode,'pg_class') as varchar)) like LOWER( #{table_comment} )
+        </if>
+        <if test="page_no !=null">
+            limit #{page_size} offset #{page_size}*#{page_no}
+        </if>
+    </select>
+
+    <select id="findTableList" resultType="com.mee.generator.entity.GenTable3" databaseId="oracle">
+        SELECT T1.* FROM (
+            SELECT T.TABLE_NAME,tc.TABLE_TYPE ,TC.COMMENTS AS TABLE_COMMENT,CURRENT_TIMESTAMP AS CREATE_TIME,CURRENT_TIMESTAMP UPDATE_TIME,
+            SYS_CONTEXT('userenv','current_schema') AS current_schema,rownum AS R
+            FROM USER_TABLES T LEFT JOIN USER_TAB_COMMENTS TC
+            ON T.TABLE_NAME =TC.TABLE_NAME
+            <where>
+                AND T.TABLE_NAME NOT LIKE 'GEN_%'
+                <if test="table_name != null and table_name != ''">
+                    AND LOWER(T.TABLE_NAME) LIKE LOWER(#{table_name})
+                </if>
+                <if test="table_comment != null and table_comment != ''">
+                    AND LOWER(TC.COMMENTS) LIKE LOWER( #{table_comment} )
+                </if>
+            </where>
+            ORDER BY T.TABLE_NAME
+        ) T1
+        <!-- oracle的分页条件必须置于最顶层，否则会出现断页 -->
+        <if test="page_no !=null">
+            WHERE T1.R > #{page_size}*#{page_no}
+            AND   T1.R &lt;= #{page_size}*(#{page_no}+1)
+        </if>
+    </select>
+
+    <select id="findTableByNames" resultType="com.mee.generator.entity.GenTable3" databaseId="postgresql">
+        select
+        c.relname as table_name,
+        /* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
+        obj_description(c.oid) as table_comment,
+        now()::timestamp create_time,
+        now()::timestamp update_time,
+        c.relnamespace::regnamespace as current_schema
+        from pg_class c
+        where c.relname in (
+        select tablename from pg_tables where schemaname=(select current_schema())
+        )
+        and c.relnamespace::regnamespace::varchar = (select current_schema())
+        <!-- and c.relname NOT LIKE 'qrtz_%' -->
+        and c.relname NOT LIKE 'gen_%'
+        and lower(c.relname) in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            lower(#{item})
+        </foreach>
+    </select>
+
+    <select id="findTableByNames" resultType="com.mee.generator.entity.GenTable3" databaseId="oracle">
+        select t1.* from (
+            SELECT t.TABLE_NAME,tc.TABLE_TYPE ,tc.COMMENTS AS table_comment,current_timestamp AS create_time,CURRENT_TIMESTAMP update_time,
+            SYS_CONTEXT('USERENV','CURRENT_SCHEMA') AS CURRENT_SCHEMA,ROWNUM AS R
+            FROM USER_TABLES T LEFT JOIN USER_TAB_COMMENTS TC
+            ON T.TABLE_NAME =TC.TABLE_NAME
+        ) T1
+        WHERE LOWER(T1.TABLE_NAME) NOT LIKE 'gen_%'
+        AND LOWER(T1.TABLE_NAME) in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            LOWER(#{item})
+        </foreach>
+    </select>
+
+    <!-- update -->
+    <update id="update">
+        update gen_table3
+        <set>
+             <if test="table_comment != null and table_comment!=''" > table_comment = #{table_comment},</if>
+             <if test="current_db != null and current_db!=''" > current_db = #{current_db},</if>
+             <if test="database_id != null and database_id!=''" > database_id = #{database_id},</if>
+             <if test="class_name != null and class_name!=''" > class_name = #{class_name},</if>
+             <if test="base_package != null and base_package!=''" > base_package = #{base_package},</if>
+             <if test="module_name != null and module_name!=''" > module_name = #{module_name},</if>
+             <if test="author != null and author!=''" > author = #{author},</if>
+             <if test="version != null and version!=''" > version = #{version},</if>
+             <if test="camel_case != null" > camel_case = #{camel_case},</if>
+             <if test="back_dir != null and back_dir!=''" > back_dir = #{back_dir},</if>
+             <if test="front_dir != null and front_dir!=''" > front_dir = #{front_dir},</if>
+             <if test="desc != null and desc!=''" > "desc" = #{desc},</if>
+             <if test="update_by != null and update_by!=''" > update_by = #{update_by},</if>
+             <if test="update_time != null" > update_time = #{update_time},</if>
+        </set>
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+        </where>
+    </update>
+
+    <insert id="insert" databaseId="postgresql">
+        insert into gen_table3(
+            id,
+            table_name,
+            table_comment,
+            current_db,
+            database_id,
+            class_name,
+            base_package,
+            module_name,
+            author,
+            version,
+            camel_case,
+            back_dir,
+            front_dir,
+            "desc",
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) values (
+            #{id},
+            #{table_name},
+            #{table_comment},
+            #{current_db},
+            #{database_id},
+            #{class_name},
+            #{base_package},
+            #{module_name},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{back_dir},
+            #{front_dir},
+            #{desc},
+            #{create_by},
+            #{create_time},
+            #{update_by},
+            #{update_time}
+        )
+    </insert>
+
+    <insert id="insert" databaseId="oracle">
+        INSERT INTO GEN_TABLE3(
+            ID,
+            TABLE_NAME,
+            TABLE_COMMENT,
+            CURRENT_DB,
+            DATABASE_ID,
+            CLASS_NAME,
+            BASE_PACKAGE,
+            MODULE_NAME,
+            AUTHOR,
+            VERSION,
+            CAMEL_CASE,
+            BACK_DIR,
+            FRONT_DIR,
+            "DESC",
+            CREATE_BY,
+            CREATE_TIME,
+            UPDATE_BY,
+            UPDATE_TIME
+        ) values (
+            #{id},
+            #{table_name},
+            #{table_comment},
+            #{current_db},
+            #{database_id},
+            #{class_name},
+            #{base_package},
+            #{module_name},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{back_dir},
+            #{front_dir},
+            #{desc,jdbcType=NULL},
+            #{create_by},
+            #{create_time},
+            #{update_by},
+            #{update_time}
+        )
+    </insert>
+
+    <!--  delete -->
+    <delete id="delete">
+        delete from gen_table3 where id = #{id}
+    </delete>
+
+    <delete id="deleteByTableId" >
+        delete from gen_table3 where id=#{id}
+    </delete>
+
+</mapper>

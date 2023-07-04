@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+@description    ${table_comment} ${class_name}(${table_name?upper_case}) DAO
+@author         ${author}
+@date           ${datetime}
+-->
+<!--<mapper namespace="${base_package}.module.${module_name}.mapper.${class_name}Mapper">-->
+<!--<mapper namespace="${base_package}.xml.${module_name}.${class_name}">-->
+<mapper namespace="${base_package}.xml.${module_name}.${class_name}">
+
+    <!-- 字段 -->
+    <!--<resultMap type="${base_package}.module.${module_name}.entity.${class_name}" id="${class_name}Result">-->
+    <resultMap type="${base_package}.${module_name}.entity.${class_name}" id="${class_name}Result">
+      <#list columns as c>
+      <#if c??>
+      <result property="${c.java_field}" column="${c.column_name}"/>
+      </#if>
+      </#list>
+    </resultMap>
+
+    <#list database_ids as db_id>
+    <!-- 查询::${db_id} -->
+    <select id="findList" resultMap="${class_name}Result" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if> >
+      select * from ${table_name?upper_case}
+      <where>
+        <#list columns as c>
+        <#if c?? && c.java_type??>
+          <#if "String"==c.java_type>
+          <if test="${c.java_field} != null and ${c.java_field} != ''">AND ${c["column_name_${db_id}"]} ${c.query_type} <#noparse>#{</#noparse>${c.java_field}<#noparse>}</#noparse></if>
+          <#else>
+          <if test="${c.java_field} != null">AND ${c["column_name_${db_id}"]} = <#noparse>#{</#noparse>${c.java_field}<#noparse>}</#noparse></if>
+          </#if>
+        </#if>
+        </#list>
+      </where>
+      ORDER BY ${mapper_key_info["column_name_${db_id}"]} DESC
+    </select>
+    </#list>
+
+    <#list database_ids as db_id>
+    <!-- 按主键主键查询::${db_id} -->
+    <select id="findBy${mapper_key_info.gs_field}" resultMap="${class_name}Result" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
+        SELECT * from ${table_name?upper_case} WHERE ${mapper_key_info["column_name_${db_id}"]}=<#noparse>#{</#noparse>${mapper_key_info.java_field}<#noparse>}</#noparse>
+    </select>
+    </#list>
+
+    <#list database_ids as db_id>
+    <!-- 插入::${db_id} -->
+    <insert id="insert" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
+    INSERT INTO ${table_name?upper_case}(
+      <#list columns as c>
+      <#if c??>
+        ${c["column_name_${db_id}"]}<#if c_has_next>,</#if>
+      </#if>
+      </#list>
+    ) values (
+        <#list columns as c>
+        <#if c??>
+        #${""}{${c.java_field}}<#if c_has_next>,</#if>
+        </#if>
+        </#list>
+    )
+    </insert>
+    </#list>
+
+    <#list database_ids as db_id>
+    <!-- 批量插入::${db_id} -->
+    <insert id="insertBatch" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
+    INSERT INTO ${table_name?upper_case}(
+      <#list columns as c>
+      <#if c??>
+        ${c["column_name_${db_id}"]}<#if c_has_next>,</#if>
+      </#if>
+      </#list>
+    ) values
+    <foreach collection ="list" item="i" separator =",">
+      (
+        <#list columns as c>
+        <#if c??>
+        #${""}{i.${c.java_field}}<#if c_has_next>,</#if>
+        </#if>
+        </#list>
+      )
+    </foreach>
+    </insert>
+    </#list>
+
+    <#list database_ids as db_id>
+    <!-- 更新::${db_id} -->
+    <update id="update" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
+      UPDATE ${table_name?upper_case}
+      <set>
+      <#list columns as c>
+      <#if c?? && c.java_type?? && "0"==c.is_pk && "create_time"!=c.column_name && "create_by"!=c.column_name >
+      <#if "String"==c.java_type>
+       <if test="${c.java_field} != null and ${c.java_field} != ''">${c["column_name_${db_id}"]}=<#noparse>#{</#noparse>${c.java_field}<#noparse>}</#noparse>,</if>
+      <#else>
+       <if test="${c.java_field} != null">${c["column_name_${db_id}"]}=<#noparse>#{</#noparse>${c.java_field}<#noparse>}</#noparse>,</if>
+      </#if>
+      </#if>
+      </#list>
+      </set>
+      WHERE ${mapper_key_info["column_name_${db_id}"]}=<#noparse>#{</#noparse>${mapper_key_info.java_field}<#noparse>}</#noparse>
+    </update>
+    </#list>
+
+    <#list database_ids as db_id>
+    <!-- 按主键删除::${db_id} -->
+    <delete id="deleteBy${mapper_key_info.gs_field}" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
+       DELETE FROM ${table_name?upper_case} WHERE ${mapper_key_info["column_name_${db_id}"]}=<#noparse>#{</#noparse>${mapper_key_info.java_field}<#noparse>}</#noparse>
+    </delete>
+    </#list>
+
+    <#list database_ids as db_id>
+    <!-- 批量删除::${db_id} -->
+    <delete id="deleteBatch" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
+      DELETE FROM ${table_name?upper_case} WHERE ${mapper_key_info["column_name_${db_id}"]} IN
+      <foreach collection ="list" item="item" open="(" close=")" separator =",">
+          <#noparse>#{item}</#noparse>
+      </foreach>
+    </delete>
+    </#list>
+
+</mapper>

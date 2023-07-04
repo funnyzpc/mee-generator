@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>代码生成一</title>
+    <#include "../wrapper/header.html"/>
+    <style>
+        /* 首列固定 */
+        td:first-child, th:first-child {
+          position:sticky;
+          left:0; /* 首行在左 */
+          z-index:1;
+          background-color:#f1f1f1;
+        }
+    </style>
+</head>
+<body style="height:100%;" >
+<div class="main" >
+<div id="data-search">
+    <!-- 业务内容 -->
+    <h3>代码生成一</h3>
+    <form method="post" id="search-form" novalidate>
+
+        <label class="form-label">表名称</label>
+        <input type="text" name="table_name" >&nbsp;&nbsp;
+
+        <label class="form-label">表描述</label>
+        <input type="text" name="table_comment" >&nbsp;
+
+        <button _func="query" type="submit" class="btn btn-primary" >查询</button>
+        <button type="reset">重置</button>
+    </form>
+</div>
+
+<div id="data-list"></div>
+
+</div>
+<script type="text/cc-template" id="template-data-list">
+    <div class="table">
+        <table style="white-space: nowrap;overflow: auto;min-width:760px" >
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" title="全选">
+                </th>
+                <th>表名称</th>
+                <th>表描述</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each data}}
+            <tr>
+                <td>
+                    <input type="checkbox" value="{{table_name}}">
+                </td>
+                <td style="min-width:160px;">{{table_name}}</td>
+                <td class="hidden-item" style="max-width:240px;" title="{{table_comment}}">{{table_comment}}</td>
+                <td style="max-width:200px;">{{create_time}}</td>
+                <td style="max-width:200px;">{{update_time}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <#include "../wrapper/page-form.html"/>
+    <div class="form-group">
+        <form style="text-align:center;padding:16px 16px;">
+            <button type="button" onclick="Gen3ImportFunc.saveTable()" class="btn btn-success">提交</button>
+            <button type="button" onclick="javascript:window.close();" class="btn btn-outline-dark">>取消</button>
+        </form>
+    </div>
+</script>
+<script type="module">
+    import * as Gen3ImportFunc from "${ctxPath}/static/js/gen3/gen3_import.js"
+    window.Gen3ImportFunc=Gen3ImportFunc; // 放到window可以直接使用
+    Gen3ImportFunc.init();
+</script>
+</body>
+</html>

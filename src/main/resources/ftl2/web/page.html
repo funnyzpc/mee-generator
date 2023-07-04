@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <#noparse><#include "../decorator/head.html"/></#noparse>
+    <title><#noparse>${applicationName}</#noparse>-${table_comment}</title>
+</head>
+<body>
+<div class="row">
+    <!-- 查询表单 -->
+    <div id="data-search">
+        <h5>${table_comment}</h5>
+        <!-- 业务内容 -->
+        <form method="GET" id="search-form" class="form-search">
+          <#list columns as c>
+            <#if c?? && "1"==c.is_query>
+            <#-- 普通输入框 -->
+            <#if c.html_type?? && "text"==c.html_type>
+            <label class="form-label" <#if c.column_comment?? && c.column_comment?length gt 8>title="${c.column_comment}"</#if>>
+        <#if c.column_comment?? && c.column_comment?length gt 8>${c.column_comment?substring(0,8)}<#else>${c.column_comment}</#if>
+            </label>
+            <input type="text" name="${c.java_field}" placeholder="${c.column_comment}">&nbsp;
+            </#if>
+            <#-- 多选或者下拉框 -->
+            <#if c.html_type?? && "text"!=c.html_type>
+            <label class="form-label" <#if c.column_comment?? && c.column_comment?length gt 8>title="${c.column_comment}"</#if>>
+            <#if c.column_comment?? && c.column_comment?length gt 8>${c.column_comment?substring(0,8)}<#else>${c.column_comment}</#if>
+            </label>&nbsp;
+            <span _dom_type="${c.html_type}" _field_name="${c.java_field}" _dict_type="${c.dict_type!"--请定义--"}"></span>&nbsp;
+            </#if>
+            </#if>
+          </#list>
+
+            <button _func="query" type="submit" class="btn btn-primary">查询</button>
+            &nbsp;&nbsp;
+            <button _func="add" class="btn btn-success">新增</button>
+            <button _func="delete_batch" class="btn btn-danger">删除</button>
+            &nbsp;
+            <button _func="export" class="btn btn-info">导出</button>
+            &nbsp;
+            <button _func="import" class="btn btn-success">导入</button>
+            <a href="<#noparse>${ctxPath}</#noparse>/static/xlsx/${table_name}_template.xlsx" target="_blank">下载模板</a>
+        </form>
+    </div>
+    <!-- table -->
+    <div id="data-list"></div>
+    <!-- dialog -->
+    <div id="data-dialog"></div>
+</div>
+</body>
+<#noparse><#include "../decorator/foot.html"/></#noparse>
+<script type="text/cc-template" id="template-data-list">
+    <div style="overflow-x: scroll; white-space: nowrap;">
+    <table class="table table-bordered table-condensed table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>
+                <input type="checkbox" title="全选">
+            </th>
+          <#list columns as c>
+            <#if c?? && "1"==c.is_list>
+            <th _idx="${c_index+1}" <#if c.column_comment?? && c.column_comment?length gt 8>title="${c.column_comment}"</#if>> <#if c.column_comment?? && c.column_comment?length gt 8>${c.column_comment?substring(0,8)}<#else>${c.column_comment}</#if> </th>
+            </#if>
+          </#list>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each data}}
+        <tr>
+            <td id="{{ ${mapper_key_info.java_field} }}">
+                <input type="checkbox" value="{{ ${mapper_key_info.java_field} }}" title="{{ ${mapper_key_info.java_field} }}">
+            </td>
+          <#list columns as c>
+            <#if c?? && "1"==c.is_list>
+            <td _idx="${c_index+1}">{{<#if c.dict_type??>${c.dict_type} </#if>${c.java_field}}}</td>
+            </#if>
+          </#list>
+            <td>
+                <a href="#" func="update">修改</a>
+                <a href="#" func="delete">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    </div>
+<#noparse><#include "../decorator/page-form.html"/></#noparse>
+</script>
+
+<script type="module">
+    import { init } from "<#noparse>${ctxPath}</#noparse>/public/${module_name}/${table_name}.js"
+    init();
+</script>
+</html>

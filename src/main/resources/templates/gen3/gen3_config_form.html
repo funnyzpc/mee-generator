@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>基本信息</title>
+    <#include "../wrapper/header.html"/>
+</head>
+<body style="height:100%">
+<div class="main" >
+<div id="data-search">
+    <h4 style="margin-left:8px;">基本信息配置-${(type==1)?string('新增','修改')}</h4>
+    <!-- 业务内容 -->
+    <form id="search-form">
+        <input type="hidden" name="type" value="${type}">
+        <input type="hidden" name="id" value="${id!}">
+    </form>
+</div>
+<div id="data-list"> </div>
+<script type="text/cc-template" id="template-data-list">
+        {{#with this.data}}
+        <form method="PUT" id="data_form">
+            <input type="hidden" name="id" value="{{id}}"/>
+            <input type="hidden" name="status" value="{{status}}"/>
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-3" >版本</label>
+                    <input type="text" name="version" value="{{version}}" class="form-control input-sm " required="required" aria-required="true">
+                </div>
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-3">作者</label>
+                    <input type="text" name="author" value="{{author}}" class="form-control input-sm" required="required">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-3" >包路径</label>
+                    <input type="text" name="base_package" value="{{base_package}}" class="form-control input-sm " required="required" aria-required="true">
+                </div>
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-3" >是否驼峰</label>
+                    <!--                    <input type="text" name="camel_case" value="{{camel_case}}" class="form-control input-sm " required="required" aria-required="true">-->
+                    <div style="width:100%;padding:6px 16px 6px 8px;" class="col-sm-6">
+                        <input type="radio" id="camel_case1"  name="camel_case" value="1" {{#equal camel_case 1}}checked{{/equal}}/>是
+                        <input type="radio" id="camel_case2"  name="camel_case" value="0" {{#equal camel_case 0}}checked{{/equal}}/>否
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-3" >模块名</label>
+                    <input type="text" name="module_name" value="{{module_name}}" class="form-control input-sm " required="required" aria-required="true">
+                </div>
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-6" >后段代码所在目录</label>
+                    <input type="text" name="back_dir" value="{{back_dir}}" class="form-control input-sm " required="required" aria-required="true">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-6" >前端代码所在目录</label>
+                    <input type="text" name="front_dir" value="{{front_dir}}" class="form-control input-sm " required="required" aria-required="true">
+                </div>
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-5" >数据库类型</label>
+<!--                    <input type="text" name="database_id" value="{{database_id}}" class="form-control input-sm " required="required" aria-required="true">-->
+<!--                    <div style="width:100%;padding:6px 16px 6px 8px;" class="col-sm-6">-->
+                        <select name="database_id" style="width: 100%;">
+                            <option value="default" {{#equal database_id 'default'}}selected{{/equal}}>default</option>
+                            <option value="postgresql" {{#equal database_id 'postgresql'}}selected{{/equal}}>postgresql</option>
+                            <option value="mysql" {{#equal database_id 'mysql'}}selected{{/equal}}>mysql</option>
+                            <option value="oracle" {{#equal database_id 'oracle'}}selected{{/equal}}>oracle</option>
+                        </select>
+<!--                    </div>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label class="control-label col-sm-3" >备注</label>
+                    <input type="text" name="desc" value="{{desc}}" class="form-control input-sm" aria-required="true">
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{#equal ${type} 1}}
+                    <button type="button" onclick="Gen3ConfigFormFunc.add()">新增</button>
+                {{/equal}}
+                {{#equal ${type} 2}}
+                    <button type="button" onclick="Gen3ConfigFormFunc.update()">修改</button>
+                {{/equal}}
+                <button type="button" onclick="javascript:window.close();">关闭</button>
+            </div>
+            <!--{{datetime '1667544142308'}}-->
+        </form>
+        {{/with}}
+    </script>
+
+</div>
+
+<script type="module">
+    import * as Gen3ConfigFormFunc from "${ctxPath}/static/js/gen3/gen3_config_form.js"
+    window.Gen3ConfigFormFunc=Gen3ConfigFormFunc;
+    Gen3ConfigFormFunc.init();
+</script>
+
+<style>
+    ul>li{
+     float:left;
+     display:block;
+     padding:0px 8px;
+    }
+</style>
+</body>
+</html>

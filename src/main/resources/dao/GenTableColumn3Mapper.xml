@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+@description 单体代码生成::业务字段
+@author shadow
+@date 2023-04-08 20:32:04
+-->
+<mapper namespace="com.mee.generator.mapper.GenTableColumn3Mapper">
+    <!-- 查询 -->
+    <select id="findList" resultType="com.mee.generator.entity.GenTableColumn3">
+        select * from gen_table_column3
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+             <if test="table_id != null" > and table_id = #{table_id}</if>
+             <if test="column_name != null and column_name!=''" > and column_name like #{column_name}</if>
+             <if test="column_comment != null and column_comment!=''" > and column_comment like #{column_comment}</if>
+             <if test="column_type != null and column_type!=''" > and column_type like #{column_type}</if>
+             <if test="java_type != null and java_type!=''" > and java_type like #{java_type}</if>
+             <if test="java_field != null and java_field!=''" > and java_field like #{java_field}</if>
+             <if test="is_pk != null and is_pk!=''" > and is_pk like #{is_pk}</if>
+             <if test="is_increment != null and is_increment!=''" > and is_increment like #{is_increment}</if>
+             <if test="is_required != null and is_required!=''" > and is_required like #{is_required}</if>
+             <if test="is_insert != null and is_insert!=''" > and is_insert like #{is_insert}</if>
+             <if test="is_edit != null and is_edit!=''" > and is_edit like #{is_edit}</if>
+             <if test="is_list != null and is_list!=''" > and is_list like #{is_list}</if>
+             <if test="is_query != null and is_query!=''" > and is_query like #{is_query}</if>
+             <if test="query_type != null and query_type!=''" > and query_type like #{query_type}</if>
+             <if test="html_type != null and html_type!=''" > and html_type like #{html_type}</if>
+             <if test="dict_type != null and dict_type!=''" > and dict_type like #{dict_type}</if>
+             <if test="sort != null" > and sort = #{sort}</if>
+             <if test="create_by != null and create_by!=''" > and create_by like #{create_by}</if>
+             <if test="create_time != null" > and create_time = #{create_time}</if>
+             <if test="update_by != null and update_by!=''" > and update_by like #{update_by}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="findByName" parameterType="String" resultType="com.mee.generator.entity.GenTableColumn3" databaseId="postgresql">
+        select
+            t1.*,
+            t2.table_comment,
+            t2.column_comment,
+            t2.column_type,
+            case when t3.column_name is not null then '1' else '0' end as is_pk -- 主键
+        from
+        (
+            select
+            t.table_name,
+            c.column_name::text as column_name,
+            case  c.is_nullable when 'NO' then '1' else '0' end  as is_required,
+            -- null as is_pk,
+            c.ordinal_position as sort,
+            -- null as column_comment,
+            case c.is_generated when 'NEVER' then '0' else '1'end as is_increment,
+            -- concat_ws('', data_type) as column_type,
+            coalesce(c.character_maximum_length,c.numeric_precision,-1) as length,
+            COALESCE(c.numeric_scale,0) as scale
+            from information_schema.tables t
+            -- inner join information_schema.columns c on  t.table_name = c.table_name
+            inner join information_schema.columns c on  t.table_name = c.table_name and t.table_schema=c.table_schema
+            where t.table_schema = (select current_schema())
+            --and t.table_type= 'BASE TABLE'
+            --and c.table_schema = (select current_schema())
+            and t.table_name=#{table_name}
+            -- group by t.table_name
+        ) as t1  left join
+        (
+            -- 获取表注释 及 字段类型
+            select
+            c.oid,
+            c.relname as table_name,
+            cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, --表注释
+            d.description  as column_comment, --字段注释
+            a.attname as  column_name,
+            a.atttypid as 类型id,
+            t.typname as column_type
+            from pg_class as c
+            left join pg_attribute as a on a.attrelid=c.oid
+            left join pg_type as t on t.oid=a.atttypid
+            left join pg_description as d on  d.objoid=a.attrelid and d.objsubid=a.attnum
+            where  c.relname=#{table_name}
+            and a.attnum>0
+            and c.relnamespace::regnamespace::varchar =  (select current_schema() )
+        ) as t2 on t1.table_name=t2.table_name and  t1.column_name=t2.column_name
+        left join
+        (
+            -- 获取主键
+            SELECT
+            C.conrelid::REGCLASS::varchar AS table_name,
+            A.attname  column_name
+            FROM
+            pg_constraint
+            C INNER JOIN pg_namespace n ON n.OID = C.connamespace
+            CROSS JOIN LATERAL UNNEST ( C.conkey ) ak ( K )
+            INNER JOIN pg_attribute A ON A.attrelid = C.conrelid
+            AND A.attnum = ak.K
+            WHERE C.conrelid::REGCLASS::TEXT = #{table_name}
+            ORDER BY C.contype
+        ) as t3  on t1.table_name=t3.table_name and t1.column_name=t3.column_name
+    </select>
+
+    <select id="findByName" parameterType="String" resultType="com.mee.generator.entity.GenTableColumn3" databaseId="oracle">
+        SELECT t1.*,t2.*,
+        CASE WHEN t3.column_name IS NOT NULL THEN '1' ELSE '0' END AS is_pk,
+        CASE WHEN t4.COLUMN_NAME IS NOT NULL THEN '1' ELSE '0' END AS is_required,
+        '0' is_increment
+        FROM
+        (
+            SELECT tc.TABLE_NAME ,tc.COLUMN_NAME,tc.COLUMN_ID AS sort,tc.data_type AS column_type,
+            COALESCE(tc.DATA_PRECISION,tc.data_length) AS LENGTH,
+            tc.DATA_SCALE SCALE
+            FROM USER_TAB_COLUMNS tc
+            -- WHERE tc.table_name = 'T_PUBLIC_MESSAGE'
+        ) t1
+        LEFT JOIN
+        (
+            SELECT cc.comments AS column_comment,cc.table_name ,cc.column_name  FROM user_col_comments cc
+        ) t2 ON t1.table_name=t2.table_name AND t1.column_name=t2.column_name
+        LEFT JOIN
+        (
+            select ucc.constraint_name,ucc.TABLE_NAME ,ucc.COLUMN_NAME
+            from user_cons_columns ucc left JOIN  user_constraints uc
+            ON  ucc.constraint_name = uc.constraint_name
+            AND ucc.table_name=uc.TABLE_NAME
+            where uc.constraint_type = 'P'
+            -- and ucc.table_name = 'T_PUBLIC_MESSAGE'
+        ) t3 ON t1.table_name=t3.table_name AND t1.column_name=t3.column_name
+        LEFT JOIN
+        (
+            select ucc.TABLE_NAME ,ucc.COLUMN_NAME
+            from user_cons_columns ucc left JOIN  user_constraints uc
+            ON  ucc.constraint_name = uc.constraint_name
+            AND ucc.table_name=uc.TABLE_NAME
+            -- WHERE  ucc.table_name = 'T_PUBLIC_MESSAGE'
+            GROUP BY ucc.TABLE_NAME ,ucc.COLUMN_NAME
+        ) t4 ON t1.table_name=t4.table_name AND t1.column_name=t4.column_name
+        WHERE t1.table_name=#{table_name}
+    </select>
+
+    <!-- update -->
+    <update id="update">
+        update gen_table_column3
+        <set>
+             <if test="table_id != null" > table_id = #{table_id},</if>
+             <if test="column_name != null and column_name!=''" > column_name = #{column_name},</if>
+             <if test="column_comment != null and column_comment!=''" > column_comment = #{column_comment},</if>
+             <if test="column_type != null and column_type!=''" > column_type = #{column_type},</if>
+             <if test="java_type != null and java_type!=''" > java_type = #{java_type},</if>
+             <if test="java_field != null and java_field!=''" > java_field = #{java_field},</if>
+             <if test="is_pk != null and is_pk!=''" > is_pk = #{is_pk},</if>
+             <if test="is_increment != null and is_increment!=''" > is_increment = #{is_increment},</if>
+             <if test="is_required != null and is_required!=''" > is_required = #{is_required},</if>
+             <if test="is_insert != null and is_insert!=''" > is_insert = #{is_insert},</if>
+             <if test="is_edit != null and is_edit!=''" > is_edit = #{is_edit},</if>
+             <if test="is_list != null and is_list!=''" > is_list = #{is_list},</if>
+             <if test="is_query != null and is_query!=''" > is_query = #{is_query},</if>
+             <if test="query_type != null and query_type!=''" > query_type = #{query_type},</if>
+             <if test="html_type != null and html_type!=''" > html_type = #{html_type},</if>
+             <if test="dict_type != null and dict_type!=''" > dict_type = #{dict_type},</if>
+             <if test="sort != null" > sort = #{sort},</if>
+             <if test="create_by != null and create_by!=''" > create_by = #{create_by},</if>
+             <if test="create_time != null" > create_time = #{create_time},</if>
+             <if test="update_by != null and update_by!=''" > update_by = #{update_by},</if>
+        </set>
+        <where>
+             <if test="id != null" > and id = #{id}</if> 
+        </where>
+    </update>
+
+    <insert id="insert">
+        insert into gen_table_column3(
+            id,
+            table_id,
+            column_name,
+            column_comment,
+            column_type,
+            java_type,
+            java_field,
+            is_pk,
+            is_increment,
+            is_required,
+            is_insert,
+            is_edit,
+            is_list,
+            is_query,
+            query_type,
+            html_type,
+            dict_type,
+            sort,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) values (
+            #{id},
+            #{table_id},
+            #{column_name},
+            #{column_comment},
+            #{column_type},
+            #{java_type},
+            #{java_field},
+            #{is_pk},
+            #{is_increment},
+            #{is_required},
+            #{is_insert},
+            #{is_edit},
+            #{is_list},
+            #{is_query},
+            #{query_type},
+            #{html_type},
+            #{dict_type},
+            #{sort},
+            #{create_by},
+            #{create_time},
+            #{update_by},
+            #{update_time}
+        )
+    </insert>
+
+    <insert id="insertBatch" databaseId="postgresql">
+        insert into gen_table_column3(
+           id,
+           table_id,
+           column_name,
+           column_comment,
+           column_type,
+           java_type,
+           java_field,
+           is_pk,
+           is_increment,
+           is_required,
+           is_insert,
+           is_edit,
+           is_list,
+           is_query,
+           query_type,
+           html_type,
+           dict_type,
+           sort,
+           create_by,
+           create_time,
+           update_by,
+           update_time
+        ) values
+        <foreach collection ="list" item="i" separator =",">
+        (
+           #{i.id},
+           #{i.table_id},
+           #{i.column_name},
+           #{i.column_comment,jdbcType=NULL},
+           #{i.column_type},
+           #{i.java_type},
+           #{i.java_field},
+           #{i.is_pk},
+           #{i.is_increment},
+           #{i.is_required},
+           #{i.is_insert},
+           #{i.is_edit},
+           #{i.is_list},
+           #{i.is_query},
+           #{i.query_type},
+           #{i.html_type},
+           #{i.dict_type,jdbcType=NULL},
+           #{i.sort},
+           #{i.create_by},
+           #{i.create_time},
+           #{i.update_by},
+           #{i.update_time}
+        )
+        </foreach>
+    </insert>
+
+    <insert id="insertBatch" databaseId="oracle">
+        INSERT INTO GEN_TABLE_COLUMN3(
+            ID,
+            TABLE_ID,
+            COLUMN_NAME,
+            COLUMN_COMMENT,
+            COLUMN_TYPE,
+            JAVA_TYPE,
+            JAVA_FIELD,
+            IS_PK,
+            IS_INCREMENT,
+            IS_REQUIRED,
+            IS_INSERT,
+            IS_EDIT,
+            IS_LIST,
+            IS_QUERY,
+            QUERY_TYPE,
+            HTML_TYPE,
+            DICT_TYPE,
+            SORT,
+            CREATE_BY,
+            CREATE_TIME,
+            UPDATE_BY,
+            UPDATE_TIME
+        )
+        SELECT  T.*  FROM(
+            <foreach collection="list" item="i" index="index" separator="union all">
+              SELECT
+                #{i.id},
+                #{i.table_id},
+                #{i.column_name},
+                #{i.column_comment,jdbcType=NULL},
+                #{i.column_type},
+                #{i.java_type},
+                #{i.java_field},
+                #{i.is_pk},
+                #{i.is_increment},
+                #{i.is_required},
+                #{i.is_insert},
+                #{i.is_edit},
+                #{i.is_list},
+                #{i.is_query},
+                #{i.query_type},
+                #{i.html_type},
+                #{i.dict_type,jdbcType=NULL},
+                #{i.sort},
+                #{i.create_by},
+                #{i.create_time},
+                #{i.update_by},
+                #{i.update_time}
+              FROM DUAL
+            </foreach>
+        ) T
+
+    </insert>
+
+    <update id="updateGenTableColumn" databaseId="postgresql">
+        update gen_table_column3
+        <set>
+            <if test="column_comment != null">column_comment = #{column_comment},</if>
+            <if test="java_type != null">java_type = #{java_type},</if>
+            <if test="java_field != null">java_field = #{java_field},</if>
+            <if test="is_insert != null">is_insert = #{is_insert},</if>
+            <if test="is_edit != null">is_edit = #{is_edit},</if>
+            <if test="is_list != null">is_list = #{is_list},</if>
+            <if test="is_query != null">is_query = #{is_query},</if>
+            <if test="is_required != null">is_required = #{is_required},</if>
+            <if test="query_type != null">query_type = #{query_type},</if>
+            <if test="html_type != null">html_type = #{html_type},</if>
+            <if test="dict_type != null">dict_type = #{dict_type},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="update_by != null">update_by = #{update_by},</if>
+            <!--
+            update_time = now()
+            -->
+        </set>
+        where id = #{id}
+        and table_id = #{table_id}
+    </update>
+
+    <update id="updateGenTableColumn" databaseId="oracle">
+        UPDATE GEN_TABLE_COLUMN3
+        <set>
+            <if test="column_comment != null">column_comment = #{column_comment},</if>
+            <if test="java_type != null">java_type = #{java_type},</if>
+            <if test="java_field != null">java_field = #{java_field},</if>
+            <if test="is_insert != null">is_insert = #{is_insert},</if>
+            <if test="is_edit != null">is_edit = #{is_edit},</if>
+            <if test="is_list != null">is_list = #{is_list},</if>
+            <if test="is_query != null">is_query = #{is_query},</if>
+            <if test="is_required != null">is_required = #{is_required},</if>
+            <if test="query_type != null">query_type = #{query_type},</if>
+            <if test="html_type != null">html_type = #{html_type},</if>
+            <if test="dict_type != null">dict_type = #{dict_type},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="update_by != null">update_by = #{update_by},</if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE ID = #{id}
+        AND TABLE_ID = #{table_id}
+    </update>
+
+    <!--  delete -->
+    <delete id="delete">
+        delete from gen_table_column3 where id = #{id}
+    </delete>
+
+    <delete id="deleteByTableId" >
+        delete from gen_table_column3 where table_id=#{table_id}
+    </delete>
+
+    <select id="findByTableId" resultType="com.mee.generator.entity.GenTableColumn3">
+        SELECT * FROM GEN_TABLE_COLUMN3 WHERE TABLE_ID = #{table_id} ORDER BY SORT
+    </select>
+
+    <select id="findByTableIdToMap" resultType="java.util.HashMap" databaseId="postgresql">
+        select * from gen_table_column3
+        where table_id = #{table_id}
+        order by sort
+    </select>
+
+    <select id="findByTableIdToMap" resultType="java.util.HashMap" databaseId="oracle">
+        select
+            id as "id",
+            table_id as "table_id",
+            LOWER(column_name) as "column_name",
+            column_comment as "column_comment",
+            LOWER(column_type) as "column_type",
+            java_type as "java_type",
+            java_field as "java_field",
+            is_pk as "is_pk",
+            is_increment as "is_increment",
+            is_required as "is_required",
+            is_insert as "is_insert",
+            is_edit as "is_edit",
+            is_list as "is_list",
+            is_query as "is_query",
+            query_type as "query_type",
+            html_type as "html_type",
+            dict_type as "dict_type",
+            sort as "sort"
+            <!--
+            create_by as "create_by",
+            create_time as "create_time",
+            update_by as "update_by",
+            update_time as "update_time"
+            -->
+        FROM GEN_TABLE_COLUMN3
+        WHERE TABLE_ID = #{table_id}
+        ORDER BY SORT
+    </select>
+
+</mapper>

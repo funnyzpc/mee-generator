@@ -1,0 +1,46 @@
+
+[
+  {"title": "顶级目录01","id":"01","has_child": true,
+    "child_list": [
+      {"title": "次级目录011","id":"011","has_child": false},
+      {"title": "次级目录012","id":"012","has_child": false},
+      {"title": "次级目录013","id":"013","has_child": false}
+    ]
+  },
+  {"title": "顶级目录02","id":"02","has_child": true,"child_list": [
+    {"title": "次级目录021","id":"021","has_child": false},
+    {"title": "次级目录022","id":"022","has_child": true,
+      "child_list": [
+        {"title": "次级目录0221","id":"0221","has_child": false},
+        {"title": "次级目录0222","id":"0222","has_child": false},
+        {"title": "次级目录0223","id":"0223","has_child": false}
+      ]
+    },
+    {"title": "次级目录023","id":"023","has_child": true,
+      "child_list": [
+        {"title": "次级目录0231","id":"0231","has_child": false},
+        {"title": "次级目录0232","id":"0232","has_child": false},
+        {"title": "次级目录0233","id":"0233","has_child": true,"child_list":[
+          {"title": "次级目录02331","id":"02331","has_child": false},
+          {"title": "次级目录02332","id":"02332","has_child": false}
+        ]
+        }
+      ]
+    }
+  ]},
+  {"title": "顶级目录03","id":"03","has_child": false},
+  {"title": "顶级目录04","id":"04","has_child": false, "link": "https://baidu.com"}
+]
+
+//[
+//  [
+//    {"title": "顶级目录01","id":"01","has_child": false},
+//    {}
+//  ],
+//  [
+//    {}
+//  ],
+//  [
+//    {}
+//  ]
+//]

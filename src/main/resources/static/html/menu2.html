@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+  window.onload=function(){
+    // {"msg":"操作成功","code":200,"data":[{"id":1,"title":"系统管理","icon":"system","path":"/system","hidden":false,"children":[{"id":11,"title":"用户管理","icon":"user","path":"user","hidden":false,"target":"_content"},{"id":12,"title":"角色管理","icon":"peoples","path":"role","hidden":true,"target":"_content"},{"id":13,"title":"菜单管理","icon":"tree-table","path":"menu","hidden":false,"target":"_content"},{"id":14,"title":"部门管理","icon":"tree","path":"dept","hidden":false,"target":"_content"},{"id":15,"title":"岗位管理","icon":"post","path":"post","hidden":true,"target":"_content"},{"id":16,"title":"字典管理","icon":"dict","path":"dict","hidden":true,"target":"_content"},{"id":11,"title":"参数设置","icon":"edit","path":"config","hidden":true,"target":"_content"},{"id":17,"title":"通知公告","icon":"message","path":"notice","hidden":true,"target":"_content"},{"id":18,"title":"日志管理","icon":"log","path":"log","hidden":false,"children":[{"id":181,"title":"操作日志","icon":"form","path":"operlog","hidden":false,"target":"_content"},{"id":182,"title":"登录日志","icon":"logininfor","path":"logininfor","hidden":false,"target":"_content"}]}]},{"id":2,"title":"系统监控","icon":"monitor","path":"/monitor","hidden":false,"children":[{"id":21,"title":"在线用户","icon":"online","path":"online","hidden":false,"target":"_content"}]},{"id":3,"title":"系统工具","icon":"tool","path":"/tool","hidden":true,"children":[{"id":31,"title":"表单构建","icon":"build","path":"build","hidden":false,"target":"_content"},{"id":32,"title":"代码生成","icon":"code","path":"gen","hidden":true,"target":"_content"},{"id":33,"title":"系统接口","icon":"swagger","path":"swagger","hidden":false,"target":"_content"}]},{"id":4,"title":"shadow website","icon":"guide","path":"http://baidu.com","hidden":false,"target":"_blank"}]}
+    let data = {"msg":"操作成功","code":200,"data":[{"id":1,"title":"系统管理","icon":"system","path":"/system","hidden":false,"children":[{"id":11,"title":"用户管理","icon":"user","path":"user","hidden":false,"target":"_content"},{"id":12,"title":"角色管理","icon":"peoples","path":"role","hidden":true,"target":"_content"},{"id":13,"title":"菜单管理","icon":"tree-table","path":"menu","hidden":false,"target":"_content"},{"id":14,"title":"部门管理","icon":"tree","path":"dept","hidden":false,"target":"_content"},{"id":15,"title":"岗位管理","icon":"post","path":"post","hidden":true,"target":"_content"},{"id":16,"title":"字典管理","icon":"dict","path":"dict","hidden":true,"target":"_content"},{"id":11,"title":"参数设置","icon":"edit","path":"config","hidden":true,"target":"_content"},{"id":17,"title":"通知公告","icon":"message","path":"notice","hidden":true,"target":"_content"},{"id":18,"title":"日志管理","icon":"log","path":"log","hidden":false,"children":[{"id":181,"title":"操作日志","icon":"form","path":"operlog","hidden":false,"target":"_content"},{"id":182,"title":"登录日志","icon":"logininfor","path":"logininfor","hidden":false,"target":"_content"}]}]},{"id":2,"title":"系统监控","icon":"monitor","path":"/monitor","hidden":false,"children":[{"id":21,"title":"在线用户","icon":"online","path":"online","hidden":false,"target":"_content"}]},{"id":3,"title":"系统工具","icon":"tool","path":"/tool","hidden":true,"children":[{"id":31,"title":"表单构建","icon":"build","path":"build","hidden":false,"target":"_content"},{"id":32,"title":"代码生成","icon":"code","path":"gen","hidden":true,"target":"_content"},{"id":33,"title":"系统接口","icon":"swagger","path":"swagger","hidden":false,"target":"_content"}]},{"id":4,"title":"shadow website","icon":"guide","path":"http://baidu.com","hidden":false,"target":"_blank"}]};
+    document.querySelector("body").innerHTML=JSON.stringify(data).replaceAll("},{","},<br/>{");
+    // 重新组装菜单数据
+    // 1.去掉 hidden=true 的数据
+    // 2.添加 has_children(true or false) 字段
+    // 3.添加 is_top(true or false) 字段
+    // 4.添加 level(number) 字段
+    let result = this.filterMenu(data.data);
+    alert(JSON.stringify( result ));
+  }
+
+  function filterMenu(data){
+     let result = [];
+     let level = 0;
+     for(let i=0;i<data.length;i++){
+       if( !data[i].hidden===true ){
+          let item = data[i];
+          item.is_top=true;
+          item.level=level;
+          if( !item.children || item.children.length==0 ){
+            item.has_children=false;
+          }else{
+            item.children=filterItem(item.children,level+1);
+            item.has_children=( item.children && item.children.length>0)?true:false;
+          }
+          result.push(item);
+       }
+     }
+     return result;
+  }
+
+  function filterItem(sub_data,level){
+     let result = [];
+     for( let i=0;i<sub_data.length;i++){
+       if( !sub_data[i].hidden===true ){
+          let item = sub_data[i];
+          item.level=level;
+          if( !item.children || item.children.length==0 ){
+            item.has_children=false;
+          }else{
+            item.children=filterItem(item.children,level+1);
+            item.has_children=( item.children && item.children.length>0)?true:false;
+          }
+          result.push(item);
+       } // if
+     } // for
+     return result;
+  }
+
+</script>
+</html>
