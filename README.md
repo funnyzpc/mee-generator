@@ -1,22 +1,23 @@
 
-## 代码生成(MEE-GENERATOR)
+## 🎉代码生成(MEE-GENERATOR)🎉
  本工程用于配合[mee-admin](https://github.com/funnyzpc/mee-admin)开发之使用，具体是使用mee-generator生成的代码用于mee-admin开发使用。
- 
+  
+ 欢迎私信 [funnyzpc](https://github.com/funnyzpc) 或 [Issues](https://github.com/funnyzpc/mee-generator/issues/new) 👏 更欢迎的加入😎
 
 ## 启动系统
-+ 1.导入sql文件,用什么数据库就导入对应的sql脚本
++ 1.🍎导入sql文件,用什么数据库就导入对应的sql脚本
   - [mysql.sql](doc%2Fmysql.sql)
   - [oracle.sql](doc%2Foracle.sql)
   - [postgresql.sql](doc%2Fpostgresql.sql)
-+ 2.启动 [MeeGeneratorApplication.java](src%2Fmain%2Fjava%2Fcom%2Fmee%2Fgenerator%2FMeeGeneratorApplication.java)
++ 2.🍊启动 [MeeGeneratorApplication.java](src%2Fmain%2Fjava%2Fcom%2Fmee%2Fgenerator%2FMeeGeneratorApplication.java)
   - 需添加启动参数
   ```
-  - 用postgresql： --spring.profiles.active=postgresql
-  - 用mysql： --spring.profiles.active=mysql
-  - 用oracle： --spring.profiles.active=oracle
+  - postgresql： --spring.profiles.active=postgresql
+  - mysql： --spring.profiles.active=mysql
+  - oracle： --spring.profiles.active=oracle
   ```
   ![img.jpg](view/img.jpg)  
-+ 3.浏览器进入：http://127.0.0.1:8082/mee_generator/
++ 3.🍐浏览器进入：http://127.0.0.1:8082/mee_generator/
 
 ## 使用MEE-GENERATOR
 1.添加主配置
