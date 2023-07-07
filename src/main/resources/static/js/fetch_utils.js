@@ -17,15 +17,16 @@ function fetchPost( url,data,callback ){
     .catch(error => console.log("请求超时,请刷新后重试~")
     );
 }
+
 /* POST+form */
-function fetchFormPost( url,data ){
+function fetchFormPost( url,form,callback ){
     fetch(url,{
        credentials:'include',
        method: 'POST',
-       body: data,
+       body: new FormData(form),
     })
     .then(response => response.json())
-    .then(data => resolve(data))
+    .then(data =>  callback(data))
     .catch(error => console.log("请求超时,请刷新后重试~")
     );
 }
