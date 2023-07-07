@@ -4,7 +4,7 @@
   
  欢迎私信 [funnyzpc](https://github.com/funnyzpc) 或 [Issues](https://github.com/funnyzpc/mee-generator/issues/new) 👏 更欢迎的加入😎
 
-## 启动系统
+## 启动MEE-GENERATOR
 + 1.🍎导入sql文件,用什么数据库就导入对应的sql脚本
   - [mysql.sql](doc%2Fmysql.sql)
   - [oracle.sql](doc%2Foracle.sql)
@@ -20,6 +20,8 @@
 + 3.🍐浏览器进入：http://127.0.0.1:8082/mee_generator/
 
 ## 使用MEE-GENERATOR
+0.导入表至系统(new⌚️)
+![img.jpg](view/10.jpeg)
 1.添加主配置
 ![img.jpg](view/img_0.jpg)
 2.开启一个主配置
@@ -39,3 +41,7 @@
 ![img_8.jpg](view/img_8.jpg)
 9.配置不合理可重新配置直至完美，记得右侧有下载按钮～
 ![img_9.jpg](view/img_9.jpg)
+
+## 更新日志
++ 2022-07-07 新增表结构导入功能
++ 

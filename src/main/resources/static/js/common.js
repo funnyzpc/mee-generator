@@ -10,7 +10,7 @@ var global_module = {
     /* 主键字段,如果module定义了则会覆盖此字段 */
     id_field:"id",
 //    toolbar:{query: doQuery, "new":doNew, "exp": doExp, "imp": doImp, "mod": doMod, "del":doDel},
-    events:{"query": doQuery, "new":doNew,"previous_page":previousPage,"first_page":firstPage,"next_page":nextPage},
+    events:{"query": doQuery, "export":doExport,"new":doNew,"previous_page":previousPage,"first_page":firstPage,"next_page":nextPage},
     data_events:{"select_one":doSelectOne,"select_all":doSelectAll},
 //    events:{}
     api:{
@@ -112,6 +112,23 @@ function initSearchForm(){
     });
 }
 
+// 数据导出
+function doExport(/*event*/){
+    //let search_form_region_id = global_module.search_form_region?global_module.search_form_region:"data-search";
+    let query_id = global_module.search_form_id;
+    /* 初始化查询表单事件 */
+    let search_form_dom = document.querySelector(`#${query_id} form`);
+    if( false===search_form_dom.reportValidity() ){
+        console.log("表单校验不通过！");
+        return ;
+    }
+    // 合并表单数据
+    Object.assign(global_module.search_form,MeeUtils.formToJson( search_form_dom ));
+    // 构建URL参数
+    let param_str = "page_size=10000&page_no=1&"+FetchUtils.buildParam( global_module.search_form  )
+    window.open(global_module.api.export+"?"+param_str);
+}
+
 function load(param){
     let query_id = global_module.data_list_id;
     global_module.search_form._selected=[]; // 重置为空，否则分页后数据仍保留
@@ -119,8 +136,8 @@ function load(param){
     document.querySelector(`#${query_id}`).innerHTML="<div class=\"loading\"></div>";
     FetchUtils.fetchGet(global_module.api.page,param,function (d){
         // 登录超时
-        if(!d || !d.data){
-           alert("登入超时");
+        if(!d || 0===d.status){
+           alert(!d?"登入超时":d.msg);
            //return window.location.href=app+"/login";
            return;
         }

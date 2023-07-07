@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SQL执行(DDL、DML、DQL)</title>
+    <#include "../wrapper/header.html"/>
+    <link rel="stylesheet" href="${ctxPath}/static/css/fix-table.css?r=1">
+</head>
+<body style="height:100%;" >
+<div class="main" >
+    <!-- 业务内容 -->
+    <div id="data-search">
+        <h4>SQL执行(DDL、DML、DQL)</h4>
+        <p>当前数据库类型:<span style="color:red;">${platform}</span> schema:<span style="color:red;">${schema}</span></p>
+        <form method="GET" id="search-form">
+<!--            <label class="form-label">表名称</label>-->
+            <div class="col-sm-7">
+            <textarea name="sql" placeholder="请输入sql内容" required="required"></textarea>
+            </div>
+            <div class="col-sm-4">
+                <button _func="query" type="submit" class="btn btn-primary" title="仅DQL(查询),有limit时执行limit查询，否则分页查询,最多1w行">查询</button>
+                <button _func="export" type="submit" class="btn btn-info" title="仅DQL(查询),有limit时执行limit查询，否则分页查询,最多1w行">导出</button><br/><br/>
+                <button _func="exec" type="submit" class="btn btn-danger" title="仅DML、DDL">执行</button>
+                <button type="reset" class="btn btn-secondary">重置</button>
+            </div>
+        </form>
+    </div>
+    <div id="data-list"></div>
+</div>
+<script type="text/cc-template" id="template-data-list">
+    <div class="table">
+        <table style="white-space: nowrap;overflow: auto;width:100%;" >
+            {{#each data}}
+            <!--表头-->
+            {{#if @first}}
+            <thead>
+            <tr>
+<!--                <th>idx</th>-->
+                {{#each this}}
+                <th>{{this}}</th>
+                {{/each}}
+                <th></th>
+                </tr>
+            </thead>
+            {{else}}
+            <!--表体-->
+            <tbody>
+            <tr>
+<!--                <td>{{@index}}</td>-->
+                {{#each this}}
+                <td>{{this}}</td>
+                {{/each}}
+                <td></td>
+            {{/if}}
+            </tr>
+            </tbody>
+            {{/each}}
+        </table>
+    </div>
+    <#include "../wrapper/page-form.html"/>
+</script>
+<script type="module">
+    import {init} from "${ctxPath}/static/js/db/db_handler.js"
+    init();
+</script>
+<style>
+textarea{
+    width:100%;
+    height:120px;
+    margin-bottom: 8px;
+    font-weight:bold;
+}
+.col-sm-7{
+    float:left;
+}
+.col-sm-4{
+    padding-left:32px;
+    float:left;
+}
+table tbody tr:hover,table tbody tr:nth-child(even):hover{
+  background-color:rgb(207, 255, 207);
+}
+</style>
+</body>
+</html>

@@ -102,4 +102,4 @@ function buildParam(data){
     }
     return param;
 }
-export { fetchPost,fetchPutForm,fetchPutJson,fetchFormPost,fetchGet,fetchDelete }
+export { fetchPost,fetchPutForm,fetchPutJson,fetchFormPost,fetchGet,fetchDelete,buildParam }

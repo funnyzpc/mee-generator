@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mee.generator.mapper.MeeDBHandlerMapper">
+
+    <!-- 获取当前schema -->
+    <select id="findSchema" resultType="java.lang.String" databaseId="postgresql">
+        select current_schema() as schema
+    </select>
+
+    <select id="findSchema" resultType="java.lang.String" databaseId="oracle">
+        SELECT SYS_CONTEXT('userenv','current_schema') as "schema" FROM DUAL
+    </select>
+
+    <select id="findSchema" resultType="java.lang.String" databaseId="mysql">
+        select database() as "schema"
+    </select>
+
+</mapper>
