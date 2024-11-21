@@ -191,6 +191,8 @@ hr {
 
 ul,
 ol {
+  padding:4px 8px;
+  margin: 4px 4px;
 }
 
 li {

@@ -212,28 +212,28 @@ public class GenTableColumn extends BaseEntity {
         this.sort = sort;
     }
 
-//    public boolean isSuperColumn() {
-//        return isSuperColumn(this.java_field);
-//    }
-//
-//    public static boolean isSuperColumn(String javaField) {
-//        return StringUtils.equalsAnyIgnoreCase(javaField,
-//                // BaseEntity
-//                "create_by", "create_time", "update_by", "update_time", "remark",
-//                // TreeEntity
-//                "parent_name", "parent_id", "order_num", "ancestors");
-//    }
+    public boolean isSuperColumn() {
+        return isSuperColumn(this.java_field);
+    }
 
-//    public boolean isUsableColumn()
-//    {
-//        return isUsableColumn(java_field);
-//    }
-//
-//    public static boolean isUsableColumn(String javaField)
-//    {
-//        // isSuperColumn()中的名单用于避免生成多余Domain属性，若某些属性在生成页面时需要用到不能忽略，则放在此处白名单
-//        return StringUtils.equalsAnyIgnoreCase(javaField, "parentId", "orderNum", "remark");
-//    }
+    public static boolean isSuperColumn(String javaField) {
+        return StringUtils.equalsAnyIgnoreCase(javaField,
+                // BaseEntity
+                "create_by", "create_time", "update_by", "update_time", "remark",
+                // TreeEntity
+                "parent_name", "parent_id", "order_num", "ancestors");
+    }
+
+    public boolean isUsableColumn()
+    {
+        return isUsableColumn(java_field);
+    }
+
+    public static boolean isUsableColumn(String javaField)
+    {
+        // isSuperColumn()中的名单用于避免生成多余Domain属性，若某些属性在生成页面时需要用到不能忽略，则放在此处白名单
+        return StringUtils.equalsAnyIgnoreCase(javaField, "parentId", "orderNum", "remark");
+    }
 
 //    public String readConverterExp()
 //    {
@@ -265,7 +265,7 @@ public class GenTableColumn extends BaseEntity {
 
     public boolean is_list(String is_list)
     {
-        return is_list != null && "1".equals(is_list);
+        return is_list != null && StringUtils.equals("1", is_list);
     }
 
     public boolean is_pk()
@@ -275,7 +275,7 @@ public class GenTableColumn extends BaseEntity {
 
     public boolean is_pk(String is_pk)
     {
-        return is_pk != null && "1".equals(is_pk);
+        return is_pk != null && StringUtils.equals("1", is_pk);
     }
     public boolean is_insert()
     {
@@ -284,7 +284,7 @@ public class GenTableColumn extends BaseEntity {
 
     public boolean is_insert(String is_insert)
     {
-        return is_insert != null && "1".equals(is_insert);
+        return is_insert != null && StringUtils.equals("1", is_insert);
     }
 
     public boolean is_edit()
@@ -294,7 +294,7 @@ public class GenTableColumn extends BaseEntity {
 
     public boolean is_edit(String is_edit)
     {
-        return is_edit != null && "1".equals(is_edit);
+        return is_edit != null && StringUtils.equals("1", is_edit);
     }
 
     public String getCap_java_field() {
@@ -303,5 +303,30 @@ public class GenTableColumn extends BaseEntity {
 
     public void setCap_java_field(String cap_java_field) {
         this.cap_java_field = cap_java_field;
+    }
+
+    @Override
+    public String toString() {
+        return "GenTableColumn{" +
+                "column_id=" + column_id +
+                ", table_id=" + table_id +
+                ", column_name='" + column_name + '\'' +
+                ", column_comment='" + column_comment + '\'' +
+                ", column_type='" + column_type + '\'' +
+                ", java_type='" + java_type + '\'' +
+                ", java_field='" + java_field + '\'' +
+                ", is_pk='" + is_pk + '\'' +
+                ", is_increment='" + is_increment + '\'' +
+                ", is_required='" + is_required + '\'' +
+                ", is_insert='" + is_insert + '\'' +
+                ", is_edit='" + is_edit + '\'' +
+                ", is_list='" + is_list + '\'' +
+                ", is_query='" + is_query + '\'' +
+                ", query_type='" + query_type + '\'' +
+                ", html_type='" + html_type + '\'' +
+                ", dict_type='" + dict_type + '\'' +
+                ", sort=" + sort +
+                ", cap_java_field='" + cap_java_field + '\'' +
+                '}';
     }
 }

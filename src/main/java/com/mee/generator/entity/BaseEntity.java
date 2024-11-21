@@ -99,4 +99,17 @@ public class BaseEntity implements Serializable {
     public void setParams(Map<String, Object> params) {
         this.params = params;
     }
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "search_value='" + search_value + '\'' +
+                ", create_by='" + create_by + '\'' +
+                ", create_time=" + create_time +
+                ", update_by='" + update_by + '\'' +
+                ", update_time=" + update_time +
+                ", remark='" + remark + '\'' +
+                ", params=" + params +
+                '}';
+    }
 }

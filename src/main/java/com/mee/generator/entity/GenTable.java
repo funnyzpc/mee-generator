@@ -1,19 +1,22 @@
 package com.mee.generator.entity;;
 
+import java.io.Serializable;
 import java.util.List;
 
-import com.mee.generator.common.constant.GenConstants;
 import com.mee.generator.enums.TplCategoryEnum;
 import com.mee.generator.util.StringUtils;
-//import org.apache.commons.lang3.ArrayUtils;
+
 
 /**
  * 业务表 gen_table
  * 
  * @author mee
  */
-public class GenTable extends BaseEntity
+public class GenTable extends BaseEntity implements Serializable
 {
+    /**
+     * 序列化标识
+     */
     private static final long serialVersionUID = 1L;
 
     /** 编号 */
@@ -299,7 +302,7 @@ public class GenTable extends BaseEntity
 
     public static boolean isTree(String tplCategory){
 //        return tplCategory != null && StringUtils.equals(GenConstants.TPL_TREE, tplCategory);
-        return tplCategory != null && TplCategoryEnum.TREE.value.equals(tplCategory);
+        return tplCategory != null && StringUtils.equals(TplCategoryEnum.TREE.value, tplCategory);
     }
 
     // ---------------- 扩展 -----------------
@@ -308,7 +311,7 @@ public class GenTable extends BaseEntity
     }
     public static boolean isCrud(String tpl_category){
 //        return tpl_category != null && StringUtils.equals(GenConstants.TPL_CRUD, tpl_category);
-        return tpl_category != null && TplCategoryEnum.CRUD.value.equals(tpl_category);
+        return tpl_category != null && StringUtils.equals(TplCategoryEnum.CRUD.value, tpl_category);
     }
 
     public boolean isSub() {
@@ -316,7 +319,7 @@ public class GenTable extends BaseEntity
     }
     public static boolean isSub(String tpl_category) {
 //        return tpl_category != null && StringUtils.equals(GenConstants.TPL_SUB, tpl_category);
-        return tpl_category != null && TplCategoryEnum.SUB.value.equals(tpl_category);
+        return tpl_category != null && StringUtils.equals(TplCategoryEnum.SUB.value, tpl_category);
     }
 
     public String getFunction_version() {
@@ -325,5 +328,35 @@ public class GenTable extends BaseEntity
 
     public void setFunction_version(String function_version) {
         this.function_version = function_version;
+    }
+
+    @Override
+    public String toString() {
+        return "GenTable{" +
+                "table_id=" + table_id +
+                ", table_name='" + table_name + '\'' +
+                ", table_comment='" + table_comment + '\'' +
+                ", sub_table_name='" + sub_table_name + '\'' +
+                ", sub_table_fk_name='" + sub_table_fk_name + '\'' +
+                ", class_name='" + class_name + '\'' +
+                ", tpl_category='" + tpl_category + '\'' +
+                ", package_name='" + package_name + '\'' +
+                ", module_name='" + module_name + '\'' +
+                ", business_name='" + business_name + '\'' +
+                ", function_name='" + function_name + '\'' +
+                ", function_author='" + function_author + '\'' +
+                ", function_version='" + function_version + '\'' +
+                ", gen_type='" + gen_type + '\'' +
+                ", gen_path='" + gen_path + '\'' +
+                ", pk_column=" + pk_column +
+                ", sub_table=" + sub_table +
+                ", columns=" + columns +
+                ", options='" + options + '\'' +
+                ", tree_code='" + tree_code + '\'' +
+                ", tree_parent_code='" + tree_parent_code + '\'' +
+                ", tree_name='" + tree_name + '\'' +
+                ", parent_menu_id='" + parent_menu_id + '\'' +
+                ", parent_menu_name='" + parent_menu_name + '\'' +
+                '}';
     }
 }

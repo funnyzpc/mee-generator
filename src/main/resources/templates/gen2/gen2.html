@@ -32,10 +32,10 @@
     <table style="white-space: nowrap;overflow: auto;" >
         <thead>
         <tr>
-            <th>
+            <!--<th width="37px">
                 <input type="checkbox" title="全选">
-            </th>
-            <th>ID</th>
+            </th>-->
+            <th width="151px">ID</th>
             <th>表名称</th>
             <th>表描述</th>
             <th>当前数据库类型</th>
@@ -57,10 +57,10 @@
         <tbody>
         {{#each data}}
         <tr>
-            <td>
+<!--            <td width="37px">
                 <input type="checkbox" value="{{table_name}}">
-            </td>
-            <td>{{id}}</td>
+            </td>-->
+            <td width="151px">{{id}}</td>
             <td>{{table_name}}</td>
             <td>{{table_comment}}</td>
             <td>{{current_db}}</td>
@@ -71,8 +71,8 @@
             <td>{{author}}</td>
             <td>{{version}}</td>
             <td>
-                {{#equal camel_case 0}}否{{/equal}}
-                {{#equal camel_case 1}}是{{/equal}}
+                {{#equal camel_case 'N'}}否{{/equal}}
+                {{#equal camel_case 'Y'}}是{{/equal}}
             </td>
             <td>{{desc}}</td>
             <td>{{create_by}}</td>
@@ -96,5 +96,13 @@
     import {init} from "${ctxPath}/static/js/gen2/gen2.js"
     init();
 </script>
+<style>
+    td:nth-child(2),th:nth-child(2){
+      position:sticky;
+      left:150px;
+      z-index:1;
+      background-color:#eaeaea;
+    }
+</style>
 </body>
 </html>

@@ -1,43 +1,86 @@
 
-// Object属性追加
-function addProperty(from,to){
-	if(!from){
-		console.log("待合并的对象from存在空");
-		return !to?{}:to;
-	}
-	if(!to){
-		return to = from;
-	}
-	for (let p in from){
-		//console.log(p);
-		//if(from.hasOwnProperty(p) && (!to.hasOwnProperty(p) )){
-		//	to[p]=from[p];
-		//}
-		if( !to[p] || null===to[p] || undefined===to[p]  ){
-			// 这里只做追加，有相同属性的不再覆盖
-			to[p]=from[p];
-		}
-	}
-	return to;
+// 合并Object参数(from=>to)
+function assign(from,to){
+  if( !from || !to ){
+    throw new Error(`必要参数不可为空 from:${from},to:${to}，请检查!`);
+  }
+  let ks = Object.keys(from);
+  for( let idx in ks ){
+    let k = ks[idx];
+    let item_from = from[k];
+    let item_to   =   to[k];
+    // 函数,函数用instanceof判断也是Object！
+    if( "function"===(typeof item_from) ){
+        to[k]=from[k];
+        continue;
+    }
+    // 数组,数组判断一定要放在对象(Object)判断前面，因为判断为数组时他也一定是对象
+    if( item_from instanceof Array ){
+      if( !(item_to instanceof Array) ){
+          to[k]=item_to=item_from;
+          continue;
+      }
+      for( let idx in item_from ){
+          to[k].push(item_from[idx]);
+      }
+      continue;
+    }
+    // 对象
+    if( item_from instanceof Object ){
+      if( !(item_to instanceof Object) ){
+        // 给一个默认值
+        to[k]=item_to={};
+      }
+      assign(from[k],to[k]);
+      continue;
+    }
+    // 原生对象 string\number\bool ... etc
+    if( null===item_from || undefined===item_from ){
+        continue;
+    }
+    to[k]=from[k];
+  }
 }
 
-// 强制覆盖
-function addPropertyOverwritten(from,to){
-	if(!from){
-		console.log("待合并的对象from存在空");
-		return !to?{}:to;
-	}
-	if(!to){
-		return to = from;
-	}
-	for (let p in from){
-		// 这里强制覆盖
-		if( from[p]){
-			to[p]=from[p];
-		}
-	}
-	return to;
-}
+//// Object属性追加
+//function addProperty(from,to){
+//	if(!from){
+//		console.log("待合并的对象from存在空");
+//		return !to?{}:to;
+//	}
+//	if(!to){
+//		return to = from;
+//	}
+//	for (let p in from){
+//		//console.log(p);
+//		//if(from.hasOwnProperty(p) && (!to.hasOwnProperty(p) )){
+//		//	to[p]=from[p];
+//		//}
+//		if( !to[p] || null===to[p] || undefined===to[p]  ){
+//			// 这里只做追加，有相同属性的不再覆盖
+//			to[p]=from[p];
+//		}
+//	}
+//	return to;
+//}
+//
+//// 强制覆盖
+//function addPropertyOverwritten(from,to){
+//	if(!from){
+//		console.log("待合并的对象from存在空");
+//		return !to?{}:to;
+//	}
+//	if(!to){
+//		return to = from;
+//	}
+//	for (let p in from){
+//		// 这里强制覆盖
+//		if( from[p]){
+//			to[p]=from[p];
+//		}
+//	}
+//	return to;
+//}
 
 // 表单转json
 function formToJson(form){
@@ -59,7 +102,12 @@ function formToJson(form){
                 data[elem[idx].name]=elem[idx].value;
                 continue;
             case 'radio':
-                data[elem[idx].name]=elem[idx].value;
+                // data[elem[idx].name]=elem[idx].value;
+                // continue;
+                // 只能取checked=true的value
+                if( true===elem[idx].checked ){
+                    data[elem[idx].name]=elem[idx].value;
+                }
                 continue;
             case 'select':
             case 'select-one':
@@ -96,4 +144,4 @@ function formToJson(form){
    return data;
 }
 
-export { addProperty,addPropertyOverwritten,formToJson }
+export { formToJson,assign }

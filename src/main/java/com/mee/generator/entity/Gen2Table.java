@@ -4,6 +4,7 @@ package com.mee.generator.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.mee.generator.enums.CamelCaseEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -49,7 +50,7 @@ public class Gen2Table {
     /**
      * 是否驼峰
      */
-    private String camel_case;
+    private CamelCaseEnum camel_case;
 
     /**备注
      *
@@ -154,11 +155,11 @@ public class Gen2Table {
         this.version = version;
     }
 
-    public String getCamel_case() {
+    public CamelCaseEnum getCamel_case() {
         return camel_case;
     }
 
-    public Gen2Table setCamel_case(String camel_case) {
+    public Gen2Table setCamel_case(CamelCaseEnum camel_case) {
         this.camel_case = camel_case;
         return this;
     }

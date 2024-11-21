@@ -1,6 +1,6 @@
 package com.mee.generator.service.impl;
 
-import com.mee.generator.common.model.MeeResult;
+import com.mee.generator.core.model.MeeResult;
 import com.mee.generator.mapper.MeeDBHandlerMapper;
 import com.mee.generator.service.MeeDBHandler;
 import com.mee.generator.util.CSVWriteUtil;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,11 +95,41 @@ public class MeeDBHandlerImpl implements MeeDBHandler {
         }
         String _sql=sql;
         if(!this.hasLimit(sql)){
-            _sql=this.buildPage(sql,page_no,page_size);
+            _sql=this.buildPage(sql.trim().replace(";",""),page_no,page_size);
         }
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(_sql);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(_sql.trim().replace(";",""));
         List<Object[]> data_list = this.fetch(sqlRowSet,10000);
+        // 类型转换
+        this.convert(data_list);
         return ResultBuild.build(data_list);
+    }
+
+    private void convert(List<Object[]> data_list){
+        switch (dbPlatform){
+            case "oracle":
+                convertOracle(data_list);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 类型转换 for oracle
+     * @param data_list
+     */
+    private void convertOracle(List<Object[]> data_list) {
+        for( Object[] data:data_list ){
+            for( int idx=0;idx<data.length;idx++ ){
+                Object item=data[idx];
+                if( null==item || item instanceof String || item instanceof BigDecimal){
+                    continue;
+                }
+                if( "oracle.sql.TIMESTAMP".equals(item.getClass().getName()) ){
+                    data[idx]=item.toString();
+                }
+            }
+        }
     }
 
     @Override
@@ -133,7 +164,7 @@ public class MeeDBHandlerImpl implements MeeDBHandler {
             case "mysql":
                 return sql+" limit "+page_size+" offset "+(page_size*page_no)+"";
             case "oracle":
-                return sql;
+                return "SELECT TMP_TABLE_COUNT_.* FROM ( SELECT ROWNUM AS R_,TMP_TABLE_.* FROM ( "+sql+" ) TMP_TABLE_) TMP_TABLE_COUNT_ WHERE TMP_TABLE_COUNT_.R_>="+(page_no*page_size)+" AND TMP_TABLE_COUNT_.R_<"+(page_size*(page_no+1));
             default:
                 return sql;
         }

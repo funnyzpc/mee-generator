@@ -1,6 +1,5 @@
 package com.mee.generator.util;
 
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -797,8 +796,8 @@ public class Convert
         else if (obj instanceof Byte[])
         {
             // import org.apache.commons.lang3.ArrayUtils;
-            //byte[] bytes = ArrayUtils.toPrimitive((Byte[]) obj);
-            byte[] bytes=((byte[]) obj);
+            byte[] bytes = toPrimitive((Byte[]) obj);
+//            byte[] bytes=((byte[]) obj);
             return str(bytes, charset);
         }
         else if (obj instanceof ByteBuffer)
@@ -806,6 +805,21 @@ public class Convert
             return str((ByteBuffer) obj, charset);
         }
         return obj.toString();
+    }
+    public static byte[] toPrimitive(Byte[] array) {
+        if (array == null) {
+            return null;
+        } else if (array.length == 0) {
+            return new byte[0];
+        } else {
+            byte[] result = new byte[array.length];
+
+            for(int i = 0; i < array.length; ++i) {
+                result[i] = array[i];
+            }
+
+            return result;
+        }
     }
 
     /**

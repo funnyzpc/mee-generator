@@ -100,7 +100,7 @@ public class ${class_name}ServiceImpl implements ${class_name}Service {
       Map<String,Object> param = new HashMap<String,Object>(2,1);
       param.put("${mapper_key_info.java_field}",${mapper_key_info.java_field});
       //${class_name} ${class_name_camel} = dbSQLDao.queryOne("${base_package}.module.${module_name}.mapper.${table_name}.findBy${mapper_key_info.gs_field}", param);
-      ${class_name} ${class_name_camel} = dbSQLDao.queryOne("${base_package}.xml.${module_name}.${class_name}.findBy${mapper_key_info.gs_field}", param);
+      ${class_name} ${class_name_camel} = dbSQLDao.findOne("${base_package}.xml.${module_name}.${class_name}.findBy${mapper_key_info.gs_field}", param);
       return ResultBuild.build(${class_name_camel});
     }
 
@@ -126,7 +126,7 @@ public class ${class_name}ServiceImpl implements ${class_name}Service {
       ${class_name_camel}.set${c.gs_field}(${c.column_name?contains("time")?string("now","user_id")});
       </#if></#list>
       //int insert_count = dbSQLDao.create("${base_package}.module.${module_name}.mapper.${table_name}.insert",${class_name_camel});
-      int insert_count = dbSQLDao.create("${base_package}.xml.${module_name}.${class_name}.insert",${class_name_camel});
+      int insert_count = dbSQLDao.insert("${base_package}.xml.${module_name}.${class_name}.insert",${class_name_camel});
       return ResultBuild.build(insert_count);
     }
 
@@ -271,7 +271,7 @@ public class ${class_name}ServiceImpl implements ${class_name}Service {
             item.put("update_by",user_id);
             item.put("update_time",now);
         }
-        int insert_count = dbSQLDao.create("${base_package}.xml.${module_name}.${class_name}.insertBatch", data_list);
+        int insert_count = dbSQLDao.insert("${base_package}.xml.${module_name}.${class_name}.insertBatch", data_list);
         LOG.info("${table_name}写入数据{}条", insert_count);
         return ResultBuild.success("成功导入:"+data_list.size() + "条数据");
     }

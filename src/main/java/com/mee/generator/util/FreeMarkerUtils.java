@@ -1,9 +1,8 @@
 package com.mee.generator.util;
 
 import com.mee.generator.MeeGeneratorApplication;
-import com.mee.generator.common.constant.GenConstants;
-import com.mee.generator.entity.GenTable;
 import com.mee.generator.entity.GenTableColumn;
+import com.mee.generator.enums.HtmlTypeEnum;
 import freemarker.template.Configuration;
 
 import java.util.*;
@@ -68,42 +67,42 @@ public class FreeMarkerUtils {
 //     * @return 模板列表
 //     */
 //    public static VelocityContext prepareContext(Gen2Table genTable) {
-//        String moduleName = genTable.getModule_name();
-//        String businessName = genTable.getBusiness_name();
-//        String packageName = genTable.getPackage_name();
-//        String tplCategory = genTable.getTpl_category();
-//        String functionName = genTable.getFunction_name();
-//
-//        VelocityContext velocityContext = new VelocityContext();
-//        velocityContext.put("tplCategory", genTable.getTpl_category());
-//        velocityContext.put("tableName", genTable.getTable_name());
-//        velocityContext.put("functionName", StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
-//        velocityContext.put("ClassName", genTable.getClass_name());
-//        velocityContext.put("className", StringUtils.uncapitalize(genTable.getClass_name()));
-//        velocityContext.put("moduleName", genTable.getModule_name());
-//        velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusiness_name()));
-//        velocityContext.put("businessName", genTable.getBusiness_name());
-//        velocityContext.put("basePackage", getPackagePrefix(packageName));
-//        velocityContext.put("packageName", packageName);
-//        velocityContext.put("author", genTable.getFunction_author());
-//        velocityContext.put("version", genTable.getFunction_version());
-////        velocityContext.put("datetime", DateUtils.getDate());
-////        velocityContext.put("datetime", DateUtil.nowDay().format(DateUtil.FORMAT_DAY));
-//        velocityContext.put("datetime", DateUtil.now().format(DateUtil.FORMAT_DAY_TIME));
-//        velocityContext.put("pkColumn", genTable.getPk_column());
-//        velocityContext.put("importList", getImportList(genTable));
-//        velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
-//        velocityContext.put("columns", genTable.getColumns());
-//        velocityContext.put("table", genTable);
-//        velocityContext.put("dicts", getDicts(genTable));
-//        setMenuVelocityContext(velocityContext, genTable);
-//        if (TplCategoryEnum.TREE.value.equals(tplCategory)){
-//            setTreeVelocityContext(velocityContext, genTable);
-//        }
-//        if (TplCategoryEnum.SUB.value.equals(tplCategory)){
-//            setSubVelocityContext(velocityContext, genTable);
-//        }
-//        return velocityContext;
+////        String moduleName = genTable.getModule_name();
+////        String businessName = genTable.getBusiness_name();
+////        String packageName = genTable.getPackage_name();
+////        String tplCategory = genTable.getTpl_category();
+////        String functionName = genTable.getFunction_name();
+////
+////        VelocityContext velocityContext = new VelocityContext();
+////        velocityContext.put("tplCategory", genTable.getTpl_category());
+////        velocityContext.put("tableName", genTable.getTable_name());
+////        velocityContext.put("functionName", StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
+////        velocityContext.put("ClassName", genTable.getClass_name());
+////        velocityContext.put("className", StringUtils.uncapitalize(genTable.getClass_name()));
+////        velocityContext.put("moduleName", genTable.getModule_name());
+////        velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusiness_name()));
+////        velocityContext.put("businessName", genTable.getBusiness_name());
+////        velocityContext.put("basePackage", getPackagePrefix(packageName));
+////        velocityContext.put("packageName", packageName);
+////        velocityContext.put("author", genTable.getFunction_author());
+////        velocityContext.put("version", genTable.getFunction_version());
+//////        velocityContext.put("datetime", DateUtils.getDate());
+//////        velocityContext.put("datetime", DateUtil.nowDay().format(DateUtil.FORMAT_DAY));
+////        velocityContext.put("datetime", DateUtil.now().format(DateUtil.FORMAT_DAY_TIME));
+////        velocityContext.put("pkColumn", genTable.getPk_column());
+////        velocityContext.put("importList", getImportList(genTable));
+////        velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
+////        velocityContext.put("columns", genTable.getColumns());
+////        velocityContext.put("table", genTable);
+////        velocityContext.put("dicts", getDicts(genTable));
+////        setMenuVelocityContext(velocityContext, genTable);
+////        if (TplCategoryEnum.TREE.value.equals(tplCategory)){
+////            setTreeVelocityContext(velocityContext, genTable);
+////        }
+////        if (TplCategoryEnum.SUB.value.equals(tplCategory)){
+////            setSubVelocityContext(velocityContext, genTable);
+////        }
+////        return velocityContext;
 //        return null;
 //    }
 //
@@ -154,29 +153,29 @@ public class FreeMarkerUtils {
 //        context.put("subclassName", StringUtils.uncapitalize(subClassName));
 //        context.put("subImportList", getImportList(genTable.getSub_table()));
 //    }
-
-    /**
-     * 获取模板信息
-     *
-     * @return 模板列表
-     */
-    public static List<String> getTemplateList( ){
-        List<String> templates = new ArrayList<String>(8);
-        templates.add("ftl/java/entity.java.ftl");
-        templates.add("ftl/java/mapper.java.ftl");
-        templates.add("ftl/java/service.java.ftl");
-        templates.add("ftl/java/serviceImpl.java.ftl");
-        templates.add("ftl/java/controller.java.ftl");
-        templates.add("ftl/xml/mapper.xml.ftl");
-
-//        templates.add("ftl/sql/sql.ftl");
-        templates.add("ftl/js/api.js.ftl");
-//        templates.add("ftl/vue/index.vue.ftl");
-//        templates.add("ftl/vue/index-tree.vue.ftl");
-//        templates.add("ftl/vue/index.vue.ftl");
-//        templates.add("ftl/java/sub-domain.java.ftl");
-        return templates;
-    }
+//
+//    /**
+//     * 获取模板信息
+//     *
+//     * @return 模板列表
+//     */
+//    public static List<String> getTemplateList( ){
+//        List<String> templates = new ArrayList<String>(8);
+//        templates.add("ftl/java/entity.java.ftl");
+//        templates.add("ftl/java/mapper.java.ftl");
+//        templates.add("ftl/java/service.java.ftl");
+//        templates.add("ftl/java/serviceImpl.java.ftl");
+//        templates.add("ftl/java/controller.java.ftl");
+//        templates.add("ftl/xml/mapper.xml.ftl");
+//
+////        templates.add("ftl/sql/sql.ftl");
+//        templates.add("ftl/js/api.js.ftl");
+////        templates.add("ftl/vue/index.vue.ftl");
+////        templates.add("ftl/vue/index-tree.vue.ftl");
+////        templates.add("ftl/vue/index.vue.ftl");
+////        templates.add("ftl/java/sub-domain.java.ftl");
+//        return templates;
+//    }
 
     /**
      * 获取模板信息
@@ -225,7 +224,6 @@ public class FreeMarkerUtils {
         templates.add("ftl3/java/UpdateInvoker.java");
         templates.add("ftl3/java/WriterInvoker.java");
         templates.add("ftl3/java/DataKey.java");
-        templates.add("ftl3/java/entity.java");
         templates.add("ftl3/java/MgmController.java");
         templates.add("ftl3/java/PreService.java");
         templates.add("ftl3/java/PreServiceImpl.java");
@@ -297,18 +295,18 @@ public class FreeMarkerUtils {
 //        }
 //        return fileName;
 //    }
-
-    /**
-     * 获取包前缀
-     *
-     * @param packageName 包名称
-     * @return 包前缀名称
-     */
-    public static String getPackagePrefix(String packageName) {
-        int lastIndex = packageName.lastIndexOf(".");
-        return StringUtils.substring(packageName, 0, lastIndex);
-    }
-
+//
+//    /**
+//     * 获取包前缀
+//     *
+//     * @param packageName 包名称
+//     * @return 包前缀名称
+//     */
+//    public static String getPackagePrefix(String packageName) {
+//        int lastIndex = packageName.lastIndexOf(".");
+//        return StringUtils.substring(packageName, 0, lastIndex);
+//    }
+//
 //    /**
 //     * 根据列类型获取导入包
 //     *
@@ -355,110 +353,111 @@ public class FreeMarkerUtils {
 //        }
 //        return StringUtils.join(dicts, ", ");
 //    }
-//
-//    /**
-//     * 添加字典列表
-//     *
-//     * @param dicts 字典列表
-//     * @param columns 列集合
-//     */
-//    public static void addDicts(Set<String> dicts, List<GenTableColumn> columns) {
-//        for (GenTableColumn column : columns) {
-//            if (!column.isSuperColumn() && StringUtils.isNotEmpty(column.getDict_type()) && StringUtils.equalsAny(
-//                    column.getHtml_type(),
-//                    new String[] { HtmlTypeEnum.SELECT.value, HtmlTypeEnum.RADIO.value, HtmlTypeEnum.CHECKBOX.value }))
-//            {
-//                dicts.add("'" + column.getDict_type() + "'");
-//            }
-//        }
-//    }
 
     /**
-     * 获取权限前缀
+     * 添加字典列表
      *
-     * @param moduleName 模块名称
-     * @param businessName 业务名称
-     * @return 返回权限前缀
+     * @param dicts 字典列表
+     * @param columns 列集合
      */
-    public static String getPermissionPrefix(String moduleName, String businessName) {
-        return StringUtils.format("{}:{}", moduleName, businessName);
-    }
-
-    /**
-     * 获取上级菜单ID字段
-     *
-     * @param paramsObj 生成其他选项
-     * @return 上级菜单ID字段
-     */
-    public static String getParentMenuId(Map paramsObj) {
-        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(GenConstants.PARENT_MENU_ID)
-                && StringUtils.isNotEmpty((String)paramsObj.get(GenConstants.PARENT_MENU_ID)))
-        {
-            return (String)paramsObj.get(GenConstants.PARENT_MENU_ID);
-        }
-        return DEFAULT_PARENT_MENU_ID;
-    }
-
-    /**
-     * 获取树编码
-     *
-     * @param paramsObj 生成其他选项
-     * @return 树编码
-     */
-    public static String getTreecode(Map paramsObj) {
-        if (paramsObj.containsKey(GenConstants.TREE_CODE)) {
-            return StringUtils.toCamelCase((String)paramsObj.get(GenConstants.TREE_CODE));
-        }
-        return StringUtils.EMPTY;
-    }
-
-    /**
-     * 获取树父编码
-     *
-     * @param paramsObj 生成其他选项
-     * @return 树父编码
-     */
-    public static String getTreeParentCode(Map paramsObj){
-        if (paramsObj.containsKey(GenConstants.TREE_PARENT_CODE)){
-            return StringUtils.toCamelCase((String)paramsObj.get(GenConstants.TREE_PARENT_CODE));
-        }
-        return StringUtils.EMPTY;
-    }
-
-    /**
-     * 获取树名称
-     *
-     * @param paramsObj 生成其他选项
-     * @return 树名称
-     */
-    public static String getTreeName(Map paramsObj){
-        if (paramsObj.containsKey(GenConstants.TREE_NAME)){
-            return StringUtils.toCamelCase((String)paramsObj.get(GenConstants.TREE_NAME));
-        }
-        return StringUtils.EMPTY;
-    }
-
-    /**
-     * 获取需要在哪一列上面显示展开按钮
-     *
-     * @param genTable 业务表对象
-     * @return 展开按钮列序号
-     */
-    public static int getExpandColumn(GenTable genTable){
-        String options = genTable.getOptions();
-//        JSONObject paramsObj = JSON.parseObject(options);
-        HashMap paramsObj = JacksonUtil.toObject(options,HashMap.class);
-        String treeName = (String)paramsObj.get(GenConstants.TREE_NAME);
-        int num = 0;
-        for (GenTableColumn column : genTable.getColumns()){
-            if (column.is_list()){
-                num++;
-                String columnName = column.getColumn_name();
-                if (columnName.equals(treeName)){
-                    break;
-                }
+    public static void addDicts(Set<String> dicts, List<GenTableColumn> columns) {
+        for (GenTableColumn column : columns) {
+            if (!column.isSuperColumn() && StringUtils.isNotEmpty(column.getDict_type()) && StringUtils.equalsAny(
+                    column.getHtml_type(),
+                    new String[] { HtmlTypeEnum.SELECT.value, HtmlTypeEnum.RADIO.value, HtmlTypeEnum.CHECKBOX.value }))
+            {
+                dicts.add("'" + column.getDict_type() + "'");
             }
         }
-        return num;
     }
+
+//    /**
+//     * 获取权限前缀
+//     *
+//     * @param moduleName 模块名称
+//     * @param businessName 业务名称
+//     * @return 返回权限前缀
+//     */
+//    public static String getPermissionPrefix(String moduleName, String businessName) {
+//        return StringUtils.format("{}:{}", moduleName, businessName);
+//    }
+//
+//    /**
+//     * 获取上级菜单ID字段
+//     *
+//     * @param paramsObj 生成其他选项
+//     * @return 上级菜单ID字段
+//     */
+//    public static String getParentMenuId(Map paramsObj) {
+//        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(GenConstants.PARENT_MENU_ID)
+//                && StringUtils.isNotEmpty((String)paramsObj.get(GenConstants.PARENT_MENU_ID)))
+//        {
+//            return (String)paramsObj.get(GenConstants.PARENT_MENU_ID);
+//        }
+//        return DEFAULT_PARENT_MENU_ID;
+//    }
+//
+//    /**
+//     * 获取树编码
+//     *
+//     * @param paramsObj 生成其他选项
+//     * @return 树编码
+//     */
+//    public static String getTreecode(Map paramsObj) {
+//        if (paramsObj.containsKey(GenConstants.TREE_CODE)) {
+//            return StringUtils.toCamelCase((String)paramsObj.get(GenConstants.TREE_CODE));
+//        }
+//        return StringUtils.EMPTY;
+//    }
+//
+//    /**
+//     * 获取树父编码
+//     *
+//     * @param paramsObj 生成其他选项
+//     * @return 树父编码
+//     */
+//    public static String getTreeParentCode(Map paramsObj){
+//        if (paramsObj.containsKey(GenConstants.TREE_PARENT_CODE)){
+//            return StringUtils.toCamelCase((String)paramsObj.get(GenConstants.TREE_PARENT_CODE));
+//        }
+//        return StringUtils.EMPTY;
+//    }
+//
+//    /**
+//     * 获取树名称
+//     *
+//     * @param paramsObj 生成其他选项
+//     * @return 树名称
+//     */
+//    public static String getTreeName(Map paramsObj){
+//        if (paramsObj.containsKey(GenConstants.TREE_NAME)){
+//            return StringUtils.toCamelCase((String)paramsObj.get(GenConstants.TREE_NAME));
+//        }
+//        return StringUtils.EMPTY;
+//    }
+//
+//    /**
+//     * 获取需要在哪一列上面显示展开按钮
+//     *
+//     * @param genTable 业务表对象
+//     * @return 展开按钮列序号
+//     */
+//    public static int getExpandColumn(GenTable genTable){
+//        String options = genTable.getOptions();
+////        JSONObject paramsObj = JSON.parseObject(options);
+//        HashMap paramsObj = JacksonUtil.toObject(options,HashMap.class);
+//        String treeName = (String)paramsObj.get(GenConstants.TREE_NAME);
+//        int num = 0;
+//        for (GenTableColumn column : genTable.getColumns()){
+//            if (column.is_list()){
+//                num++;
+//                String columnName = column.getColumn_name();
+//                if (columnName.equals(treeName)){
+//                    break;
+//                }
+//            }
+//        }
+//        return num;
+//    }
+
 }

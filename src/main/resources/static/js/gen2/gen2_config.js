@@ -5,8 +5,6 @@ import * as FetchUtils  from "../fetch_utils.js"
 var module={
     /* 调用Common.init后是否调用一次查询 */
     default_query:true,
-    /* 分页表单数据(可选) */
-    search_form: {"page_no":0,"page_size":10},
     /* 当前业务模块(页面)扩展函数 id=search-form的扩展事件 */
     events:{ "new_config":doNewConfig },
     /* id=data-list的行事件,此类事件会自动传入(当前行数据,当前行索引,当前dom对象),也可默认为空 */
@@ -22,9 +20,7 @@ var module={
         /* 修改: PUT请求 */
         "mod": ctxPath+"/gen2_config/update",
         "base": ctxPath+"/gen2_config",
-    },
-    /* 列表查询请求，如果执行的是Common的相关请求则数据会回写到此字段内*/
-    data:[],
+    }
 };
 
 // 初始化通用模块

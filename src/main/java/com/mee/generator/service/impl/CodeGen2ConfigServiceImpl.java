@@ -1,10 +1,10 @@
 package com.mee.generator.service.impl;
 
-import com.mee.generator.common.model.MeeResult;
+import com.mee.generator.core.model.MeeResult;
 import com.mee.generator.entity.Gen2Config;
+import com.mee.generator.util.ResultBuild;
 import com.mee.generator.mapper.Gen2ConfigMapper;
 import com.mee.generator.util.DateUtil;
-import com.mee.generator.util.ResultBuild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

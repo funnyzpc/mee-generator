@@ -31,23 +31,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectGenTableColumnVo">
-        select column_id, table_id, column_name, column_comment, column_type, java_type, java_field, is_pk, is_increment, is_required, is_insert, is_edit, is_list, is_query, query_type, html_type, dict_type, sort, create_by, create_time /*, update_by, update_time*/ from gen_table_column
+        SELECT COLUMN_ID, TABLE_ID, COLUMN_NAME, COLUMN_COMMENT, COLUMN_TYPE, JAVA_TYPE, JAVA_FIELD, IS_PK, IS_INCREMENT, IS_REQUIRED, IS_INSERT, IS_EDIT, IS_LIST, IS_QUERY, QUERY_TYPE, HTML_TYPE, DICT_TYPE, SORT, CREATE_BY, CREATE_TIME /*, UPDATE_BY, UPDATE_TIME*/ FROM GEN_TABLE_COLUMN
     </sql>
 	
     <select id="selectGenTableColumnListByTableId" parameterType="Long" resultMap="GenTableColumnResult">
         <include refid="selectGenTableColumnVo"/>
         where table_id = #{tableId}
-        order by sort
+        ORDER BY SORT
     </select>
 
     <select id="selectDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
-        select
-        t1.*,
-        t2.table_comment,
-        t2.column_comment,
-        t2.column_type,
-        case when t3.column_name is not null then '1' else '0' end as is_pk -- 主键
-        from
+        SELECT
+            T1.*,
+            T2.TABLE_COMMENT,
+            T2.COLUMN_COMMENT,
+            T2.COLUMN_TYPE,
+            CASE WHEN T3.COLUMN_NAME IS NOT NULL THEN '1' ELSE '0' END AS IS_PK <!--主键-->
+        FROM
         (
             select
             t.table_name,
@@ -102,6 +102,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ) as t3  on t1.table_name=t3.table_name and t1.column_name=t3.column_name
     </select>
 
+    <select id="selectDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult" databaseId="oracle">
+        SELECT
+            t1.*,t2.*,
+            CASE WHEN t3.column_name IS NOT NULL THEN '1' ELSE '0' END AS is_pk,
+            CASE WHEN t4.COLUMN_NAME IS NOT NULL THEN '1' ELSE '0' END AS is_required,
+            '0' is_increment
+        FROM
+        (
+            SELECT tc.TABLE_NAME ,tc.COLUMN_NAME,tc.COLUMN_ID AS sort,tc.data_type AS column_type,
+            COALESCE(tc.DATA_PRECISION,tc.data_length) AS LENGTH,
+            tc.DATA_SCALE SCALE
+            FROM USER_TAB_COLUMNS tc
+        ) t1
+        LEFT JOIN
+        (
+            SELECT cc.comments AS column_comment,cc.table_name ,cc.column_name  FROM user_col_comments cc
+        ) t2 ON t1.table_name=t2.table_name AND t1.column_name=t2.column_name
+        LEFT JOIN
+        (
+            select ucc.constraint_name,ucc.TABLE_NAME ,ucc.COLUMN_NAME
+            from user_cons_columns ucc left JOIN  user_constraints uc
+            ON  ucc.constraint_name = uc.constraint_name
+            AND ucc.table_name=uc.TABLE_NAME
+            where uc.constraint_type = 'P'
+        ) t3 ON t1.table_name=t3.table_name AND t1.column_name=t3.column_name
+        LEFT JOIN
+        (
+            select ucc.TABLE_NAME ,ucc.COLUMN_NAME
+            from user_cons_columns ucc left JOIN  user_constraints uc
+            ON  ucc.constraint_name = uc.constraint_name
+            AND ucc.table_name=uc.TABLE_NAME
+            GROUP BY ucc.TABLE_NAME ,ucc.COLUMN_NAME
+        ) t4 ON t1.table_name=t4.table_name AND t1.column_name=t4.column_name
+        WHERE t1.table_name=#{table_name}
+    </select>
+
 <!--   mysql
     <select id="selectDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
 		select column_name, (case when (is_nullable = 'no' <![CDATA[ && ]]> column_key != 'PRI') then '1' else null end) as is_required, (case when column_key = 'PRI' then '1' else '0' end) as is_pk, ordinal_position as sort, column_comment, (case when extra = 'auto_increment' then '1' else '0' end) as is_increment, column_type
@@ -111,32 +147,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 <!--    <insert id="insertGenTableColumn" parameterType="com.mee.generator.entity.GenTableColumn" useGeneratedKeys="true" keyProperty="columnId">-->
     <insert id="insertGenTableColumn" parameterType="com.mee.generator.entity.GenTableColumn" >
-        insert into gen_table_column (
-            column_id,
-			table_id,
-			column_name,
-			column_comment,
-			column_type,
-			java_type,
-			java_field,
-			is_pk,
-			is_increment,
-			is_required,
-			is_insert,
-			is_edit,
-			is_list,
-			is_query,
-			query_type,
-			html_type,
-			dict_type,
-			sort,
-			create_by,
-			create_time
-         )values(
+        INSERT INTO GEN_TABLE_COLUMN (
+            COLUMN_ID,
+			TABLE_ID,
+			COLUMN_NAME,
+			COLUMN_COMMENT,
+			COLUMN_TYPE,
+			JAVA_TYPE,
+			JAVA_FIELD,
+			IS_PK,
+			IS_INCREMENT,
+			IS_REQUIRED,
+			IS_INSERT,
+			IS_EDIT,
+			IS_LIST,
+			IS_QUERY,
+			QUERY_TYPE,
+			HTML_TYPE,
+			DICT_TYPE,
+			SORT,
+			CREATE_BY,
+			CREATE_TIME
+         )VALUES(
             #{column_id},
 			#{table_id},
 			#{column_name},
-			#{column_comment},
+			#{column_comment,jdbcType=VARCHAR},
 			#{column_type},
 			#{java_type},
 			#{java_field},
@@ -144,12 +180,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			#{is_increment},
 			#{is_required},
 			#{is_insert},
-			#{is_edit},
-			#{is_list},
-			#{is_query},
+			#{is_edit,jdbcType=VARCHAR},
+			#{is_list,jdbcType=VARCHAR},
+			#{is_query,jdbcType=VARCHAR},
 			#{query_type},
-			#{html_type},
-			#{dict_type},
+			#{html_type,jdbcType=VARCHAR},
+			#{dict_type,jdbcType=VARCHAR},
             #{sort},
 			#{create_by},
 			#{create_time}
@@ -157,7 +193,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 	 
     <update id="updateGenTableColumn" parameterType="com.mee.generator.entity.GenTableColumn">
-        update gen_table_column
+        update GEN_TABLE_COLUMN
         <set>
             <if test="column_comment != null">column_comment = #{column_comment},</if>
             <if test="java_type != null">java_type = #{java_type},</if>
@@ -181,18 +217,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
 <!--    <delete id="deleteGenTableColumnByIds" parameterType="Long">
-        delete from gen_table_column where table_id in 
+        delete from GEN_TABLE_COLUMN where table_id in 
         <foreach collection="array" item="tableId" open="(" separator="," close=")">
             #{tableId}
         </foreach>
     </delete>-->
 
     <delete id="deleteByTableId" >
-        delete from gen_table_column where table_id=#{table_id}
+        delete from GEN_TABLE_COLUMN where table_id=#{table_id}
     </delete>
     
     <delete id="deleteGenTableColumns">
-        delete from gen_table_column where column_id in 
+        delete from GEN_TABLE_COLUMN where column_id in 
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item.columnId}
         </foreach>
@@ -200,7 +236,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!--    <select id="findList" resultType="java.util.Map" resultMap="GenTableColumnResult">-->
     <select id="findList" resultMap="GenTableColumnResult">
-        select * from gen_table_column
+        select * from GEN_TABLE_COLUMN
         <where>
             <if test="column_id!=null">and column_id=#{column_id}</if>
             <if test="table_id!=null">and table_id=#{table_id}</if>
@@ -211,13 +247,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="findList2" resultType="java.util.Map">
-        select * from gen_table_column
+        select * from GEN_TABLE_COLUMN
         <where>
             <if test="table_id!=null">and table_id=#{table_id}</if>
             <if test="column_id!=null">and column_id=#{column_id}</if>
             <if test="java_type!=null and java_type!=''">and java_type=#{java_type}</if>
         </where>
-        order by  column_id desc
+        ORDER BY COLUMN_ID DESC
     </select>
 
 </mapper>

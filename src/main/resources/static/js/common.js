@@ -3,16 +3,26 @@ import * as MeeUtils  from "./mee_utils.js"
 
 /*通用api及参数定义，init后会自动合并到各自的模块:module */
 var global_module = {
-//    /* 分页表单的默认参数 selected:已选择的数据体id，一般定义多选框需要此参数*/
-//    page_form:{"page_no":0,"page_size":10,"idx":1,"selected":[]},
+    /* 默认是否执行分页查询 */
+    default_query:false,
+    /* 著录(修改/新增)表单结构定义 */
+    form_struct:{ on:false },
     /* 分页表单的默认参数 _selected:已选择的数据体id，一般定义多选框需要此参数*/
     search_form:{"page_no":0,"page_size":10,"_current_page_size":0,"_total":0,"_page_count":0,"_selected":[]},
     /* 主键字段,如果module定义了则会覆盖此字段 */
     id_field:"id",
-//    toolbar:{query: doQuery, "new":doNew, "exp": doExp, "imp": doImp, "mod": doMod, "del":doDel},
+    /* 查询表单参数 */
     events:{"query": doQuery, "export":doExport,"new":doNew,"previous_page":previousPage,"first_page":firstPage,"next_page":nextPage},
+    /* 分页数据行事件 */
     data_events:{"select_one":doSelectOne,"select_all":doSelectAll},
-//    events:{}
+    // 搜索框ID，可由外层module定义
+    search_form_id:"data-search",
+    // 分页列表ID，可由外层module定义
+    data_list_id:"data-list",
+    // 模板ID，可由外层module定义
+    template_id:"template-data-list",
+    // 这里的data可能是Object也可能是Array,所以这里不申明
+    // data:[],
     api:{
         /* 列表分页查询：GET请求 */
         "page":"/list",
@@ -36,57 +46,27 @@ function init(module){
 
 // 合并module 用户态的module合并到global_module
 function mergeProperty(module){
-    //global_module.ctx_path=module.ctx_path;
-    global_module.default_query=(true===module.default_query || false===module.default_query)?module.default_query:global_module.default_query;
-    global_module.form_struct=module.form_struct?module.form_struct:{};
-    // 用户态的property合并到global的property
-    MeeUtils.addProperty(module.events,global_module.events);
-    MeeUtils.addProperty(module.data_events,global_module.data_events);
-    // MeeUtils.addProperty(module.search_form,global_module.search_form);
-    MeeUtils.addPropertyOverwritten(module.search_form,global_module.search_form);
-    MeeUtils.addPropertyOverwritten(module.api,global_module.api);
-    if( module.default_query && (true===module.default_query || false===module.default_query) ){
-        global_module.default_query=module.default_query;
-    }
-    if( module.id_field ){
-        global_module.id_field=module.id_field;
-    }
     // api fill base
-    let has_common = module.api["base"]?true:false;
-    for( let key in global_module.api ){
-        if( !module.api[key] ){
-            // 填充一个base
-            if( has_common ){
-                global_module.api[key]=module.api["base"]+global_module.api[key];
-            }else{
-                throw new Error(`api未定义 module.api[${key}]，请检查!`)
-            }
-        }
+    if( module.api["base"] ){
+      for( let key in global_module.api ){
+        global_module.api[key]=module.api["base"]+global_module.api[key];
+      }
     }
-//    // 合并init_dict,默认为空 这里面定义的字典项最终是从接口过来
-//    global_module.init_dict=module.init_dict?module.init_dict:[];
-//    // 合并来自用户自己定义的字典项
-//    //global_module.dicts=MeeUtils.addProperty(module.dicts,global_module.dicts);
-//    MeeUtils.addProperty(module.dicts,global_module.dicts);
-    // 合并标识id
-    global_module.search_form_id=module.search_form_id?module.search_form_id:"data-search";
-    global_module.data_list_id=module.data_list_id?module.data_list_id:"data-list";
-    global_module.template_id=module.template_id?module.template_id:"template-data-list";
-
+    // 合并module数据至global_module
+    MeeUtils.assign(module,global_module);
+    //console.log(module);
+    //console.log(global_module);
 }
 
 // 注册查询表单事件
 function initSearchForm(){
-//    let query_id = global_module.search_form_id?global_module.search_form_id:"data-search";
     let query_id = global_module.search_form_id;
     /* 初始化查询表单事件 */
-    // let search_form_dom = document.querySelector("#search_form_region_id form");
     let search_form_dom = document.querySelector(`#${query_id} form`);
     // 如果没有查询表单则无需注册事件
     if( !search_form_dom ){
         return;
     }
-    //let search_form = search_form_dom.querySelectorAll("button,input[type=button]");
     let search_form = search_form_dom.querySelectorAll("*[_func]");
     search_form.forEach(function (item){
         let func = item.getAttribute("_func");
@@ -106,7 +86,8 @@ function initSearchForm(){
         }else{
             // reset是不需要注册为单独的方法
             if( func && "reset"!==func){
-                alert("ERROR:*[_func="+func+"]方法不存在!")
+                alert("ERROR:*[_func="+func+"]方法不存在!");
+                throw new Error("ERROR:*[_func="+func+"]方法不存在!");
             }
         }
     });
@@ -132,7 +113,6 @@ function doExport(/*event*/){
 function load(param){
     let query_id = global_module.data_list_id;
     global_module.search_form._selected=[]; // 重置为空，否则分页后数据仍保留
-    //document.querySelector("#data-list").innerHTML="<div class=\"loading\"></div>";
     document.querySelector(`#${query_id}`).innerHTML="<div class=\"loading\"></div>";
     FetchUtils.fetchGet(global_module.api.page,param,function (d){
         // 登录超时
@@ -167,8 +147,6 @@ function toPageData( d ){
     d.index=global_module.search_form.page_no+1;
     d.page_size=global_module.search_form.page_size;
 
-    // // 当前第几页
-    //global_module.search_form.page_no=d.index;
     // 时间返回的记录数
     global_module.search_form._current_page_size=d.data.length;
 }
@@ -266,7 +244,6 @@ function doSelectOne(elem){
                list.push(global_module.search_form._selected[idx]);
             }
             // 数组内删除一个
-            // global_module.search_form._selected.splice(idx,1);
             global_module.search_form._selected=list;
         }
     }
@@ -285,7 +262,6 @@ function initPageEvent(){
     // 禁用所有分页按钮
     let _page_no = global_module.search_form.page_no;
     let page_item_dom = page_dom.querySelectorAll("button,select");
-    // let body_event = document.querySelector("#page-form").querySelectorAll("button");
     // 如果只有一页则禁用所有分页按钮
     if( global_module.search_form.page_size>global_module.search_form._current_page_size && _page_no===0 ){
         page_item_dom.forEach(function (item,idx){
@@ -352,8 +328,6 @@ function doNew(){
 
 // 首页
 function firstPage(elem){
-    // alert("首页");
-    //load(global_module.search_form, global_module.search_form.page_no=0, global_module.search_form.page_size);
     global_module.search_form.page_no=0;
     load(global_module.search_form);
 };
@@ -365,7 +339,6 @@ function previousPage(elem){
         alert("已经是第一页了（@,@）")
         return;
     }
-    // load(global_module.search_form, global_module.search_form.page_no=global_module.search_form.page_no-1, global_module.search_form.page_size);
     // -1
     global_module.search_form.page_no--;
     load(global_module.search_form);
@@ -373,15 +346,13 @@ function previousPage(elem){
 
 // 下一页
 function nextPage(elem){
-    // alert("下一页");
-    if( global_module.data.length!==global_module.search_form.page_size ){
+    if( global_module.data.length<global_module.search_form.page_size ){
         alert("已经是最后一页了（*m*）")
         return;
     }
     // +1
     global_module.search_form.page_no++;
     load(global_module.search_form);
-    //load(global_module.search_form, global_module.search_form.page_no=global_module.search_form.page_no+1, global_module.search_form.page_size);
 };
 
 export {init,showList,global_module,load,doQuery}

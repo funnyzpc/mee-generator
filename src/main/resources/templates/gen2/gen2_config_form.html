@@ -47,8 +47,8 @@
                     <label class="control-label col-sm-3" >是否驼峰<span style="color:red;">*</span></label>
                     <!--                    <input type="text" name="camel_case" value="{{camel_case}}" class="form-control input-sm " required="required" aria-required="true">-->
                     <div style="width:100%;padding:6px 16px 6px 8px;" class="col-sm-6">
-                        <input type="radio" name="camel_case" value="1" {{#equal camel_case 1}}checked{{/equal}} required="required" />是
-                        <input type="radio" name="camel_case" value="0" {{#equal camel_case 0}}checked{{/equal}} required="required" />否
+                        <input type="radio" name="camel_case" value="Y" {{#equal camel_case 'Y'}}checked{{/equal}} required="required" />是
+                        <input type="radio" name="camel_case" value="N" {{#equal camel_case 'N'}}checked{{/equal}} required="required" />否
                     </div>
                 </div>
             </div>

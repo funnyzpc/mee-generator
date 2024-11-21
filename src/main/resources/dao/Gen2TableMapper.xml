@@ -22,9 +22,35 @@
              <if test="create_time != null" > and create_time = #{create_time}</if>
              <if test="update_by != null and update_by!=''" > and update_by like #{update_by}</if>
         </where>
-        order by id desc
+        ORDER BY ID DESC
         <if test="page_no !=null">
             limit #{page_size} offset #{page_size}*#{page_no}
+        </if>
+    </select>
+
+    <select id="findList" resultType="com.mee.generator.entity.Gen2Table" databaseId="oracle">
+        SELECT T1.* FROM ( select T.*,ROWNUM AS R from GEN2_TABLE T
+        <where>
+            <if test="id != null" > and id = #{id}</if>
+            <if test="table_name != null and table_name!=''" > and table_name like #{table_name}</if>
+            <if test="table_comment != null and table_comment!=''" > and table_comment like #{table_comment}</if>
+            <if test="current_db_type != null and current_db_type!=''" > and current_db_type like #{current_db_type}</if>
+            <if test="class_name != null and class_name!=''" > and class_name like #{class_name}</if>
+            <if test="package_name != null and package_name!=''" > and package_name like #{package_name}</if>
+            <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+            <if test="remark != null and remark!=''" > and remark like #{remark}</if>
+            <if test="create_by != null and create_by!=''" > and create_by like #{create_by}</if>
+            <if test="create_time != null" > and create_time = #{create_time}</if>
+            <if test="update_by != null and update_by!=''" > and update_by like #{update_by}</if>
+        </where>
+        ORDER BY ID DESC
+        ) T1
+        <if test="page_no !=null">
+            <!--
+            limit #{page_size} offset #{page_size}*#{page_no}
+            -->
+            WHERE T1.R > #{page_size}*#{page_no}
+            AND   T1.R &lt;= #{page_size}*(#{page_no}+1)
         </if>
     </select>
 
@@ -50,18 +76,38 @@
     </select>
 
     <select id="findById" resultType="com.mee.generator.entity.Gen2Table">
-        SELECT * FROM GEN2_TABLE t
-        where t.id = #{table_id}
+        SELECT * FROM GEN2_TABLE T WHERE T.ID = #{table_id}
     </select>
 
     <select id="findByIdToMap" resultType="java.util.LinkedHashMap">
-        SELECT * FROM GEN2_TABLE t
-        where t.id = #{table_id}
+        SELECT * FROM GEN2_TABLE T WHERE T.ID = #{table_id}
     </select>
 
     <select id="findByIdToMap" resultType="java.util.LinkedHashMap" databaseId="mysql">
         SELECT
         id,table_name,table_comment,current_db,database_id,class_name,base_package,module_name,author,version,camel_case,`desc`,create_by,create_time,update_by,update_time
+        FROM GEN2_TABLE t
+        where t.id = #{table_id}
+    </select>
+
+    <select id="findByIdToMap" resultType="java.util.LinkedHashMap" databaseId="oracle">
+        SELECT
+            id "id",
+            table_name "table_name",
+            table_comment "table_comment",
+            current_db "current_db",
+            database_id "database_id",
+            class_name "class_name",
+            base_package "base_package",
+            module_name "module_name",
+            author "author",
+            version "version",
+            camel_case "camel_case",
+            "DESC" "desc",
+            create_by "create_by",
+            create_time "create_time",
+            update_by "update_by",
+            update_time "update_time"
         FROM GEN2_TABLE t
         where t.id = #{table_id}
     </select>
@@ -75,7 +121,7 @@
     </select>
 
     <!-- postgresql -->
-    <select id="findTableList" resultType="com.mee.generator.entity.Gen2Table">
+    <select id="findTableList" resultType="com.mee.generator.entity.Gen2Table" databaseId="postgresql">
         select
         c.relname as table_name,
         /* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
@@ -108,7 +154,7 @@
         left join ( select database() as current_schema ) as s on 1=1
         where table_schema = (select database())
 <!--        AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'-->
-        AND table_name NOT IN (select table_name from gen_table)
+        AND table_name NOT IN (select table_name from GEN2_TABLE)
         AND LOWER(table_name) NOT LIKE 'gen%'
         <if test="table_name != null and table_name != ''">
             AND lower(t.table_name) like lower(#{table_name})
@@ -121,7 +167,34 @@
         </if>
     </select>
 
-    <select id="findTableByNames" resultType="com.mee.generator.entity.Gen2Table">
+    <select id="findTableList" resultType="com.mee.generator.entity.Gen2Table" databaseId="oracle">
+        SELECT T1.* FROM (
+        SELECT T.TABLE_NAME,tc.TABLE_TYPE ,TC.COMMENTS AS TABLE_COMMENT,CURRENT_TIMESTAMP AS CREATE_TIME,CURRENT_TIMESTAMP UPDATE_TIME,
+        SYS_CONTEXT('userenv','current_schema') AS current_schema,rownum AS R
+        FROM USER_TABLES T LEFT JOIN USER_TAB_COMMENTS TC
+        ON T.TABLE_NAME =TC.TABLE_NAME
+        <where>
+            <!-- 不含生成表信息 -->
+            AND T.TABLE_NAME NOT LIKE 'GEN%'
+            <!-- 不含已生成信息 -->
+            AND T.TABLE_NAME NOT IN (SELECT TABLE_NAME  FROM GEN2_TABLE)
+            <if test="table_name != null and table_name != ''">
+                AND LOWER(T.TABLE_NAME) LIKE LOWER(#{table_name})
+            </if>
+            <if test="table_comment != null and table_comment != ''">
+                AND LOWER(TC.COMMENTS) LIKE LOWER( #{table_comment} )
+            </if>
+        </where>
+        ORDER BY T.TABLE_NAME
+        ) T1
+        <!-- oracle的分页条件必须置于最顶层，否则会出现断页 -->
+        <if test="page_no !=null">
+            WHERE T1.R > #{page_size}*#{page_no}
+            AND   T1.R &lt;= #{page_size}*(#{page_no}+1)
+        </if>
+    </select>
+
+    <select id="findTableByNames" resultType="com.mee.generator.entity.Gen2Table" databaseId="postgresql">
         select
         c.relname as table_name,
         /* cast(obj_description(c.relfilenode,'pg_class') as varchar) as table_comment, */
@@ -155,6 +228,20 @@
         </foreach>
     </select>
 
+    <select id="findTableByNames" resultType="com.mee.generator.entity.Gen2Table" databaseId="oracle">
+        select t1.* from (
+        SELECT t.TABLE_NAME,tc.TABLE_TYPE ,tc.COMMENTS AS table_comment,current_timestamp AS create_time,CURRENT_TIMESTAMP update_time,
+        SYS_CONTEXT('USERENV','CURRENT_SCHEMA') AS CURRENT_SCHEMA,ROWNUM AS R
+        FROM USER_TABLES T LEFT JOIN USER_TAB_COMMENTS TC
+        ON T.TABLE_NAME =TC.TABLE_NAME
+        ) T1
+        WHERE LOWER(T1.TABLE_NAME) NOT LIKE 'gen%'
+        AND LOWER(T1.TABLE_NAME) in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            LOWER(#{item})
+        </foreach>
+    </select>
+
     <!-- update -->
     <update id="update">
         update GEN2_TABLE
@@ -177,7 +264,7 @@
         </where>
     </update>
 
-    <insert id="insert">
+    <insert id="insert" databaseId="postgresql">
         insert into GEN2_TABLE(
             id,
             table_name,
@@ -246,6 +333,44 @@
             #{version},
             #{camel_case},
             #{desc},
+            #{create_by},
+            #{create_time},
+            #{update_by},
+            #{update_time}
+        )
+    </insert>
+
+    <insert id="insert" databaseId="oracle">
+        insert into GEN2_TABLE(
+            ID,
+            TABLE_NAME,
+            TABLE_COMMENT,
+            CURRENT_DB,
+            DATABASE_ID,
+            CLASS_NAME,
+            BASE_PACKAGE,
+            MODULE_NAME,
+            AUTHOR,
+            VERSION,
+            CAMEL_CASE,
+            "DESC",
+            CREATE_BY,
+            CREATE_TIME,
+            UPDATE_BY,
+            UPDATE_TIME
+        ) values (
+            #{id},
+            #{table_name},
+            #{table_comment},
+            #{current_db},
+            #{database_id},
+            #{class_name},
+            #{base_package},
+            #{module_name},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{desc,jdbcType=VARCHAR},
             #{create_by},
             #{create_time},
             #{update_by},

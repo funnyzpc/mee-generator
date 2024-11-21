@@ -4,6 +4,7 @@ package com.mee.generator.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.mee.generator.enums.CamelCaseEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -42,9 +43,10 @@ public class GenTable3 {
     private String module_name;
     private String author;
     private String version;
-    private String camel_case;
-    private String back_dir;
-    private String front_dir;
+    // 是否驼峰
+    private CamelCaseEnum camel_case;
+//    private String back_dir;
+//    private String front_dir;
 
      // 备注
     private String desc;
@@ -147,29 +149,13 @@ public class GenTable3 {
         this.version = version;
     }
 
-    public String getCamel_case() {
+    public CamelCaseEnum getCamel_case() {
         return camel_case;
     }
 
-    public GenTable3 setCamel_case(String camel_case) {
+    public GenTable3 setCamel_case(CamelCaseEnum camel_case) {
         this.camel_case = camel_case;
         return this;
-    }
-
-    public String getBack_dir() {
-        return back_dir;
-    }
-
-    public void setBack_dir(String back_dir) {
-        this.back_dir = back_dir;
-    }
-
-    public String getFront_dir() {
-        return front_dir;
-    }
-
-    public void setFront_dir(String front_dir) {
-        this.front_dir = front_dir;
     }
 
     public String getDesc() {
@@ -210,5 +196,27 @@ public class GenTable3 {
 
     public void setUpdate_time(LocalDateTime update_time) {
         this.update_time = update_time;
+    }
+
+    @Override
+    public String toString() {
+        return "GenTable3{" +
+                "id='" + id + '\'' +
+                ", table_name='" + table_name + '\'' +
+                ", table_comment='" + table_comment + '\'' +
+                ", current_db='" + current_db + '\'' +
+                ", database_id='" + database_id + '\'' +
+                ", class_name='" + class_name + '\'' +
+                ", base_package='" + base_package + '\'' +
+                ", module_name='" + module_name + '\'' +
+                ", author='" + author + '\'' +
+                ", version='" + version + '\'' +
+                ", camel_case='" + camel_case + '\'' +
+                ", desc='" + desc + '\'' +
+                ", create_by='" + create_by + '\'' +
+                ", create_time=" + create_time +
+                ", update_by='" + update_by + '\'' +
+                ", update_time=" + update_time +
+                '}';
     }
 }

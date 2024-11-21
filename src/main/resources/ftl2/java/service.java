@@ -3,6 +3,12 @@ package ${base_package}.module.${module_name}.service;
 import java.util.List;
 import java.util.Map;
 import ${base_package}.module.${module_name}.entity.${class_name};
+import com.mee.common.util.MeeResult;
+import com.mee.core.model.Page;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
+
 <#-- 导入包 -->
 <#if entity_package??>
 <#list entity_package as package>

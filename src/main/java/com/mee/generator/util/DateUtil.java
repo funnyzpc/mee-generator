@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 /**
@@ -60,22 +60,31 @@ public class DateUtil {
         return simpleDateFormat.format(date);
     }
 
-
     /**
      * LocalDate、LocalDateTime 格式化字符串
      */
-    public static String format(LocalDate localDate, String fmtPattern){
+    public static String format(TemporalAccessor localDate, String fmtPattern){
         if(localDate == null || StringUtils.isEmpty(fmtPattern)){
             return null;
         }
         return DateTimeFormatter.ofPattern(fmtPattern).format(localDate);
     }
-    public static String format(LocalDateTime localDateTime, String fmtPattern){
-        if(localDateTime == null || StringUtils.isEmpty(fmtPattern)){
-            return null;
-        }
-        return DateTimeFormatter.ofPattern(fmtPattern).format(localDateTime);
-    }
+
+//    /**
+//     * LocalDate、LocalDateTime 格式化字符串
+//     */
+//    public static String format(LocalDate localDate, String fmtPattern){
+//        if(localDate == null || StringUtils.isEmpty(fmtPattern)){
+//            return null;
+//        }
+//        return DateTimeFormatter.ofPattern(fmtPattern).format(localDate);
+//    }
+//    public static String format(LocalDateTime localDateTime, String fmtPattern){
+//        if(localDateTime == null || StringUtils.isEmpty(fmtPattern)){
+//            return null;
+//        }
+//        return DateTimeFormatter.ofPattern(fmtPattern).format(localDateTime);
+//    }
 
     /** 同期年份 input:yyyy-MM **/
     public static String conYear(String date){
@@ -123,19 +132,19 @@ public class DateUtil {
         return Duration.between(start,end).toMillis()/1000;
     }
 
-    /**
-     * 获取服务器启动时间
-     */
-    public static LocalDateTime getServerStartDate() {
-        long timestamp = ManagementFactory.getRuntimeMXBean().getStartTime();
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),zoneId);
-    }
-    public static String getServerStartDateStr() {
-        long timestamp = ManagementFactory.getRuntimeMXBean().getStartTime();
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),zoneId).format(FORMAT_DAY_TIME);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(addDays(-1L));
-    }
+//    /**
+//     * 获取服务器启动时间
+//     */
+//    public static LocalDateTime getServerStartDate() {
+//        long timestamp = ManagementFactory.getRuntimeMXBean().getStartTime();
+//        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),zoneId);
+//    }
+//    public static String getServerStartDateStr() {
+//        long timestamp = ManagementFactory.getRuntimeMXBean().getStartTime();
+//        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),zoneId).format(FORMAT_DAY_TIME);
+//    }
+//
+//    public static void main(String[] args) {
+//        System.out.println(addDays(-1L));
+//    }
 }

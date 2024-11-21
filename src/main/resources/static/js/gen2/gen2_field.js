@@ -19,9 +19,7 @@ var module={
         page: ctxPath+"/code_gen2/find_by_table_id",
         "base": ctxPath+"/code_gen2",
 
-    },
-    /* 列表查询请求，如果执行的是Common的相关请求则数据会回写到此字段内*/
-    data:[],
+    }
 };
 
 // 初始化通用模块

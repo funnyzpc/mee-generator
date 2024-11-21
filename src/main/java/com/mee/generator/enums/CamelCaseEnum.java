@@ -11,15 +11,14 @@ package com.mee.generator.enums;
 public enum CamelCaseEnum {
 
     /**
-     * 驼峰
-     * */
-    YES("1","驼峰"),
-
-    /**
      * 非驼峰
      * */
-    NO("0","非驼峰/原生");
+    N("N","非驼峰/原生"),
 
+    /**
+     * 驼峰
+     * */
+    Y("Y","驼峰");
 
     /**
      * 值

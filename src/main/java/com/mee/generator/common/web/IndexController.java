@@ -1,6 +1,7 @@
 package com.mee.generator.common.web;
 
 import com.mee.generator.common.service.IndexServiceImpl;
+import com.mee.generator.core.model.MeeResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 /**
 *   主页
@@ -40,7 +42,7 @@ public class IndexController {
      */
     @GetMapping(value = "menus",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map menus(){
+    public MeeResult<List<HashMap>> menus(){
         return indexService.buildMenu();
     }
 

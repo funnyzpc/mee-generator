@@ -22,7 +22,7 @@
     <#list database_ids as db_id>
     <!-- 查询::${db_id} -->
     <select id="findList" resultMap="${class_name}Result" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if> >
-      select * from ${table_name?upper_case}
+      SELECT * FROM ${table_name?upper_case}
       <where>
         <#list columns as c>
         <#if c?? && c.java_type??>
@@ -41,7 +41,7 @@
     <#list database_ids as db_id>
     <!-- 按主键主键查询::${db_id} -->
     <select id="findBy${mapper_key_info.gs_field}" resultMap="${class_name}Result" <#if database_ids?size gt 1 >databaseId="${db_id}"</#if>>
-        SELECT * from ${table_name?upper_case} WHERE ${mapper_key_info["column_name_${db_id}"]}=<#noparse>#{</#noparse>${mapper_key_info.java_field}<#noparse>}</#noparse>
+        SELECT * FROM ${table_name?upper_case} WHERE ${mapper_key_info["column_name_${db_id}"]}=<#noparse>#{</#noparse>${mapper_key_info.java_field}<#noparse>}</#noparse>
     </select>
     </#list>
 

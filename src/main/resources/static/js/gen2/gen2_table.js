@@ -24,7 +24,9 @@ function saveData(){
     fetchPutForm(ctxPath+"/code_gen2/gen2_table/update",form,function(res){
         if( res && res.status===1 ){
             alert(res.msg);
-            window.open(ctxPath+'/code_gen2/gen2.html','_self')
+            // window.open(ctxPath+'/code_gen2/gen2.html','_self');
+            // 刷新页面
+            window.location.reload();
             return;
         }
         alert( (res && res.msg)? res.msg : "保存失败");

@@ -1,11 +1,11 @@
 package com.mee.generator.web;
 
-import com.mee.generator.common.model.MeeResult;
+import com.mee.generator.core.model.MeeResult;
 import com.mee.generator.entity.Gen2Table;
-import com.mee.generator.mapper.Gen2ColumnMapper;
-import com.mee.generator.mapper.Gen2TableMapper;
-import com.mee.generator.service.impl.CodeGen2ImportServiceImpl;
 import com.mee.generator.util.ResultBuild;
+import com.mee.generator.mapper.Gen2TableMapper;
+import com.mee.generator.mapper.Gen2ColumnMapper;
+import com.mee.generator.service.impl.Gen2ImportServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +28,7 @@ public class Gen2ImportController {
     private Gen2ColumnMapper genTableColumn2Mapper;
 
     @Autowired
-    private CodeGen2ImportServiceImpl codeGen2ImportService;
+    private Gen2ImportServiceImpl gen2ImportService;
 
 //    @GetMapping("gen2_preview.html")
 //    public String preview(){
@@ -60,7 +60,7 @@ public class Gen2ImportController {
     @PostMapping("/save_table")
     @ResponseBody
     public MeeResult saveTable(@RequestBody String[] table_list) {
-        return codeGen2ImportService.importGenTable(table_list);
+        return gen2ImportService.importGenTable(table_list);
     }
 
 }

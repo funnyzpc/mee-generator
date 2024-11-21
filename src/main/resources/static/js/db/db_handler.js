@@ -19,8 +19,8 @@ var module={
         "export":   ctxPath+"/db_handler/export",
         "base":     ctxPath+"/db_handler",
     },
-    /* 列表查询请求，如果执行的是Common的相关请求则数据会回写到此字段内*/
-    data:[],
+    /* 数据字段，这里无需定义 */
+    // data:[],
 };
 
 // 初始化通用模块

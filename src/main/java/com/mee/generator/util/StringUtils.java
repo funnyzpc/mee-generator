@@ -1,25 +1,28 @@
 package com.mee.generator.util;
 
-import org.springframework.util.AntPathMatcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 字符串工具类
  * 
  * @author mee
  */
-//public class StringUtils extends org.apache.commons.lang3.StringUtils
-public class StringUtils {
+public class StringUtils /*extends org.apache.commons.lang3.StringUtils*/
+{
     /** 空字符串 */
     private static final String NULLSTR = "";
 
     /** 下划线 */
     private static final char SEPARATOR = '_';
-    /**
-     * 空
-     */
     public static final String EMPTY = "";
+
+
     /**
      * 获取参数不为空值
      * 
@@ -256,33 +259,106 @@ public class StringUtils {
 //    {
 //        return StringUtils.startsWithAny(link, Constants.HTTP, Constants.HTTPS);
 //    }
+//
+//    /**
+//     * 字符串转set
+//     *
+//     * @param str 字符串
+//     * @param sep 分隔符
+//     * @return set集合
+//     */
+//    public static final Set<String> str2Set(String str, String sep)
+//    {
+//        return new HashSet<String>(str2List(str, sep, true, false));
+//    }
+//
+//    /**
+//     * 字符串转list
+//     *
+//     * @param str 字符串
+//     * @param sep 分隔符
+//     * @param filterBlank 过滤纯空白
+//     * @param trim 去掉首尾空白
+//     * @return list集合
+//     */
+//    public static final List<String> str2List(String str, String sep, boolean filterBlank, boolean trim)
+//    {
+//        List<String> list = new ArrayList<String>();
+//        if (StringUtils.isEmpty(str))
+//        {
+//            return list;
+//        }
+//
+//        // 过滤空白字符串
+//        if (filterBlank && StringUtils.isBlank(str))
+//        {
+//            return list;
+//        }
+//        String[] split = str.split(sep);
+//        for (String string : split)
+//        {
+//            if (filterBlank && StringUtils.isBlank(string))
+//            {
+//                continue;
+//            }
+//            if (trim)
+//            {
+//                string = string.trim();
+//            }
+//            list.add(string);
+//        }
+//
+//        return list;
+//    }
 
-
-    /**
-     * 判断给定的set列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
-     *
-     * @param collection 给定的集合
-     * @param array 给定的数组
-     * @return boolean 结果
-     */
-    public static boolean containsAny(Collection<String> collection, String... array)
-    {
-        if (isEmpty(collection) || isEmpty(array))
-        {
-            return false;
-        }
-        else
-        {
-            for (String str : array)
-            {
-                if (collection.contains(str))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+//    /**
+//     * 判断给定的set列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
+//     *
+//     * @param collection 给定的集合
+//     * @param array 给定的数组
+//     * @return boolean 结果
+//     */
+//    public static boolean containsAny(Collection<String> collection, String... array)
+//    {
+//        if (isEmpty(collection) || isEmpty(array))
+//        {
+//            return false;
+//        }
+//        else
+//        {
+//            for (String str : array)
+//            {
+//                if (collection.contains(str))
+//                {
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }
+//    }
+//
+//    /**
+//     * 查找指定字符串是否包含指定字符串列表中的任意一个字符串同时串忽略大小写
+//     *
+//     * @param cs 指定字符串
+//     * @param searchCharSequences 需要检查的字符串数组
+//     * @return 是否包含任意一个字符串
+//     */
+//    public static boolean containsAnyIgnoreCase(CharSequence cs, CharSequence... searchCharSequences)
+//    {
+//        if (isEmpty(cs) || isEmpty(searchCharSequences))
+//        {
+//            return false;
+//        }
+//        for (CharSequence testStr : searchCharSequences)
+//        {
+//            if (containsIgnoreCase(cs, testStr))
+//            {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 驼峰转下划线命名
@@ -332,28 +408,28 @@ public class StringUtils {
 
         return sb.toString();
     }
-
-    /**
-     * 是否包含字符串
-     * 
-     * @param str 验证字符串
-     * @param strs 字符串组
-     * @return 包含返回true
-     */
-    public static boolean inStringIgnoreCase(String str, String... strs)
-    {
-        if (str != null && strs != null)
-        {
-            for (String s : strs)
-            {
-                if (str.equalsIgnoreCase(trim(s)))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+//
+//    /**
+//     * 是否包含字符串
+//     *
+//     * @param str 验证字符串
+//     * @param strs 字符串组
+//     * @return 包含返回true
+//     */
+//    public static boolean inStringIgnoreCase(String str, String... strs)
+//    {
+//        if (str != null && strs != null)
+//        {
+//            for (String s : strs)
+//            {
+//                if (str.equalsIgnoreCase(trim(s)))
+//                {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 将下划线大写方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。 例如：HELLO_WORLD->HelloWorld
@@ -419,62 +495,62 @@ public class StringUtils {
         return sb.toString();
     }
 
-    /**
-     * 查找指定字符串是否匹配指定字符串列表中的任意一个字符串
-     * 
-     * @param str 指定字符串
-     * @param strs 需要检查的字符串数组
-     * @return 是否匹配
-     */
-    public static boolean matches(String str, List<String> strs)
-    {
-        if (isEmpty(str) || isEmpty(strs))
-        {
-            return false;
-        }
-        for (String pattern : strs)
-        {
-            if (isMatch(pattern, str))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断url是否与规则配置: 
-     * ? 表示单个字符; 
-     * * 表示一层路径内的任意字符串，不可跨层级; 
-     * ** 表示任意层路径;
-     * 
-     * @param pattern 匹配规则
-     * @param url 需要匹配的url
-     * @return
-     */
-    public static boolean isMatch(String pattern, String url)
-    {
-        AntPathMatcher matcher = new AntPathMatcher();
-        return matcher.match(pattern, url);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T cast(Object obj)
-    {
-        return (T) obj;
-    }
-
-    /**
-     * 数字左边补齐0，使之达到指定长度。注意，如果数字转换为字符串后，长度大于size，则只保留 最后size个字符。
-     * 
-     * @param num 数字对象
-     * @param size 字符串指定长度
-     * @return 返回数字的字符串格式，该字符串为指定长度。
-     */
-    public static final String padl(final Number num, final int size)
-    {
-        return padl(num.toString(), size, '0');
-    }
+//    /**
+//     * 查找指定字符串是否匹配指定字符串列表中的任意一个字符串
+//     *
+//     * @param str 指定字符串
+//     * @param strs 需要检查的字符串数组
+//     * @return 是否匹配
+//     */
+//    public static boolean matches(String str, List<String> strs)
+//    {
+//        if (isEmpty(str) || isEmpty(strs))
+//        {
+//            return false;
+//        }
+//        for (String pattern : strs)
+//        {
+//            if (isMatch(pattern, str))
+//            {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * 判断url是否与规则配置:
+//     * ? 表示单个字符;
+//     * * 表示一层路径内的任意字符串，不可跨层级;
+//     * ** 表示任意层路径;
+//     *
+//     * @param pattern 匹配规则
+//     * @param url 需要匹配的url
+//     * @return
+//     */
+//    public static boolean isMatch(String pattern, String url)
+//    {
+//        AntPathMatcher matcher = new AntPathMatcher();
+//        return matcher.match(pattern, url);
+//    }
+//
+//    @SuppressWarnings("unchecked")
+//    public static <T> T cast(Object obj)
+//    {
+//        return (T) obj;
+//    }
+//
+//    /**
+//     * 数字左边补齐0，使之达到指定长度。注意，如果数字转换为字符串后，长度大于size，则只保留 最后size个字符。
+//     *
+//     * @param num 数字对象
+//     * @param size 字符串指定长度
+//     * @return 返回数字的字符串格式，该字符串为指定长度。
+//     */
+//    public static final String padl(final Number num, final int size)
+//    {
+//        return padl(num.toString(), size, '0');
+//    }
 
     /**
      * 字符串左补齐。如果原始字符串s长度大于size，则只保留最后size个字符。
@@ -512,4 +588,447 @@ public class StringUtils {
         }
         return sb.toString();
     }
+
+    public static boolean equals(CharSequence cs1, CharSequence cs2) {
+        if (cs1 == cs2) {
+            return true;
+        } else if (cs1 != null && cs2 != null) {
+            if (cs1.length() != cs2.length()) {
+                return false;
+            } else if (cs1 instanceof String && cs2 instanceof String) {
+                return cs1.equals(cs2);
+            } else {
+                int length = cs1.length();
+
+                for(int i = 0; i < length; ++i) {
+                    if (cs1.charAt(i) != cs2.charAt(i)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean equalsAnyIgnoreCase(CharSequence string, CharSequence... searchStrings) {
+//        if (ArrayUtils.isNotEmpty(searchStrings)) {
+        if ( null!=searchStrings && searchStrings.length>0 ) {
+            CharSequence[] var2 = searchStrings;
+            int var3 = searchStrings.length;
+
+            for(int var4 = 0; var4 < var3; ++var4) {
+                CharSequence next = var2[var4];
+                if (equalsIgnoreCase(string, next)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    private static boolean equalsIgnoreCase(CharSequence cs1, CharSequence cs2) {
+        if (cs1 == cs2) {
+            return true;
+        } else if (cs1 != null && cs2 != null) {
+            return cs1.length() != cs2.length() ? false : regionMatches(cs1, true, 0, cs2, 0, cs1.length());
+        } else {
+            return false;
+        }
+    }
+    static boolean regionMatches(CharSequence cs, boolean ignoreCase, int thisStart, CharSequence substring, int start, int length) {
+        if (cs instanceof String && substring instanceof String) {
+            return ((String)cs).regionMatches(ignoreCase, thisStart, (String)substring, start, length);
+        } else {
+            int index1 = thisStart;
+            int index2 = start;
+            int tmpLen = length;
+            int srcLen = cs.length() - thisStart;
+            int otherLen = substring.length() - start;
+            if (thisStart >= 0 && start >= 0 && length >= 0) {
+                if (srcLen >= length && otherLen >= length) {
+                    while(tmpLen-- > 0) {
+                        char c1 = cs.charAt(index1++);
+                        char c2 = substring.charAt(index2++);
+                        if (c1 != c2) {
+                            if (!ignoreCase) {
+                                return false;
+                            }
+
+                            char u1 = Character.toUpperCase(c1);
+                            char u2 = Character.toUpperCase(c2);
+                            if (u1 != u2 && Character.toLowerCase(u1) != Character.toLowerCase(u2)) {
+                                return false;
+                            }
+                        }
+                    }
+
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    public static String substringBetween(String str, String open, String close) {
+        if (!allNotNull(new Object[]{str, open, close})) {
+            return null;
+        } else {
+            int start = str.indexOf(open);
+            if (start != -1) {
+                int end = str.indexOf(close, start + open.length());
+                if (end != -1) {
+                    return str.substring(start + open.length(), end);
+                }
+            }
+
+            return null;
+        }
+    }
+    private static boolean allNotNull(Object... values) {
+        if (values == null) {
+            return false;
+        } else {
+            Object[] var1 = values;
+            int var2 = values.length;
+
+            for(int var3 = 0; var3 < var2; ++var3) {
+                Object val = var1[var3];
+                if (val == null) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+    public static String[] split(String str, String separatorChars) {
+        return splitWorker(str, separatorChars, -1, false);
+    }
+
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    private static String[] splitWorker(String str, String separatorChars, int max, boolean preserveAllTokens) {
+        if (str == null) {
+            return null;
+        } else {
+            int len = str.length();
+            if (len == 0) {
+                return EMPTY_STRING_ARRAY;
+            } else {
+                List<String> list = new ArrayList();
+                int sizePlus1 = 1;
+                int i = 0;
+                int start = 0;
+                boolean match = false;
+                boolean lastMatch = false;
+                if (separatorChars != null) {
+                    if (separatorChars.length() != 1) {
+                        label87:
+                        while(true) {
+                            while(true) {
+                                if (i >= len) {
+                                    break label87;
+                                }
+
+                                if (separatorChars.indexOf(str.charAt(i)) >= 0) {
+                                    if (match || preserveAllTokens) {
+                                        lastMatch = true;
+                                        if (sizePlus1++ == max) {
+                                            i = len;
+                                            lastMatch = false;
+                                        }
+
+                                        list.add(str.substring(start, i));
+                                        match = false;
+                                    }
+
+                                    ++i;
+                                    start = i;
+                                } else {
+                                    lastMatch = false;
+                                    match = true;
+                                    ++i;
+                                }
+                            }
+                        }
+                    } else {
+                        char sep = separatorChars.charAt(0);
+
+                        label71:
+                        while(true) {
+                            while(true) {
+                                if (i >= len) {
+                                    break label71;
+                                }
+
+                                if (str.charAt(i) == sep) {
+                                    if (match || preserveAllTokens) {
+                                        lastMatch = true;
+                                        if (sizePlus1++ == max) {
+                                            i = len;
+                                            lastMatch = false;
+                                        }
+
+                                        list.add(str.substring(start, i));
+                                        match = false;
+                                    }
+
+                                    ++i;
+                                    start = i;
+                                } else {
+                                    lastMatch = false;
+                                    match = true;
+                                    ++i;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    label103:
+                    while(true) {
+                        while(true) {
+                            if (i >= len) {
+                                break label103;
+                            }
+
+                            if (Character.isWhitespace(str.charAt(i))) {
+                                if (match || preserveAllTokens) {
+                                    lastMatch = true;
+                                    if (sizePlus1++ == max) {
+                                        i = len;
+                                        lastMatch = false;
+                                    }
+
+                                    list.add(str.substring(start, i));
+                                    match = false;
+                                }
+
+                                ++i;
+                                start = i;
+                            } else {
+                                lastMatch = false;
+                                match = true;
+                                ++i;
+                            }
+                        }
+                    }
+                }
+
+                if (match || preserveAllTokens && lastMatch) {
+                    list.add(str.substring(start, i));
+                }
+
+                return (String[])list.toArray(new String[0]);
+            }
+        }
+    }
+
+    public static boolean endsWithIgnoreCase(CharSequence str, CharSequence suffix) {
+        return endsWith(str, suffix, true);
+    }
+    private static boolean endsWith(CharSequence str, CharSequence suffix, boolean ignoreCase) {
+        if (str != null && suffix != null) {
+            if (suffix.length() > str.length()) {
+                return false;
+            } else {
+                int strOffset = str.length() - suffix.length();
+                return regionMatches(str, ignoreCase, strOffset, suffix, 0, suffix.length());
+            }
+        } else {
+            return str == suffix;
+        }
+    }
+
+    public static String substringBefore(String str, String separator) {
+        if (!isEmpty(str) && separator != null) {
+            if (separator.isEmpty()) {
+                return "";
+            } else {
+                int pos = str.indexOf(separator);
+                return pos == -1 ? str : str.substring(0, pos);
+            }
+        } else {
+            return str;
+        }
+    }
+    public static int indexOf(CharSequence seq, CharSequence searchSeq) {
+        return seq != null && searchSeq != null ? indexOf(seq, searchSeq, 0) : -1;
+    }
+
+    private static int indexOf(CharSequence cs, CharSequence searchChar, int start) {
+        if (cs instanceof String) {
+            return ((String)cs).indexOf(searchChar.toString(), start);
+        } else if (cs instanceof StringBuilder) {
+            return ((StringBuilder)cs).indexOf(searchChar.toString(), start);
+        } else {
+            return cs instanceof StringBuffer ? ((StringBuffer)cs).indexOf(searchChar.toString(), start) : cs.toString().indexOf(searchChar.toString(), start);
+        }
+    }
+
+    public static boolean equalsAny(CharSequence string, CharSequence... searchStrings) {
+        if (null!=searchStrings && searchStrings.length>0 ) {
+            CharSequence[] var2 = searchStrings;
+            int var3 = searchStrings.length;
+
+            for(int var4 = 0; var4 < var3; ++var4) {
+                CharSequence next = var2[var4];
+                if (equals(string, next)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String uncapitalize(String str) {
+        int strLen = length(str);
+        if (strLen == 0) {
+            return str;
+        } else {
+            int firstCodepoint = str.codePointAt(0);
+            int newCodePoint = Character.toLowerCase(firstCodepoint);
+            if (firstCodepoint == newCodePoint) {
+                return str;
+            } else {
+                int[] newCodePoints = new int[strLen];
+                int outOffset = 0;
+                newCodePoints[outOffset++] = newCodePoint;
+
+                int codepoint;
+                for(int inOffset = Character.charCount(firstCodepoint); inOffset < strLen; inOffset += Character.charCount(codepoint)) {
+                    codepoint = str.codePointAt(inOffset);
+                    newCodePoints[outOffset++] = codepoint;
+                }
+
+                return new String(newCodePoints, 0, outOffset);
+            }
+        }
+    }
+    private static int length(CharSequence cs) {
+        return cs == null ? 0 : cs.length();
+    }
+
+    public static String capitalize(String str) {
+        int strLen = length(str);
+        if (strLen == 0) {
+            return str;
+        } else {
+            int firstCodepoint = str.codePointAt(0);
+            int newCodePoint = Character.toTitleCase(firstCodepoint);
+            if (firstCodepoint == newCodePoint) {
+                return str;
+            } else {
+                int[] newCodePoints = new int[strLen];
+                int outOffset = 0;
+                newCodePoints[outOffset++] = newCodePoint;
+
+                int codepoint;
+                for(int inOffset = Character.charCount(firstCodepoint); inOffset < strLen; inOffset += Character.charCount(codepoint)) {
+                    codepoint = str.codePointAt(inOffset);
+                    newCodePoints[outOffset++] = codepoint;
+                }
+                return new String(newCodePoints, 0, outOffset);
+            }
+        }
+    }
+
+    public static String replace(String text, String searchString, String replacement) {
+        return replace(text, searchString, replacement, -1);
+    }
+    public static String replace(String text, String searchString, String replacement, int max) {
+        return replace(text, searchString, replacement, max, false);
+    }
+    private static String replace(String text, String searchString, String replacement, int max, boolean ignoreCase) {
+        if (!isEmpty(text) && !isEmpty(searchString) && replacement != null && max != 0) {
+            if (ignoreCase) {
+                searchString = searchString.toLowerCase();
+            }
+            int start = 0;
+            int end = ignoreCase ? indexOfIgnoreCase(text, searchString, start) : indexOf(text, searchString, start);
+            if (end == -1) {
+                return text;
+            } else {
+                int replLength = searchString.length();
+                int increase = Math.max(replacement.length() - replLength, 0);
+                increase *= max < 0 ? 16 : Math.min(max, 64);
+
+                StringBuilder buf;
+                for(buf = new StringBuilder(text.length() + increase); end != -1; end = ignoreCase ? indexOfIgnoreCase(text, searchString, start) : indexOf(text, searchString, start)) {
+                    buf.append(text, start, end).append(replacement);
+                    start = end + replLength;
+                    --max;
+                    if (max == 0) {
+                        break;
+                    }
+                }
+                buf.append(text, start, text.length());
+                return buf.toString();
+            }
+        } else {
+            return text;
+        }
+    }
+    public static int indexOfIgnoreCase(CharSequence str, CharSequence searchStr, int startPos) {
+        if (str != null && searchStr != null) {
+            if (startPos < 0) {
+                startPos = 0;
+            }
+            int endLimit = str.length() - searchStr.length() + 1;
+            if (startPos > endLimit) {
+                return -1;
+            } else if (searchStr.length() == 0) {
+                return startPos;
+            } else {
+                for(int i = startPos; i < endLimit; ++i) {
+                    if (regionMatches(str, true, i, searchStr, 0, searchStr.length())) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+    public static String join(Iterable<?> iterable, String separator) {
+        return iterable == null ? null : join(iterable.iterator(), separator);
+    }
+    public static String join(Iterator<?> iterator, String separator) {
+        if (iterator == null) {
+            return null;
+        } else if (!iterator.hasNext()) {
+            return "";
+        } else {
+            Object first = iterator.next();
+            if (!iterator.hasNext()) {
+                return Objects.toString(first, "");
+            } else {
+                StringBuilder buf = new StringBuilder(256);
+                if (first != null) {
+                    buf.append(first);
+                }
+
+                while(iterator.hasNext()) {
+                    if (separator != null) {
+                        buf.append(separator);
+                    }
+
+                    Object obj = iterator.next();
+                    if (obj != null) {
+                        buf.append(obj);
+                    }
+                }
+
+                return buf.toString();
+            }
+        }
+    }
+
 }

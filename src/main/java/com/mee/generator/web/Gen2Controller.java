@@ -1,10 +1,9 @@
 package com.mee.generator.web;
 
-import com.mee.generator.common.model.MeeResult;
-import com.mee.generator.entity.Gen2Column;
-import com.mee.generator.entity.Gen2Table;
-import com.mee.generator.mapper.Gen2ColumnMapper;
+import com.mee.generator.core.model.MeeResult;
+import com.mee.generator.entity.*;
 import com.mee.generator.mapper.Gen2TableMapper;
+import com.mee.generator.mapper.Gen2ColumnMapper;
 import com.mee.generator.service.impl.CodeGen2ServiceImpl;
 import com.mee.generator.service.impl.GenTable2ServiceImpl;
 import com.mee.generator.util.ResultBuild;

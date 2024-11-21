@@ -1,9 +1,10 @@
 package com.mee.generator.web;
 
-import com.mee.generator.common.model.MeeResult;
-import com.mee.generator.entity.Gen2Config;
-import com.mee.generator.mapper.Gen2ConfigMapper;
+import com.mee.generator.core.model.MeeResult;
+import com.mee.generator.entity.*;
+import com.mee.generator.enums.CamelCaseEnum;
 import com.mee.generator.mapper.Gen2TableMapper;
+import com.mee.generator.mapper.Gen2ConfigMapper;
 import com.mee.generator.service.impl.CodeGen2ConfigServiceImpl;
 import com.mee.generator.util.ResultBuild;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,11 +92,10 @@ public class Gen2ConfigController {
         }
         Gen2Config genTableConfig2 = new Gen2Config();
         if(1==type){
-            genTableConfig2=new Gen2Config();
             // 不开启
             genTableConfig2.setStatus(0);
             // 不使用驼峰模式
-            genTableConfig2.setCamel_case("0");
+            genTableConfig2.setCamel_case(CamelCaseEnum.N);
             // default
             genTableConfig2.setDatabase_id("default");
         }else if(2==type){

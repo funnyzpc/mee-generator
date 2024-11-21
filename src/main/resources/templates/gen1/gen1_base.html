@@ -6,7 +6,7 @@
 </head>
 <body style="height:100%">
 <div class="main" >
-    <div style="display:flex;font-size:1.2rem;">
+    <div style="display:flex;font-size:1.4rem;">
     <ul>
         <li>
 <!--            <a target="gen1_content"  href="${ctxPath}/code_gen1/gen1_base.html" style="background-color:blue;font-weight:bold;color: white;">基本信息</a>-->
@@ -24,7 +24,7 @@
 <!-- 业务内容 -->
 <div id="data-search">
     <form id="search-form">
-        <input type="hidden" name="table_id" value="${table_id}">&nbsp;
+        <input type="hidden" name="table_id" value="${table_id}">
     </form>
 </div>
 <div id="data-list"></div>
@@ -46,18 +46,18 @@
 
         <div class="form-group">
             <div class="col-sm-3">
-                <label class="control-label col-sm-3" >实体类名称</label>
+                <label class="control-label col-sm-6" >实体类名称</label>
                 <input type="text" name="class_name" value="{{class_name}}" class="form-control input-sm " required="required" aria-required="true">
             </div>
             <div class="col-sm-3">
-                <label class="control-label col-sm-3" >作者</label>
+                <label class="control-label col-sm-6" >作者</label>
                 <input type="text" name="function_author" value="{{function_author}}" class="form-control input-sm " required="required" aria-required="true">
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-sm-3">
-                <label class="control-label col-sm-3" >备注</label>
+                <label class="control-label col-sm-6" >备注</label>
                 <textarea type="text" name="remark" class="form-control input-sm " required="required" aria-required="true">{{remark}}</textarea>
             </div>
         </div>

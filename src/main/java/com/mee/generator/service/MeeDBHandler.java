@@ -1,7 +1,6 @@
 package com.mee.generator.service;
 
-
-import com.mee.generator.common.model.MeeResult;
+import com.mee.generator.core.model.MeeResult;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

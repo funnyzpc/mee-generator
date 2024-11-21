@@ -1,4 +1,3 @@
-//import * as CC from "../../cc.js"
 import * as Common  from "../common.js"
 import * as FetchUtils  from "../fetch_utils.js"
 

@@ -3,10 +3,11 @@
 <head>
     <title>代码生成二</title>
     <#include "../wrapper/header.html"/>
+    <link rel="stylesheet" href="${ctxPath}/static/css/fix-table.css">
 </head>
 <body style="height:100%">
 <div class="main" >
-    <div style="display:flex;font-size:1.2rem;">
+    <div style="display:flex;font-size:1.4rem;">
     <ul>
         <li>
             <a href="${ctxPath}/code_gen1/gen1_base.html?table_id=${table_id}" >基本信息</a>
@@ -22,7 +23,7 @@
 <!--    <div style="clear:both;"></div>-->
 <div id="data-search">
     <form id="search-form">
-        <input type="hidden" name="table_id" value="${table_id}">&nbsp;
+        <input type="hidden" name="table_id" value="${table_id}">
     </form>
 </div>
 
@@ -31,11 +32,12 @@
 
 </div>
 <script type="text/cc-template" id="template-data-list">
+    <div class="table">
     <table style="white-space: nowrap;overflow: auto;">
     <thead>
     <tr>
-        <th>序号</th>
         <th>字段列名</th>
+        <th>序号</th>
         <th>字段描述</th>
         <th>物理类型</th>
         <th>java类型</th>
@@ -53,13 +55,13 @@
     <tbody>
     {{#each data.field}}
     <tr>
+        <td style="font-weight:bold;">{{column_name}}</td>
         <td>
             {{sort}}
             <input type="hidden" name="table_id" value="{{table_id}}"/>
             <input type="hidden" name="column_id" value="{{column_id}}"/>
             <input type="hidden" name="column_name" value="{{column_name}}"/>
         </td>
-        <td>{{column_name}}</td>
         <td><input type="text" name="column_comment" value="{{column_comment}}"/> </td>
         <td>{{column_type}}</td>
         <td>
@@ -68,7 +70,7 @@
                 <option {{#equal java_type 'String'}}selected{{/equal}}>String</option>
                 <option {{#equal java_type 'Integer'}}selected{{/equal}}>Integer</option>
                 <option {{#equal java_type 'Long'}}selected{{/equal}}>Long</option>
-                <option {{#equal java_type 'DOUBLE'}}selected{{/equal}}>DOUBLE</option>
+                <option {{#equal java_type 'Double'}}selected{{/equal}}>Double</option>
                 <option {{#equal java_type 'BigDecimal'}}selected{{/equal}}>BigDecimal</option>
                 <option {{#equal java_type 'Date'}}selected{{/equal}}>Date</option>
                 <option {{#equal java_type 'LocalDate'}}selected{{/equal}}>LocalDate</option>
@@ -115,6 +117,7 @@
     {{/each}}
     </tbody>
     </table>
+    </div>
 <div class="form-group">
 <form style="text-align:left;padding:16px 16px;">
     <button type="button" onclick="Gen1FieldFunc.saveData()" class="btn btn-primary">提交</button>&nbsp;
@@ -134,6 +137,7 @@
      display:block;
      padding:4px 8px;
     }
+    /* select{padding:0.2em 2em 0.2em 0.4em;} */
 </style>
 </body>
 </html>

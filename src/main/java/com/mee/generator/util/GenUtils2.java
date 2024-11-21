@@ -3,13 +3,15 @@ package com.mee.generator.util;
 import com.mee.generator.entity.Gen2Column;
 import com.mee.generator.enums.JavaTypeEnum;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 代码生成器 工具类
  * 
  * @author mee
  */
 public class GenUtils2 {
-
 //    /**
 //     * 初始化表信息
 //     */
@@ -124,36 +126,36 @@ public class GenUtils2 {
 //            column.setHtml_type(HtmlTypeEnum.EDITOR.value);
 //        }
 //    }
-
-    /**
-     * 校验数组是否包含指定值
-     * 
-     * @param arr 数组
-     * @param targetValue 值
-     * @return 是否包含
-     */
-    public static boolean arraysContains(String[] arr, String targetValue) {
-        for( String field:arr){
-            if(field.toLowerCase().equals(targetValue.toLowerCase())){
-                return Boolean.TRUE;
-            }
-        }
-        return Boolean.FALSE;
-//        return Arrays.asList(arr).contains(targetValue);
-    }
-
-    /**
-     * 获取模块名
-     * 
-     * @param packageName 包名
-     * @return 模块名
-     */
-    public static String getModuleName(String packageName) {
-        int lastIndex = packageName.lastIndexOf(".");
-        int nameLength = packageName.length();
-        return StringUtils.substring(packageName, lastIndex + 1, nameLength);
-    }
-
+//
+//    /**
+//     * 校验数组是否包含指定值
+//     *
+//     * @param arr 数组
+//     * @param targetValue 值
+//     * @return 是否包含
+//     */
+//    public static boolean arraysContains(String[] arr, String targetValue) {
+//        for( String field:arr){
+//            if(field.toLowerCase().equals(targetValue.toLowerCase())){
+//                return Boolean.TRUE;
+//            }
+//        }
+//        return Boolean.FALSE;
+////        return Arrays.asList(arr).contains(targetValue);
+//    }
+//
+//    /**
+//     * 获取模块名
+//     *
+//     * @param packageName 包名
+//     * @return 模块名
+//     */
+//    public static String getModuleName(String packageName) {
+//        int lastIndex = packageName.lastIndexOf(".");
+//        int nameLength = packageName.length();
+//        return StringUtils.substring(packageName, lastIndex + 1, nameLength);
+//    }
+//
 //    /**
 //     * 获取业务名
 //     *
@@ -203,19 +205,19 @@ public class GenUtils2 {
         return text;
     }
 
-    /**
-     * 关键字替换
-     * 
-     * @param text 需要被替换的名字
-     * @return 替换后的名字
-     */
-    public static String replaceText(String text) {
-        if(null==text || "".equals(text.trim())){
-            return "";
-        }
-        return (text.replaceAll( "(?:表|MEE)", ""));
-    }
-
+//    /**
+//     * 关键字替换
+//     *
+//     * @param text 需要被替换的名字
+//     * @return 替换后的名字
+//     */
+//    public static String replaceText(String text) {
+//        if(null==text || "".equals(text.trim())){
+//            return "";
+//        }
+//        return (text.replaceAll( "(?:表|MEE)", ""));
+//    }
+//
 //    /**
 //     * 获取数据库类型字段
 //     *
@@ -307,20 +309,20 @@ public class GenUtils2 {
     }
 
     /**
-     * 表名转换成Java类名
-     *
-     * @param table_name 表名称
-     * @return 类名
+     * 是否忽略字段 (适用于编辑、插入、列表、查询这四大字段)
+     * @return
      */
-    public static String convertClassName(String table_name) {
-//        boolean autoRemovePre = GenConfig.getAutoRemovePre();
-//        String table_prefix = GenConfig.getTablePrefix();
-//        if (autoRemovePre && StringUtils.isNotEmpty(table_prefix))
-//        {
-//            String[] searchList = StringUtils.split(table_prefix, ",");
-//            table_name = replaceFirst(table_name, searchList);
-//        }
-        return StringUtils.convertToCamelCase(table_name);
+    public static Boolean isIgnoreField(String java_filed){
+        List<String> IGNORE_FIELDS=new ArrayList<String>(16){{
+            add("updateTime");
+            add("updateDate");
+            add("updateUser");
+            add("updateBy");
+            add("createTime");
+            add("createDate");
+            add("createUser");
+            add("createBy");
+        }};
+        return IGNORE_FIELDS.contains(java_filed);
     }
-
 }

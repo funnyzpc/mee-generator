@@ -20,6 +20,7 @@ import java.net.InetAddress;
 public class MeeGeneratorApplication {
     private static final Logger LOG= LoggerFactory.getLogger(MeeGeneratorApplication.class);
 
+    // --spring.profiles.active=oracle
     public static void main(String[] args) throws Exception{
         ConfigurableApplicationContext application = SpringApplication.run(MeeGeneratorApplication.class, args);
         Environment env = application.getEnvironment();

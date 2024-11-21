@@ -17,7 +17,6 @@ function fetchPost( url,data,callback ){
     .catch(error => console.log("请求超时,请刷新后重试~")
     );
 }
-
 /* POST+form */
 function fetchFormPost( url,form,callback ){
     fetch(url,{
@@ -35,7 +34,9 @@ function fetchFormPost( url,form,callback ){
 function fetchGet(url,param,callback) {
     let param_str = buildParam(param);
     fetch(url+"?"+param_str,{ credentials:'include',method: 'GET' })
-        .then((response) => response.json())
+        .then( response => {
+          return response.json();
+        })
         .then((data)=>{
             callback(data)
         }).catch(error =>  {

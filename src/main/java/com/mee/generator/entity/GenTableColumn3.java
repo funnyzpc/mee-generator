@@ -89,8 +89,8 @@ public class GenTableColumn3 {
     private LocalDateTime update_time;
 
    // -------- 扩展字段，非数据库字段 --------
-    Integer length;
-    Integer scale;
+    private Integer length;
+    private Integer scale;
 
     public String getId() {
         return id;
@@ -283,4 +283,35 @@ public class GenTableColumn3 {
     public void setScale(Integer scale) {
         this.scale = scale;
     }
+
+    @Override
+    public String toString() {
+        return "GenTableColumn3{" +
+                "id='" + id + '\'' +
+                ", table_id='" + table_id + '\'' +
+                ", column_name='" + column_name + '\'' +
+                ", column_comment='" + column_comment + '\'' +
+                ", column_type='" + column_type + '\'' +
+                ", java_type='" + java_type + '\'' +
+                ", java_field='" + java_field + '\'' +
+                ", is_pk='" + is_pk + '\'' +
+                ", is_increment='" + is_increment + '\'' +
+                ", is_required='" + is_required + '\'' +
+                ", is_insert='" + is_insert + '\'' +
+                ", is_edit='" + is_edit + '\'' +
+                ", is_list='" + is_list + '\'' +
+                ", is_query='" + is_query + '\'' +
+                ", query_type='" + query_type + '\'' +
+                ", html_type='" + html_type + '\'' +
+                ", dict_type='" + dict_type + '\'' +
+                ", sort=" + sort +
+                ", create_by='" + create_by + '\'' +
+                ", create_time=" + create_time +
+                ", update_by='" + update_by + '\'' +
+                ", update_time=" + update_time +
+                ", length=" + length +
+                ", scale=" + scale +
+                '}';
+    }
+
 }

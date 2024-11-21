@@ -1,6 +1,6 @@
 package com.mee.generator.util;
 
-import com.mee.generator.common.model.MeeResult;
+import com.mee.generator.core.model.MeeResult;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

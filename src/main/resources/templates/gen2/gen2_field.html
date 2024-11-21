@@ -3,10 +3,11 @@
 <head>
     <title>代码生成二</title>
     <#include "../wrapper/header.html"/>
+    <link rel="stylesheet" href="${ctxPath}/static/css/fix-table.css">
 </head>
 <body style="height:100%">
 <div class="main" >
-<div style="display:flex;font-size:1.6rem;">
+<div style="display:flex;font-size:1.4rem;">
 <ul>
     <li>
         <a href="${ctxPath}/code_gen2/gen2_table.html?table_id=${table_id}" >表信息</a>
@@ -26,17 +27,17 @@
 
 </div>
 <script type="text/cc-template" id="template-data-list">
-    <h3>{{this.data.table.table_name}}</h3>
-    <div style="overflow-x: scroll; white-space: nowrap;">
+    <h4>{{this.data.table.table_name}}</h4>
+    <div class="table">
     <table style="white-space: nowrap;overflow: auto;">
     <thead>
     <tr>
-        <th>序号</th>
         <th>字段列名</th>
+        <th>序号</th>
         <th>字段描述</th>
         <th>DB类型</th>
-        <th>java类型</th>
-        <th>java属性</th>
+        <th>java字段类型</th>
+        <th>java字段</th>
         <th>是否主键</th>
         <th title="新增时传入到后台字段">新增</th>
         <th title="更新时传入到后台字段">更新</th>
@@ -51,13 +52,13 @@
     <tbody>
     {{#each data.field}}
     <tr>
+        <td style="font-weight:bold;">{{column_name}}</td>
         <td>
             {{sort}}
             <input type="hidden" name="id" value="{{id}}"/>
             <input type="hidden" name="table_id" value="{{table_id}}"/>
             <input type="hidden" name="column_name" value="{{column_name}}"/>
         </td>
-        <td>{{column_name}}</td>
         <td><input type="text" name="column_comment" value="{{column_comment}}"/> </td>
         <td>{{column_type}}</td>
         <td>
@@ -66,7 +67,7 @@
                 <option {{#equal java_type 'String'}}selected{{/equal}}>String</option>
                 <option {{#equal java_type 'Integer'}}selected{{/equal}}>Integer</option>
                 <option {{#equal java_type 'Long'}}selected{{/equal}}>Long</option>
-                <option {{#equal java_type 'DOUBLE'}}selected{{/equal}}>DOUBLE</option>
+                <option {{#equal java_type 'Double'}}selected{{/equal}}>Double</option>
                 <option {{#equal java_type 'BigDecimal'}}selected{{/equal}}>BigDecimal</option>
                 <option {{#equal java_type 'Date'}}selected{{/equal}}>Date</option>
                 <option {{#equal java_type 'LocalDate'}}selected{{/equal}}>LocalDate</option>
@@ -120,6 +121,7 @@
     {{/each}}
     </tbody>
     </table>
+    </div>
     </div>
 <div class="form-group">
     <form style="text-align:left;padding:16px 16px;">

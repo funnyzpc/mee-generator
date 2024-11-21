@@ -6,8 +6,6 @@ import * as FetchUtils  from "../fetch_utils.js"
 var module={
     /* 调用Common.init后是否调用一次查询 */
     default_query:true,
-    /* 分页表单数据(可选) */
-    search_form: {"page_no":0,"page_size":10},
     /* 当前业务模块(页面)扩展函数 id=search-form的扩展事件 */
     events:{ "import_table":doImportTable },
     /* id=data-list的行事件,此类事件会自动传入(当前行数据,当前行索引,当前dom对象),也可默认为空 */
@@ -17,16 +15,14 @@ var module={
         /* 列表分页查询：GET请求 */
         "page": ctxPath+"/code_gen2/list",
         /* 添加：POST请求 */
-        add: ctxPath+"/code_gen2/add",
+        "add": ctxPath+"/code_gen2/add",
         /* 删除: DELETE请求 */
-        del: ctxPath+"/code_gen2/delete",
+        "del": ctxPath+"/code_gen2/delete",
         /* 修改: PUT请求 */
-        mod: ctxPath+"/code_gen2/update",
+        "mod": ctxPath+"/code_gen2/update",
         "base": ctxPath+"/code_gen3_config",
 
-    },
-    /* 列表查询请求，如果执行的是Common的相关请求则数据会回写到此字段内*/
-    data:[],
+    }
 };
 
 // 初始化通用模块
@@ -56,7 +52,7 @@ function doPreview(item,idx,elem){
 
 // 导入表
 function doImportTable(){
-    let win = window.open(ctxPath+'/code_gen2/gen2_import.html','_blank','channelmode=yes,width=800px,left=320px,top=80px');
+    let win = window.open(ctxPath+'/code_gen2/gen2_import.html','_blank','channelmode=yes,width=800px,height=600px,left=320px,top=80px');
     // 关闭窗口后事件回调
     win.onbeforeunload = function(){
         console.log("关闭窗口...");

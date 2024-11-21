@@ -1,4 +1,4 @@
-package com.mee.generator.common.model;
+package com.mee.generator.core.model;
 
 import java.io.Serializable;
 

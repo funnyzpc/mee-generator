@@ -53,14 +53,14 @@
             <td>{{id}}</td>
             <td>{{author}}</td>
             <td>
-                {{#equal camel_case 0}}否{{/equal}}
-                {{#equal camel_case 1}}是{{/equal}}
+                {{#equal camel_case 'N'}}否{{/equal}}
+                {{#equal camel_case 'Y'}}是{{/equal}}
             </td>
             <td>{{base_package}}</td>
             <td>{{module_name}}</td>
             <td>{{database_id}}</td>
             <td>
-                <a href="#" func="enable">
+                <a href="#" func="enable" title="点击以启用/禁用">
                 {{#equal status 0}}未启用{{/equal}}
                 {{#equal status 1}}已启用{{/equal}}
                 </a>

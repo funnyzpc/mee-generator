@@ -2,12 +2,12 @@ package com.mee.generator.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ZipUtil;
-import com.mee.generator.common.model.MeeResult;
-import com.mee.generator.entity.Gen2Column;
+import com.mee.generator.core.model.MeeResult;
 import com.mee.generator.entity.Gen2Table;
-import com.mee.generator.mapper.Gen2ColumnMapper;
-import com.mee.generator.mapper.Gen2TableMapper;
+import com.mee.generator.entity.Gen2Column;
 import com.mee.generator.util.ResultBuild;
+import com.mee.generator.mapper.Gen2TableMapper;
+import com.mee.generator.mapper.Gen2ColumnMapper;
 import com.mee.generator.util.SystemUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

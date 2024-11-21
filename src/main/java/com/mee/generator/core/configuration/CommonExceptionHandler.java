@@ -1,6 +1,6 @@
 package com.mee.generator.core.configuration;
 
-import com.mee.generator.entity.ResultBuild;
+import com.mee.generator.util.ResultBuild;
 import com.mee.generator.util.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

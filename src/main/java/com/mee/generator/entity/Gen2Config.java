@@ -4,6 +4,7 @@ package com.mee.generator.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.mee.generator.enums.CamelCaseEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,8 @@ public class Gen2Config {
      // 版本(v1.0)
     private String version;
  
-     // 接口、字段是否驼峰格式 1.是 0.否
-    private String camel_case;
+     // 接口、字段是否驼峰格式 Y.是 N.否
+    private CamelCaseEnum camel_case;
  
      // 包基础名称(example:com.mee.generator)
     private String base_package;
@@ -77,11 +78,11 @@ public class Gen2Config {
         this.version = version;
     }
 
-    public String getCamel_case() {
+    public CamelCaseEnum getCamel_case() {
         return camel_case;
     }
 
-    public void setCamel_case(String camel_case) {
+    public void setCamel_case(CamelCaseEnum camel_case) {
         this.camel_case = camel_case;
     }
 
@@ -140,5 +141,22 @@ public class Gen2Config {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    @Override
+    public String toString() {
+        return "Gen2Config{" +
+                "id='" + id + '\'' +
+                ", author='" + author + '\'' +
+                ", version='" + version + '\'' +
+                ", camel_case=" + camel_case +
+                ", base_package='" + base_package + '\'' +
+                ", module_name='" + module_name + '\'' +
+                ", database_id='" + database_id + '\'' +
+                ", status=" + status +
+                ", desc='" + desc + '\'' +
+                ", update_version=" + update_version +
+                ", update_time=" + update_time +
+                '}';
     }
 }

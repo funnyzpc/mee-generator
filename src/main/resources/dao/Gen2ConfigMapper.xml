@@ -38,7 +38,29 @@
             <if test="desc != null" > and `desc` = #{desc}</if>
             <if test="update_version != null" > and update_version = #{update_version}</if>
         </where>
-        order by id desc
+        ORDER BY ID DESC
+    </select>
+
+    <select id="findList" resultType="com.mee.generator.entity.Gen2Config" databaseId="oracle">
+        SELECT T1.* FROM ( SELECT T.*,ROWNUM AS R FROM GEN2_CONFIG T
+        <where>
+            <if test="id != null" > and id = #{id}</if>
+            <if test="author != null and author!=''" > and author like #{author}</if>
+            <if test="version != null and version!=''" > and version like #{version}</if>
+            <if test="camel_case != null" > and camel_case = #{camel_case}</if>
+            <if test="base_package != null and base_package!=''" > and base_package like #{base_package}</if>
+            <if test="module_name != null and module_name!=''" > and module_name like #{module_name}</if>
+            <if test="database_id != null and database_id!=''" > and database_id like #{database_id}</if>
+            <if test="status != null" > and status = #{status}</if>
+            <if test="desc != null" > and `desc` = #{desc}</if>
+            <if test="update_version != null" > and update_version = #{update_version}</if>
+        </where>
+        ORDER BY ID DESC
+        ) T1
+        <if test="page_no !=null">
+            WHERE T1.R > #{page_size}*#{page_no}
+            AND   T1.R &lt;= #{page_size}*(#{page_no}+1)
+        </if>
     </select>
 
     <select id="findById" resultType="com.mee.generator.entity.Gen2Config">
@@ -91,6 +113,24 @@
         </where>
     </update>
 
+    <update id="update" databaseId="oracle">
+        update GEN2_CONFIG
+        <set>
+            <if test="author != null and author!=''" > author = #{author},</if>
+            <if test="version != null and version!=''" > version = #{version},</if>
+            <if test="camel_case != null"> camel_case = #{camel_case},</if>
+            <if test="base_package != null and base_package!=''" > base_package = #{base_package},</if>
+            <if test="module_name != null and module_name!=''" > module_name = #{module_name},</if>
+            <if test="database_id != null and database_id!=''" > database_id = #{database_id},</if>
+            <if test="status != null" > STATUS = #{status},</if>
+            <if test="desc != null" >"DESC" = #{desc},</if>
+            <if test="update_version != null" > update_version = #{update_version},</if>
+        </set>
+        <where>
+            <if test="id != null" > and id = #{id}</if>
+        </where>
+    </update>
+
     <update id="toDisabled">
         update GEN2_CONFIG
         set status = #{status}
@@ -98,19 +138,19 @@
     </update>
 
     <insert id="insert">
-        insert into GEN2_CONFIG(
-            id,
-            author,
-            version,
-            camel_case,
-            base_package,
-            module_name,
-            database_id,
-            status,
+        INSERT INTO GEN2_CONFIG(
+            ID,
+            AUTHOR,
+            VERSION,
+            CAMEL_CASE,
+            BASE_PACKAGE,
+            MODULE_NAME,
+            DATABASE_ID,
+            STATUS,
             "desc",
-            update_version,
-            update_time
-        ) values (
+            UPDATE_VERSION,
+            UPDATE_TIME
+        ) VALUES (
             #{id},
             #{author},
             #{version},
@@ -120,25 +160,25 @@
             #{database_id},
             #{status},
             #{desc},
-            (select COALESCE(max(update_version),1) from  GEN2_CONFIG),
+            (select COALESCE(max(update_version),0)+1 from  GEN2_CONFIG),
             #{update_time}
         )
     </insert>
 
     <insert id="insert" databaseId="mysql">
-        insert into GEN2_CONFIG(
-            id,
-            author,
-            version,
-            camel_case,
-            base_package,
-            module_name,
-            database_id,
-            status,
+        INSERT INTO GEN2_CONFIG(
+            ID,
+            AUTHOR,
+            VERSION,
+            CAMEL_CASE,
+            BASE_PACKAGE,
+            MODULE_NAME,
+            DATABASE_ID,
+            STATUS,
             `desc`,
-            update_version,
-            update_time
-        ) values (
+            UPDATE_VERSION,
+            UPDATE_TIME
+        ) VALUES (
             #{id},
             #{author},
             #{version},
@@ -149,6 +189,34 @@
             #{status},
             #{desc},
             #{update_version},
+            #{update_time}
+        )
+    </insert>
+
+    <insert id="insert" databaseId="oracle">
+        insert into GEN2_CONFIG(
+            ID,
+            AUTHOR,
+            VERSION,
+            CAMEL_CASE,
+            BASE_PACKAGE,
+            MODULE_NAME,
+            DATABASE_ID,
+            STATUS,
+            "DESC",
+            UPDATE_VERSION,
+            UPDATE_TIME
+        ) values (
+            #{id},
+            #{author},
+            #{version},
+            #{camel_case},
+            #{base_package},
+            #{module_name},
+            #{database_id},
+            #{status},
+            #{desc},
+            (SELECT COALESCE(max(update_version),0)+1 FROM GEN2_CONFIG),
             #{update_time}
         )
     </insert>

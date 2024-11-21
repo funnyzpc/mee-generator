@@ -21,7 +21,7 @@ function init(){
 
 function saveData(){
     let form = document.querySelector("#data_form");
-    let json = MeeUtils.formToJson(form);
+    // let json = MeeUtils.formToJson(form);
     fetchPutForm(ctxPath+"/code_gen1/gen1_base/update",form,function(res){
         if( res && res.status===1 ){
             alert(res.msg);

@@ -20,6 +20,9 @@ input{
   width: 33.3333%;
   float:left;
 }
+.col-sm-4 {
+  padding-right:6px;
+}
 .form-group{
     width:100%;
     margin-bottom: 8px;
@@ -41,10 +44,7 @@ input{
 .col-sm-3 {
     width: 25%;
     float: left;
-    padding-right:8px;
-}
-.col-sm-4 {
-  width: 33.3%;
+    padding-right:6px;
 }
 .col-sm-5 {
   width: 41.6%;

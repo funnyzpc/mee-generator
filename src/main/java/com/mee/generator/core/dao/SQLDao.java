@@ -1,5 +1,6 @@
 package com.mee.generator.core.dao;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,23 @@ public interface SQLDao {
 	 * @return
 	 */
 	List query(String id, Map params, int count);
+
+//	 /**
+//	  * get a page
+//	  * @param id
+//	  * @param pageIdx
+//	  * @return
+//	  */
+//	 Page list(String id, int pageIdx, int pageSize);
+//
+//	 /**
+//	  * get a page with parameter of o
+//	  * @param id
+//	  * @param params
+//	  * @param pageIdx
+//	  * @return
+//	  */
+//	 Page list(String id, Map params, int pageIdx, int pageSize);
 
 	 /**
 	 * execute a insert sql, and return rows count

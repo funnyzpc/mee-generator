@@ -52,7 +52,7 @@
             <version>2.11.0</version>
         </dependency>
 
-<!--        <dependency>
+        <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
             <version>2.3</version>
@@ -66,7 +66,7 @@
                     <artifactId>slf4j-simple</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
-            <scope>runtime</scope>
+<!--            <scope>runtime</scope>-->
             <version>21.5.0.0</version>
             <optional>true</optional>
         </dependency>
@@ -160,6 +160,31 @@
         </dependency>
 
     </dependencies>
+    <!-- 多环节打包 -->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+                <env.warname>${application.name}</env.warname>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <profileActive>test</profileActive>
+                <env.warname>${application.name}</env.warname>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+
+    </profiles>
 
     <build>
         <resources>

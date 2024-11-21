@@ -29,6 +29,8 @@ public interface Gen2ColumnMapper {
      * @return 结果
      */
     int update(Gen2Column genTableColumn);
+    int updateGenTableColumn(Gen2Column gen2Column);
+
     int insert(Gen2Column column);
     int insertBatch(List<Gen2Column> columns);
 }

@@ -88,7 +88,7 @@
 </script>
 
 <script type="module">
-    import { init } from "<#noparse>${ctxPath}</#noparse>/public/${module_name}/${table_name}.js"
+    import { init } from "<#noparse>${ctxPath}</#noparse>/public/${module_name}/${table_name?lower_case}.js"
     init();
 </script>
 </html>

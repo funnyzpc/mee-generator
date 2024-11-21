@@ -4,6 +4,7 @@ package com.mee.generator.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.mee.generator.enums.CamelCaseEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,8 @@ public class GenTableConfig3 {
      // 版本(v1.0)
     private String version;
  
-     // 接口、字段是否驼峰格式 1.是 0.否
-    private String camel_case;
+     // 接口、字段是否驼峰格式 Y.是 N.否
+    private CamelCaseEnum camel_case;
  
      // 包基础名称(example:com.mee.generator)
     private String base_package;
@@ -33,11 +34,11 @@ public class GenTableConfig3 {
      // 模块所在目录（example：BASE_PACKAGE.module.MODULE_NAME)
     private String module_name;
  
-     // 后端代码所在目录
-    private String back_dir;
- 
-     // 前端代码所在目录
-    private String front_dir;
+//     // 后端代码所在目录
+//    private String back_dir;
+//
+//     // 前端代码所在目录
+//    private String front_dir;
  
      // 数据类型(default,mysql、postgresql、oracle等等)
     private String database_id;
@@ -83,11 +84,11 @@ public class GenTableConfig3 {
         this.version = version;
     }
 
-    public String getCamel_case() {
+    public CamelCaseEnum getCamel_case() {
         return camel_case;
     }
 
-    public void setCamel_case(String camel_case) {
+    public void setCamel_case(CamelCaseEnum camel_case) {
         this.camel_case = camel_case;
     }
 
@@ -105,22 +106,6 @@ public class GenTableConfig3 {
 
     public void setModule_name(String module_name) {
         this.module_name = module_name;
-    }
-
-    public String getBack_dir() {
-        return back_dir;
-    }
-
-    public void setBack_dir(String back_dir) {
-        this.back_dir = back_dir;
-    }
-
-    public String getFront_dir() {
-        return front_dir;
-    }
-
-    public void setFront_dir(String front_dir) {
-        this.front_dir = front_dir;
     }
 
     public String getDatabase_id() {
@@ -163,4 +148,22 @@ public class GenTableConfig3 {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    @Override
+    public String toString() {
+        return "GenTableConfig3{" +
+                "id='" + id + '\'' +
+                ", author='" + author + '\'' +
+                ", version='" + version + '\'' +
+                ", camel_case='" + camel_case + '\'' +
+                ", base_package='" + base_package + '\'' +
+                ", module_name='" + module_name + '\'' +
+                ", database_id='" + database_id + '\'' +
+                ", status=" + status +
+                ", desc='" + desc + '\'' +
+                ", update_version=" + update_version +
+                ", update_time=" + update_time +
+                '}';
+    }
+
 }

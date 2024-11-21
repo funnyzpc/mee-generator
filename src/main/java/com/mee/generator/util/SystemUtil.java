@@ -17,31 +17,31 @@ public class SystemUtil {
         if(System.getProperty("file.separator").equals("/")){
             file_base_path = "/tmp";
         }else{
-            file_base_path = "D:/tmp";
+            file_base_path = "C:/tmp";
         }
         // 构建目录
         if(!new File(file_base_path).exists()){
             new File(file_base_path).mkdir();
         }
     }
-
-    // 列出所有的文件(仅当前级及下一级)
-    public static List<File> listAll(File dir) {
-        List<File> fileList = new ArrayList<File>(8);
-        for(File f:dir.listFiles()){
-            if(f.isFile()){
-                fileList.add(f);
-                continue;
-            }
-            for(File innerFile:f.listFiles()){
-                if(innerFile.isFile()){
-                    fileList.add(innerFile);
-                    continue;
-                }
-            }
-        }
-        return fileList;
-    }
+//
+//    // 列出所有的文件(仅当前级及下一级)
+//    public static List<File> listAll(File dir) {
+//        List<File> fileList = new ArrayList<File>(8);
+//        for(File f:dir.listFiles()){
+//            if(f.isFile()){
+//                fileList.add(f);
+//                continue;
+//            }
+//            for(File innerFile:f.listFiles()){
+//                if(innerFile.isFile()){
+//                    fileList.add(innerFile);
+//                    continue;
+//                }
+//            }
+//        }
+//        return fileList;
+//    }
 
 
 }

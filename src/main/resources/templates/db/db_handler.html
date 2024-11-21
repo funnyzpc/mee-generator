@@ -13,7 +13,7 @@
         <p>当前数据库类型:<span style="color:red;">${platform}</span> schema:<span style="color:red;">${schema}</span></p>
         <form method="GET" id="search-form">
 <!--            <label class="form-label">表名称</label>-->
-            <div class="col-sm-7">
+            <div class="col-sm-5">
             <textarea name="sql" placeholder="请输入sql内容" required="required"></textarea>
             </div>
             <div class="col-sm-4">
@@ -33,7 +33,7 @@
             <!--表头-->
             {{#if @first}}
             <thead>
-            <tr>
+                <tr>
 <!--                <th>idx</th>-->
                 {{#each this}}
                 <th>{{this}}</th>
@@ -43,20 +43,25 @@
             </thead>
             {{else}}
             <!--表体-->
-            <tbody>
-            <tr>
+<!--            <tbody>-->
+            <tr data-index="{{@index}}">
 <!--                <td>{{@index}}</td>-->
                 {{#each this}}
                 <td>{{this}}</td>
                 {{/each}}
                 <td></td>
-            {{/if}}
             </tr>
-            </tbody>
+<!--            </tbody>-->
+            {{/if}}
             {{/each}}
         </table>
     </div>
-    <#include "../wrapper/page-form.html"/>
+    <form id="_page-form">
+        <label>当前第{{index}}每页20条</label>
+        <button name="first_page" class="btn btn-outline-dark">首页</button>
+        <button name="previous_page" class="btn btn-outline-dark">&lt;&lt;上一页</button>
+        <button name="next_page" class="btn btn-outline-dark">下一页&gt;&gt;</button>
+    </form>
 </script>
 <script type="module">
     import {init} from "${ctxPath}/static/js/db/db_handler.js"
@@ -69,12 +74,8 @@ textarea{
     margin-bottom: 8px;
     font-weight:bold;
 }
-.col-sm-7{
-    float:left;
-}
 .col-sm-4{
     padding-left:32px;
-    float:left;
 }
 table tbody tr:hover,table tbody tr:nth-child(even):hover{
   background-color:rgb(207, 255, 207);

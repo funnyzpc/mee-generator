@@ -1,12 +1,11 @@
 package com.mee.generator.service.impl;
 
-import com.mee.generator.common.model.MeeResult;
-import com.mee.generator.entity.Gen2Table;
-import com.mee.generator.mapper.Gen2ColumnMapper;
+import com.mee.generator.core.model.MeeResult;
+import com.mee.generator.entity.*;
+import com.mee.generator.enums.CamelCaseEnum;
 import com.mee.generator.mapper.Gen2TableMapper;
-import com.mee.generator.util.DateUtil;
-import com.mee.generator.util.FreeMarkerUtils;
-import com.mee.generator.util.ResultBuild;
+import com.mee.generator.mapper.Gen2ColumnMapper;
+import com.mee.generator.util.*;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ import java.util.*;
 /**
  * 业务 服务层实现
  * 
- * @author mee
+ * @author shadow
  */
 @Service
 public class GenTable2ServiceImpl {
@@ -34,15 +33,15 @@ public class GenTable2ServiceImpl {
     private Gen2ColumnMapper genTableColumn2Mapper;
 
 
-    /**
-     * 查询据库列表
-     * 
-     * @param tableNames 表名称组
-     * @return 数据库表集合
-     */
-    public List<Gen2Table> selectDbTableListByNames(String[] tableNames) {
-        return genTable2Mapper.findTableByNames(tableNames);
-    }
+//    /**
+//     * 查询据库列表
+//     *
+//     * @param tableNames 表名称组
+//     * @return 数据库表集合
+//     */
+//    public List<Gen2Table> selectDbTableListByNames(String[] tableNames) {
+//        return genTable2Mapper.findTableByNames(tableNames);
+//    }
 
 //    /**
 //     * 查询所有表信息
@@ -83,6 +82,24 @@ public class GenTable2ServiceImpl {
         if( null==genTable || null==genTable.getId() ){
             return ResultBuild.fail("必要参数不可为空！");
         }
+
+        final String id = genTable.getId();
+        final CamelCaseEnum camel_case = genTable.getCamel_case();
+        // 是否驼峰字段更新则更新
+        Gen2Table gen2Table = genTable2Mapper.findById(id);
+        if( null==camel_case || null==gen2Table || null==gen2Table.getCamel_case()  ){
+            return ResultBuild.fail("记录为空！");
+        }
+        if( !camel_case.equals(gen2Table.getCamel_case()) ){
+            List<Gen2Column> gen2Columns = genTableColumn2Mapper.findByTableId(id);
+            for( Gen2Column item:gen2Columns ){
+                final String column_name = item.getColumn_name().toLowerCase(Locale.ROOT);
+                item.setJava_field(CamelCaseEnum.Y.equals(camel_case)?StringUtils.toCamelCase(column_name):column_name);
+                genTableColumn2Mapper.updateGenTableColumn(item);
+                // genTableColumn2Mapper.update(item);
+            }
+        }
+
         genTable.setUpdate_by("auto");
         genTable.setUpdate_time(DateUtil.now());
         int update_count = genTable2Mapper.update(genTable);
@@ -228,17 +245,19 @@ public class GenTable2ServiceImpl {
         String camel_case = (String)table.get("camel_case");
         // 如果是驼峰就取class_name并且第一个单词转小写
         // 如果非驼峰就直接取 table_name
-        if("1".equals(camel_case) ){
+        if(CamelCaseEnum.Y.value.equals(camel_case) ){
             String java_field = (String)table.get("class_name");
-            String prefix = java_field.substring(0, 1).toUpperCase(Locale.ROOT);
+            String prefix = java_field.substring(0, 1).toLowerCase(Locale.ROOT);
             if( java_field.length()==1 ){
                 table.put("gs_table",prefix);
             }else{
                 table.put("gs_table",prefix+java_field.substring(1));
             }
         }else{
-            table.put("gs_table",table.get("table_name"));
+            table.put("gs_table",((String)table.get("table_name")).toLowerCase());
         }
+//        table.put("table_name_lower",((String)table.get("table_name")).toLowerCase());
+
 
         // entity别名 SysUser => sysUser;
         String class_name = (String) table.get("class_name");
